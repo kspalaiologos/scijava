@@ -60,7 +60,6 @@ public class SciInteger implements Comparable<SciInteger>, Cloneable {
     private static native boolean eq(long a, long b);
     private static native boolean neq(long a, long b);
     private static native int compare(long a, long b);
-    private static native void reassignString(long dest, String s);
     private static native void and(long dest, long a, long b);
     private static native void or(long dest, long a, long b);
     private static native void xor(long dest, long a, long b);
