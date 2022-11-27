@@ -61,6 +61,12 @@ public class SciInteger implements Comparable<SciInteger> {
     private static native boolean neq(long a, long b);
     private static native int compare(long a, long b);
     private static native void reassignString(long dest, String s);
+    private static native void and(long dest, long a, long b);
+    private static native void or(long dest, long a, long b);
+    private static native void xor(long dest, long a, long b);
+    private static native void not(long dest, long a);
+    private static native void shl(long dest, long a, int b);
+    private static native void shr(long dest, long a, int b);
 
     private static native SciInteger fromInteger(int i);
     private static native SciInteger fromString(String s);
@@ -179,6 +185,42 @@ public class SciInteger implements Comparable<SciInteger> {
 
     public static boolean neq(SciInteger a, SciInteger b) {
         return neq(a.ptr, b.ptr);
+    }
+
+    public static SciInteger and(SciInteger a, SciInteger b) {
+        SciInteger result = SciInteger.fromInteger(0);
+        and(result.ptr, a.ptr, b.ptr);
+        return result;
+    }
+
+    public static SciInteger or(SciInteger a, SciInteger b) {
+        SciInteger result = SciInteger.fromInteger(0);
+        or(result.ptr, a.ptr, b.ptr);
+        return result;
+    }
+
+    public static SciInteger xor(SciInteger a, SciInteger b) {
+        SciInteger result = SciInteger.fromInteger(0);
+        xor(result.ptr, a.ptr, b.ptr);
+        return result;
+    }
+
+    public static SciInteger not(SciInteger a) {
+        SciInteger result = SciInteger.fromInteger(0);
+        not(result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciInteger shl(SciInteger a, int b) {
+        SciInteger result = SciInteger.fromInteger(0);
+        shl(result.ptr, a.ptr, b);
+        return result;
+    }
+
+    public static SciInteger shr(SciInteger a, int b) {
+        SciInteger result = SciInteger.fromInteger(0);
+        shr(result.ptr, a.ptr, b);
+        return result;
     }
 
     @Override

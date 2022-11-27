@@ -16,6 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use std::ops::{BitAnd, BitOr, BitXor, Not, Shl, Shr};
+
 // This is the interface to the JVM that we'll call the majority of our
 // methods on.
 use jni::JNIEnv;
@@ -272,4 +274,64 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_compare(_env: JNIEnv,
     let a = unsafe { &*a };
     let b = unsafe { &*b };
     a.cmp(b) as jint
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_and(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong, b: jlong) {
+    let dest = dest as *mut Integer;
+    let a = a as *mut Integer;
+    let b = b as *mut Integer;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    let dest = unsafe { &mut *dest };
+    *dest = a.bitand(b).into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_or(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong, b: jlong) {
+    let dest = dest as *mut Integer;
+    let a = a as *mut Integer;
+    let b = b as *mut Integer;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    let dest = unsafe { &mut *dest };
+    *dest = a.bitor(b).into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_xor(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong, b: jlong) {
+    let dest = dest as *mut Integer;
+    let a = a as *mut Integer;
+    let b = b as *mut Integer;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    let dest = unsafe { &mut *dest };
+    *dest = a.bitxor(b).into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_not(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong) {
+    let dest = dest as *mut Integer;
+    let a = a as *mut Integer;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.not().into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_shl(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong, b: jint) {
+    let dest = dest as *mut Integer;
+    let a = a as *mut Integer;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.shl(b).into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_shr(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong, b: jint) {
+    let dest = dest as *mut Integer;
+    let a = a as *mut Integer;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.shr(b).into();
 }
