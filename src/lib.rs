@@ -28,7 +28,7 @@ use jni::objects::{JClass, JString};
 // This is just a pointer. We'll be returning it from our function. We
 // can't return one of the objects with lifetime information because the
 // lifetime checker won't let us.
-use jni::sys::{jstring, jlong, jint, jobject};
+use jni::sys::{jstring, jlong, jint, jobject, jboolean};
 
 use rug::ops::Pow;
 use rug::Integer;
@@ -56,6 +56,13 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_fromString(env: JNIEn
     let ptr = ptr as jlong;
     let obj = env.new_object("palaiologos/scijava/SciInteger", "(J)V", &[ptr.into()]).unwrap();
     obj.into_raw()
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_reassignString(env: JNIEnv, _class: JClass, ptr: jlong, s: JString) {
+    let s: String = env.get_string(s).unwrap().into();
+    let a = ptr as *mut Integer;
+    unsafe { *a = Integer::from_str_radix(&s, 10).unwrap(); }
 }
 
 #[no_mangle]
@@ -193,4 +200,76 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_factorial(_env: JNIEn
     let a = a as *mut Integer;
     let a = unsafe { &mut *a };
     *a = Integer::factorial(b as u32).into()
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_signum(_env: JNIEnv, _class: JClass, dest:jlong, a: jlong) {
+    let a = a as *mut Integer;
+    let a = unsafe { &*a };
+    let dest = dest as *mut Integer;
+    let dest = unsafe { &mut *dest };
+    *dest = a.signum_ref().into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_lt(_env: JNIEnv, _class: JClass, a: jlong, b: jlong) -> jboolean {
+    let a = a as *mut Integer;
+    let b = b as *mut Integer;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    (a < b) as jboolean
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_lte(_env: JNIEnv, _class: JClass, a: jlong, b: jlong) -> jboolean {
+    let a = a as *mut Integer;
+    let b = b as *mut Integer;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    (a <= b) as jboolean
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_gt(_env: JNIEnv, _class: JClass, a: jlong, b: jlong) -> jboolean {
+    let a = a as *mut Integer;
+    let b = b as *mut Integer;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    (a > b) as jboolean
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_gte(_env: JNIEnv, _class: JClass, a: jlong, b: jlong) -> jboolean {
+    let a = a as *mut Integer;
+    let b = b as *mut Integer;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    (a >= b) as jboolean
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_eq(_env: JNIEnv, _class: JClass, a: jlong, b: jlong) -> jboolean {
+    let a = a as *mut Integer;
+    let b = b as *mut Integer;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    (a == b) as jboolean
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_neq(_env: JNIEnv, _class: JClass, a: jlong, b: jlong) -> jboolean {
+    let a = a as *mut Integer;
+    let b = b as *mut Integer;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    (a != b) as jboolean
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_compare(_env: JNIEnv, _class: JClass, a: jlong, b: jlong) -> jint {
+    let a = a as *mut Integer;
+    let b = b as *mut Integer;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    a.cmp(b) as jint
 }

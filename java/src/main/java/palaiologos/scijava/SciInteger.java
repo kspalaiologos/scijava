@@ -20,7 +20,7 @@ package palaiologos.scijava;
 
 import java.lang.ref.Cleaner;
 
-public class SciInteger {
+public class SciInteger implements Comparable<SciInteger> {
     private final long ptr;
 
     private final Cleaner.Cleanable cleanable;
@@ -52,6 +52,19 @@ public class SciInteger {
     private static native void gcd(long dest, long a, long b);
     private static native void lcm(long dest, long a, long b);
     private static native void factorial(long dest, int a);
+    private static native void signum(long dest, long a);
+    private static native boolean lt(long a, long b);
+    private static native boolean lte(long a, long b);
+    private static native boolean gt(long a, long b);
+    private static native boolean gte(long a, long b);
+    private static native boolean eq(long a, long b);
+    private static native boolean neq(long a, long b);
+    private static native int compare(long a, long b);
+    private static native void reassignString(long dest, String s);
+
+    private static native SciInteger fromInteger(int i);
+    private static native SciInteger fromString(String s);
+    private static native SciInteger fromStringRadix(String s, int radix);
 
     // Public API.
     public static final SciInteger ZERO = fromInteger(0);
@@ -59,10 +72,18 @@ public class SciInteger {
     public static final SciInteger TWO = fromInteger(2);
     public static final SciInteger FIVE = fromInteger(5);
     public static final SciInteger TEN = fromInteger(10);
-    
-    public static native SciInteger fromInteger(int i);
-    public static native SciInteger fromString(String s);
-    public static native SciInteger fromStringRadix(String s, int radix);
+
+    public static SciInteger valueOf(int i) {
+        return fromInteger(i);
+    }
+
+    public static SciInteger valueOf(String s) {
+        return fromString(s);
+    }
+
+    public static SciInteger valueOf(String s, int radix) {
+        return fromStringRadix(s, radix);
+    }
 
     public static SciInteger add(SciInteger a, SciInteger b) {
         SciInteger result = SciInteger.fromInteger(0);
@@ -130,6 +151,36 @@ public class SciInteger {
         return result;
     }
 
+    public static SciInteger signum(SciInteger a) {
+        SciInteger result = SciInteger.fromInteger(0);
+        signum(result.ptr, a.ptr);
+        return result;
+    }
+
+    public static boolean lt(SciInteger a, SciInteger b) {
+        return lt(a.ptr, b.ptr);
+    }
+
+    public static boolean lte(SciInteger a, SciInteger b) {
+        return lte(a.ptr, b.ptr);
+    }
+
+    public static boolean gt(SciInteger a, SciInteger b) {
+        return gt(a.ptr, b.ptr);
+    }
+
+    public static boolean gte(SciInteger a, SciInteger b) {
+        return gte(a.ptr, b.ptr);
+    }
+
+    public static boolean eq(SciInteger a, SciInteger b) {
+        return eq(a.ptr, b.ptr);
+    }
+
+    public static boolean neq(SciInteger a, SciInteger b) {
+        return neq(a.ptr, b.ptr);
+    }
+
     @Override
     public String toString() {
         return toString(ptr);
@@ -137,5 +188,10 @@ public class SciInteger {
 
     public String toString(int radix) {
         return toStringRadix(ptr, radix);
+    }
+
+    @Override
+    public int compareTo(SciInteger o) {
+        return compare(ptr, o.ptr);
     }
 }
