@@ -54,6 +54,12 @@ public class SciInteger {
     private static native void factorial(long dest, int a);
 
     // Public API.
+    public static final SciInteger ZERO = fromInteger(0);
+    public static final SciInteger ONE = fromInteger(1);
+    public static final SciInteger TWO = fromInteger(2);
+    public static final SciInteger FIVE = fromInteger(5);
+    public static final SciInteger TEN = fromInteger(10);
+    
     public static native SciInteger fromInteger(int i);
     public static native SciInteger fromString(String s);
     public static native SciInteger fromStringRadix(String s, int radix);
