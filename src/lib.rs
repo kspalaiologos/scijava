@@ -474,7 +474,7 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_testBit(_env: JNIEnv,
     let a = unsafe { &*a };
     if b < 0 {
         let _ = _env.throw_new("java/lang/ArithmeticException", "Call to testBit with negative index");
-        return;
+        return 0;
     }
     a.get_bit(b as u32) as jboolean
 }
