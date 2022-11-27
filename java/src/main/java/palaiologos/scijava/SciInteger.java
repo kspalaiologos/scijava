@@ -20,7 +20,7 @@ package palaiologos.scijava;
 
 import java.lang.ref.Cleaner;
 
-public class SciInteger implements Comparable<SciInteger> {
+public class SciInteger implements Comparable<SciInteger>, Cloneable {
     private final long ptr;
 
     private final Cleaner.Cleanable cleanable;
@@ -80,9 +80,15 @@ public class SciInteger implements Comparable<SciInteger> {
     private static native void fibonacci(long dest, int a);
     private static native void lucas(long dest, int a);
     private static native int hamming(long a, long b);
+    private static native void sqrt(long dest, long a);
+    private static native void square(long dest, long a);
+    private static native int jacobi(long a, long b);
+    private static native int legendre(long a, long b);
     private static native SciInteger fromInteger(int i);
     private static native SciInteger fromString(String s);
     private static native SciInteger fromStringRadix(String s, int radix);
+    private static native int toInteger(long i);
+    private static native void copy(long dest, long src);
 
     // Public API.
     public static final SciInteger ZERO = fromInteger(0);
@@ -309,6 +315,46 @@ public class SciInteger implements Comparable<SciInteger> {
         return result;
     }
 
+    public static SciInteger min(SciInteger a, SciInteger b) {
+        if(SciInteger.lt(a, b)) {
+            return a;
+        } else {
+            return b;
+        }
+    }
+
+    public static SciInteger max(SciInteger a, SciInteger b) {
+        if(SciInteger.gt(a, b)) {
+            return a;
+        } else {
+            return b;
+        }
+    }
+
+    public static SciInteger sqrt(SciInteger a) {
+        SciInteger result = SciInteger.fromInteger(0);
+        sqrt(result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciInteger square(SciInteger a) {
+        SciInteger result = SciInteger.fromInteger(0);
+        square(result.ptr, a.ptr);
+        return result;
+    }
+
+    public static int legendre(SciInteger a, SciInteger p) {
+        return legendre(a.ptr, p.ptr);
+    }
+
+    public static int jacobi(SciInteger a, SciInteger p) {
+        return jacobi(a.ptr, p.ptr);
+    }
+
+    public int intValue() {
+        return toInteger(ptr);
+    }
+
     @Override
     public String toString() {
         return toString(ptr);
@@ -321,5 +367,12 @@ public class SciInteger implements Comparable<SciInteger> {
     @Override
     public int compareTo(SciInteger o) {
         return compare(ptr, o.ptr);
+    }
+
+    @Override
+    public SciInteger clone() {
+        SciInteger result = SciInteger.fromInteger(0);
+        copy(result.ptr, ptr);
+        return result;
     }
 }

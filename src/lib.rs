@@ -61,6 +61,13 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_fromString(env: JNIEn
 }
 
 #[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_toInteger(env: JNIEnv, _class: JClass, ptr: jlong) -> jint {
+    let ptr = ptr as *mut Integer;
+    let n = unsafe { &*ptr };
+    n.to_i32().unwrap()
+}
+
+#[no_mangle]
 pub extern "system" fn Java_palaiologos_scijava_SciInteger_reassignString(env: JNIEnv, _class: JClass, ptr: jlong, s: JString) {
     let s: String = env.get_string(s).unwrap().into();
     let a = ptr as *mut Integer;
@@ -458,4 +465,49 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_hamming(_env: JNIEnv,
     let a = unsafe { &*a };
     let b = unsafe { &*b };
     a.hamming_dist(b).unwrap() as jint
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_sqrt(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong) {
+    let dest = dest as *mut Integer;
+    let a = a as *mut Integer;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.sqrt_ref().into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_square(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong) {
+    let dest = dest as *mut Integer;
+    let a = a as *mut Integer;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.square_ref().into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_legendre(_env: JNIEnv, _class: JClass, a: jlong, b: jlong) -> jint {
+    let a = a as *mut Integer;
+    let b = b as *mut Integer;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    a.legendre(b) as jint
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_jacobi(_env: JNIEnv, _class: JClass, a: jlong, b: jlong) -> jint {
+    let a = a as *mut Integer;
+    let b = b as *mut Integer;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    a.jacobi(b) as jint
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_copy(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong) {
+    let dest = dest as *mut Integer;
+    let a = a as *mut Integer;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.clone();
 }
