@@ -33,7 +33,7 @@ use jni::objects::{JClass, JString};
 use jni::sys::{jstring, jlong, jint, jobject, jboolean};
 
 use rug::ops::Pow;
-use rug::Integer;
+use rug::{Integer, Complete};
 
 #[no_mangle]
 pub extern "system" fn Java_palaiologos_scijava_SciInteger_free(_env: JNIEnv, _class: JClass, ptr: jlong) {
@@ -391,4 +391,71 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_bitCount(_env: JNIEnv
     } else {
         a.count_zeros().unwrap() as jint
     }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_isPrime(_env: JNIEnv, _class: JClass, a: jlong, certainty: jint) -> jboolean {
+    let a = a as *mut Integer;
+    let a = unsafe { &*a };
+    a.is_probably_prime(certainty as u32) as jboolean
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_nextPrime(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong) {
+    let dest = dest as *mut Integer;
+    let a = a as *mut Integer;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.next_prime_ref().into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_clamp(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong, min: jlong, max: jlong) {
+    let dest = dest as *mut Integer;
+    let a = a as *mut Integer;
+    let min = min as *mut Integer;
+    let max = max as *mut Integer;
+    let a = unsafe { &*a };
+    let min = unsafe { &*min };
+    let max = unsafe { &*max };
+    let dest = unsafe { &mut *dest };
+    *dest = a.clamp_ref(min, max).into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_divmod(_env: JNIEnv, _class: JClass, destdiv: jlong, destmod: jlong, a: jlong, b: jlong) {
+    let destdiv = destdiv as *mut Integer;
+    let destmod = destmod as *mut Integer;
+    let a = a as *mut Integer;
+    let b = b as *mut Integer;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    let destdiv = unsafe { &mut *destdiv };
+    let destmod = unsafe { &mut *destmod };
+    let (div, modu) = a.div_rem_ref(b).complete();
+    *destdiv = div.into();
+    *destmod = modu.into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_fibonacci(_env: JNIEnv, _class: JClass, dest: jlong, a: jint) {
+    let dest = dest as *mut Integer;
+    let dest = unsafe { &mut *dest };
+    *dest = Integer::fibonacci(a as u32).into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_lucas(_env: JNIEnv, _class: JClass, dest: jlong, a: jint) {
+    let dest = dest as *mut Integer;
+    let dest = unsafe { &mut *dest };
+    *dest = Integer::lucas(a as u32).into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_hamming(_env: JNIEnv, _class: JClass, a: jlong, b: jlong) -> jint {
+    let a = a as *mut Integer;
+    let b = b as *mut Integer;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    a.hamming_dist(b).unwrap() as jint
 }

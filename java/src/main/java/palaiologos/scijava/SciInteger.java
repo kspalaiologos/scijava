@@ -73,7 +73,13 @@ public class SciInteger implements Comparable<SciInteger> {
     private static native void testBit(long dest, long a, int b);
     private static native int bitCount(long a);
     private static native int bitLength(long a);
-
+    private static native boolean isPrime(long a);
+    private static native void nextPrime(long dest, long a);
+    private static native void clamp(long dest, long a, long min, long max);
+    private static native void divmod(long destdiv, long destmod, long a, long b);
+    private static native void fibonacci(long dest, int a);
+    private static native void lucas(long dest, int a);
+    private static native int hamming(long a, long b);
     private static native SciInteger fromInteger(int i);
     private static native SciInteger fromString(String s);
     private static native SciInteger fromStringRadix(String s, int radix);
@@ -259,6 +265,48 @@ public class SciInteger implements Comparable<SciInteger> {
 
     public static int bitCount(SciInteger a) {
         return bitCount(a.ptr);
+    }
+
+    public static boolean isPrime(SciInteger a) {
+        return isPrime(a.ptr);
+    }
+
+    public static SciInteger nextPrime(SciInteger a) {
+        SciInteger result = SciInteger.valueOf(0);
+        nextPrime(result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciInteger[] divMod(SciInteger a, SciInteger b) {
+        SciInteger[] tab = new SciInteger[2];
+        tab[0] = SciInteger.fromInteger(0);
+        tab[1] = SciInteger.fromInteger(0);
+        divmod(tab[0].ptr, tab[1].ptr, a.ptr, b.ptr);
+        return tab;
+    }
+
+    public static SciInteger fibonacci(int n) {
+        SciInteger result = SciInteger.fromInteger(0);
+        fibonacci(result.ptr, n);
+        return result;
+    }
+
+    public static SciInteger clamp(SciInteger a, SciInteger min, SciInteger max) {
+        SciInteger result = SciInteger.fromInteger(0);
+        clamp(result.ptr, a.ptr, min.ptr, max.ptr);
+        return result;
+    }
+
+    public static SciInteger lucas(int n) {
+        SciInteger result = SciInteger.fromInteger(0);
+        lucas(result.ptr, n);
+        return result;
+    }
+
+    public static SciInteger hamming(int n) {
+        SciInteger result = SciInteger.fromInteger(0);
+        hamming(result.ptr, n);
+        return result;
     }
 
     @Override
