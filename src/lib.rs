@@ -324,7 +324,7 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_shl(_env: JNIEnv, _cl
     let a = a as *mut Integer;
     let a = unsafe { &*a };
     let dest = unsafe { &mut *dest };
-    *dest = a.shl(b).into();
+    *dest = a.shl(b as u32).into();
 }
 
 #[no_mangle]
@@ -333,5 +333,62 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_shr(_env: JNIEnv, _cl
     let a = a as *mut Integer;
     let a = unsafe { &*a };
     let dest = unsafe { &mut *dest };
-    *dest = a.shr(b).into();
+    *dest = a.shr(b as u32).into();
+}
+
+// set bit, clear bit, flip bit, test bit, bit length, set bit count.
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_setBit(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong, b: jint, val: jboolean) {
+    let dest = dest as *mut Integer;
+    let a = a as *mut Integer;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.clone();
+    dest.set_bit(b as u32, if val != 0 { true } else { false });
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_clearBit(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong, b: jint) {
+    let dest = dest as *mut Integer;
+    let a = a as *mut Integer;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.clone();
+    dest.set_bit(b as u32, false);
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_flipBit(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong, b: jint) {
+    let dest = dest as *mut Integer;
+    let a = a as *mut Integer;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.clone();
+    dest.toggle_bit(b as u32);
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_testBit(_env: JNIEnv, _class: JClass, a: jlong, b: jint) -> jboolean {
+    let a = a as *mut Integer;
+    let a = unsafe { &*a };
+    a.get_bit(b as u32) as jboolean
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_bitLength(_env: JNIEnv, _class: JClass, a: jlong) -> jint {
+    let a = a as *mut Integer;
+    let a = unsafe { &*a };
+    a.signed_bits() as jint
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_bitCount(_env: JNIEnv, _class: JClass, a: jlong) -> jint {
+    let a = a as *mut Integer;
+    let a = unsafe { &*a };
+    if a < &0 {
+        a.count_ones().unwrap() as jint
+    } else {
+        a.count_zeros().unwrap() as jint
+    }
 }

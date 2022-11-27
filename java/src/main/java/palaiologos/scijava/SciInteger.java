@@ -67,6 +67,12 @@ public class SciInteger implements Comparable<SciInteger> {
     private static native void not(long dest, long a);
     private static native void shl(long dest, long a, int b);
     private static native void shr(long dest, long a, int b);
+    private static native void setBit(long dest, long a, int b);
+    private static native void clearBit(long dest, long a, int b);
+    private static native void flipBit(long dest, long a, int b);
+    private static native void testBit(long dest, long a, int b);
+    private static native int bitCount(long a);
+    private static native int bitLength(long a);
 
     private static native SciInteger fromInteger(int i);
     private static native SciInteger fromString(String s);
@@ -221,6 +227,38 @@ public class SciInteger implements Comparable<SciInteger> {
         SciInteger result = SciInteger.fromInteger(0);
         shr(result.ptr, a.ptr, b);
         return result;
+    }
+
+    public static SciInteger setBit(SciInteger a, int b) {
+        SciInteger result = SciInteger.fromInteger(0);
+        setBit(result.ptr, a.ptr, b);
+        return result;
+    }
+
+    public static SciInteger clearBit(SciInteger a, int b) {
+        SciInteger result = SciInteger.fromInteger(0);
+        clearBit(result.ptr, a.ptr, b);
+        return result;
+    }
+
+    public static SciInteger testBit(SciInteger a, int b) {
+        SciInteger result = SciInteger.fromInteger(0);
+        testBit(result.ptr, a.ptr, b);
+        return result;
+    }
+
+    public static SciInteger flipBit(SciInteger a, int b) {
+        SciInteger result = SciInteger.fromInteger(0);
+        flipBit(result.ptr, a.ptr, b);
+        return result;
+    }
+
+    public static int bitLength(SciInteger a) {
+        return bitLength(a.ptr);
+    }
+
+    public static int bitCount(SciInteger a) {
+        return bitCount(a.ptr);
     }
 
     @Override
