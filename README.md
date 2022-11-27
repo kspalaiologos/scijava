@@ -1,1 +1,1 @@
-# scijava
+# scijava - Fast scientific computing for Java

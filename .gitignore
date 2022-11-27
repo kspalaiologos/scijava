@@ -1,0 +1,9 @@
+# Rust stuff
+/target
+/Cargo.lock
+
+# Java stuff
+/java/.idea/
+/java/target/
+/java/scijava.iml
+/java/src/main/resources/

@@ -1,10 +1,28 @@
+/*
+    scijava
+    Copyright (C) 2022 Kamila Szewczyk
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package palaiologos.scijava;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
-class NativeUtils {
+class NativeLibrary {
     private static String osName() {
         String os = System.getProperty("os.name").toLowerCase().replace(' ', '_');
         if (os.startsWith("win")){
@@ -31,12 +49,12 @@ class NativeUtils {
     }
 
     private static String resourceName() {
-        return "/palaiologos/scijava/native/" + osName() + "-" + osArch() + "-scijava." + libExtension();
+        return "/native/" + osName() + "-" + osArch() + "-scijava." + libExtension();
     }
 
     private static File temporaryDir;
 
-    private NativeUtils() {
+    private NativeLibrary() {
     }
 
     private static void load(String path) throws IOException {
@@ -50,7 +68,7 @@ class NativeUtils {
 
         File temp = new File(temporaryDir, filename);
 
-        try (InputStream is = NativeUtils.class.getResourceAsStream(path)) {
+        try (InputStream is = NativeLibrary.class.getResourceAsStream(path)) {
             Files.copy(is, temp.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             temp.delete();
