@@ -4,7 +4,14 @@ version = "1.0.0"
 edition = "2021"
 license = "GPL-3.0+"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[profile.release]
+strip = true
+opt-level = 3
+lto = true
+panic = "abort"
+debug-assertions = false
+overflow-checks = false
+debug = false
 
 [dependencies]
 rug = "1.18.0"
