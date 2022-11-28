@@ -19,6 +19,9 @@
 package palaiologos.scijava;
 
 import java.lang.ref.Cleaner;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class SciInteger implements Comparable<SciInteger>, Cloneable {
     private final long ptr;
@@ -88,6 +91,7 @@ public class SciInteger implements Comparable<SciInteger>, Cloneable {
     private static native SciInteger fromStringRadix(String s, int radix);
     private static native int toInteger(long i);
     private static native void copy(long dest, long src);
+    private static native void factor(Map<SciInteger, SciInteger> destFactors, long a);
 
     // Public API.
     public static final SciInteger ZERO = fromInteger(0);
@@ -373,5 +377,16 @@ public class SciInteger implements Comparable<SciInteger>, Cloneable {
         SciInteger result = SciInteger.fromInteger(0);
         copy(result.ptr, ptr);
         return result;
+    }
+
+    public HashMap<SciInteger, SciInteger> factor(SciInteger a) {
+        HashMap<SciInteger, SciInteger> result = new HashMap<>();
+        factor(result, a.ptr);
+        return result;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ptr);
     }
 }

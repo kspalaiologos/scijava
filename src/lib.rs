@@ -16,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use std::collections::HashMap;
 use std::ops::{BitAnd, BitOr, BitXor, Not, Shl, Shr};
 
 // This is the interface to the JVM that we'll call the majority of our
@@ -25,13 +26,14 @@ use jni::JNIEnv;
 // These objects are what you should use as arguments to your native
 // function. They carry extra lifetime information to prevent them escaping
 // this context and getting used after being GC'd.
-use jni::objects::{JClass, JString, JObject};
+use jni::objects::{JClass, JString, JObject, JValue, JMap};
 
 // This is just a pointer. We'll be returning it from our function. We
 // can't return one of the objects with lifetime information because the
 // lifetime checker won't let us.
 use jni::sys::{jstring, jlong, jint, jobject, jboolean};
 
+use rug::integer::IsPrime;
 use rug::ops::Pow;
 use rug::{Integer, Complete};
 
@@ -629,4 +631,103 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_copy(_env: JNIEnv, _c
     let a = unsafe { &*a };
     let dest = unsafe { &mut *dest };
     *dest = a.clone();
+}
+
+fn factor_using_pollard_rho(factors: &mut HashMap<Integer, Integer>, mut n: Integer, a: u64) {
+    let mut x = Integer::from(2);
+    let mut z = Integer::from(2);
+    let mut y = Integer::from(2);
+    let mut P = Integer::from(1);
+    let mut k = 1;
+    let mut l = 1;
+    let mut t:Integer;
+    'outer: while &n != &1 {
+        loop {
+            t = (&x * &x).into();
+            x = (t % &n) + a;
+            t = (&z - &x).into();
+            P *= &t;
+            P %= &n;
+            if k % 32 == 1 {
+                t = P.gcd_ref(&n).into();
+                if t != 1 {
+                    // factor found.
+                    loop {
+                        t = (&y * &y).into();
+                        y = (t % &n) + a;
+                        t = (&z - &y).into();
+                        t.gcd_mut(&n);
+                        if t != 1 {
+                            break;
+                        }
+                    }
+                    n /= &t;
+                    if t.is_probably_prime(50) == IsPrime::No {
+                        factor_using_pollard_rho(factors, t, a + 1);
+                    } else {
+                        if factors.contains_key(&t) {
+                            let val = factors.get_mut(&t).unwrap();
+                            *val += 1;
+                        } else {
+                            factors.insert(t, Integer::from(1));
+                        }
+                    }
+                    if n.is_probably_prime(50) != IsPrime::No {
+                        if factors.contains_key(&n) {
+                            let val = factors.get_mut(&n).unwrap();
+                            *val += 1;
+                        } else {
+                            factors.insert(n.clone(), Integer::from(1));
+                        }
+                        return;
+                    }
+                    x %= &n;
+                    z %= &n;
+                    y %= &n;
+                    continue 'outer;
+                }
+                y = x.clone();
+            }
+            k -= 1;
+            if k == 0 {
+                break;
+            }
+        }
+        z = x.clone();
+        k = l;
+        l = 2 * l;
+        for _i in 0..k {
+            t = (&x * &x).into();
+            x = (t % &n) + a;
+        }
+        y = x.clone();
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_factor(env: JNIEnv, _class: JClass, dest: JObject, a: jlong) {
+    let dest = JMap::from_env(&env, dest).unwrap();
+    let a = a as *mut Integer;
+    let mut a = unsafe { &*a }.clone();
+    let mut factors: HashMap<Integer, Integer> = HashMap::new();
+    
+    if a < 0 {
+        a = -a;
+        // Push -1 to vector of SciIntegers destFactors and 1 to destPowers.
+        factors.insert(Integer::from(-1), Integer::from(1));
+    }
+
+    if a == 0 {
+        return;
+    }
+
+    factor_using_pollard_rho(&mut factors, a, 1);
+
+    factors.iter().for_each(|(k, v)| {
+        let key_ptr = Box::into_raw(Box::new(k.clone())) as jlong;
+        let value_ptr = Box::into_raw(Box::new(v.clone())) as jlong;
+        let key = env.new_object("palaiologos/scijava/SciInteger", "(J)V", &[JValue::Long(key_ptr)]).unwrap();
+        let value = env.new_object("palaiologos/scijava/SciInteger", "(J)V", &[JValue::Long(value_ptr)]).unwrap();
+        dest.put(key, value);
+    });
 }
