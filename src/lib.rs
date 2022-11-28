@@ -72,7 +72,7 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_fromString(env: JNIEn
     let n = match n {
         Ok(n) => n,
         Err(_) => {
-            let _ = env.throw(("palaiologos/scijava/ArithmeticException", "Failed to parse the numeric string."));
+            let _ = env.throw(("java/lang/ArithmeticException", "Failed to parse the numeric string."));
             return JObject::null().into_raw();
         }
     };
@@ -95,7 +95,7 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_toInteger(env: JNIEnv
     match n.to_i32() {
         Some(n) => n,
         None => {
-            let _ = env.throw(("palaiologos/scijava/ArithmeticException", "Failed to convert the integer to a Java integer (overflow/underflow?)."));
+            let _ = env.throw(("java/lang/ArithmeticException", "Failed to convert the integer to a Java integer (overflow/underflow?)."));
             0
         }
     }
@@ -116,7 +116,7 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_fromStringRadix(env: 
     let n = match n {
         Ok(n) => n,
         Err(_) => {
-            let _ = env.throw(("palaiologos/scijava/ArithmeticException", "Failed to parse the numeric string."));
+            let _ = env.throw(("java/lang/ArithmeticException", "Failed to parse the numeric string."));
             return JObject::null().into_raw();
         }
     };
@@ -151,7 +151,7 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_toString(env: JNIEnv,
 pub extern "system" fn Java_palaiologos_scijava_SciInteger_toStringRadix(env: JNIEnv, _class: JClass, ptr: jlong, radix: jint) -> jstring {
     let ptr = ptr as *mut Integer;
     let n = unsafe { &*ptr };
-    if radix < 2 || radix > 36 {
+    if !(2..=36).contains(&radix) {
         let _ = env.throw(("java/lang/IllegalArgumentException", "Radix must be between 2 and 36."));
         return JObject::null().into_raw();
     }
@@ -207,7 +207,7 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_div(env: JNIEnv, _cla
     let b = unsafe { &*b };
     let dest = unsafe { &mut *dest };
     if b == &0 {
-        let _ = env.throw(("palaiologos/scijava/ArithmeticException", "Division by zero."));
+        let _ = env.throw(("java/lang/ArithmeticException", "Division by zero."));
         return;
     }
     *dest = (a / b).into();
@@ -222,7 +222,7 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_rem(env: JNIEnv, _cla
     let b = unsafe { &*b };
     let dest = unsafe { &mut *dest };
     if b == &0 {
-        let _ = env.throw(("palaiologos/scijava/ArithmeticException", "Division by zero."));
+        let _ = env.throw(("java/lang/ArithmeticException", "Division by zero."));
         return;
     }
     *dest = (a % b).into();
@@ -282,7 +282,7 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_factorial(env: JNIEnv
     let a = a as *mut Integer;
     let a = unsafe { &mut *a };
     if b < 0 {
-        let _ = env.throw(("palaiologos/scijava/ArithmeticException", "Factorial of negative number."));
+        let _ = env.throw(("java/lang/ArithmeticException", "Factorial of negative number."));
         return;
     }
     *a = Integer::factorial(b as u32).into()
@@ -439,7 +439,7 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_setBit(_env: JNIEnv, 
         return;
     }
     *dest = a.clone();
-    dest.set_bit(b as u32, if val != 0 { true } else { false });
+    dest.set_bit(b as u32, val != 0);
 }
 
 #[no_mangle]
@@ -547,8 +547,8 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_divmod(_env: JNIEnv, 
         return;
     }
     let (div, modu) = a.div_rem_ref(b).complete();
-    *destdiv = div.into();
-    *destmod = modu.into();
+    *destdiv = div;
+    *destmod = modu;
 }
 
 #[no_mangle]
@@ -637,19 +637,19 @@ fn factor_using_pollard_rho(factors: &mut HashMap<Integer, Integer>, mut n: Inte
     let mut x = Integer::from(2);
     let mut z = Integer::from(2);
     let mut y = Integer::from(2);
-    let mut P = Integer::from(1);
+    let mut p = Integer::from(1);
     let mut k = 1;
     let mut l = 1;
     let mut t:Integer;
-    'outer: while &n != &1 {
+    'outer: while n != 1 {
         loop {
             t = (&x * &x).into();
             x = (t % &n) + a;
             t = (&z - &x).into();
-            P *= &t;
-            P %= &n;
+            p *= &t;
+            p %= &n;
             if k % 32 == 1 {
-                t = P.gcd_ref(&n).into();
+                t = p.gcd_ref(&n).into();
                 if t != 1 {
                     // factor found.
                     loop {
@@ -664,13 +664,11 @@ fn factor_using_pollard_rho(factors: &mut HashMap<Integer, Integer>, mut n: Inte
                     n /= &t;
                     if t.is_probably_prime(50) == IsPrime::No {
                         factor_using_pollard_rho(factors, t, a + 1);
+                    } else if factors.contains_key(&t) {
+                        let val = factors.get_mut(&t).unwrap();
+                        *val += 1;
                     } else {
-                        if factors.contains_key(&t) {
-                            let val = factors.get_mut(&t).unwrap();
-                            *val += 1;
-                        } else {
-                            factors.insert(t, Integer::from(1));
-                        }
+                        factors.insert(t, Integer::from(1));
                     }
                     if n.is_probably_prime(50) != IsPrime::No {
                         if factors.contains_key(&n) {
@@ -695,7 +693,7 @@ fn factor_using_pollard_rho(factors: &mut HashMap<Integer, Integer>, mut n: Inte
         }
         z = x.clone();
         k = l;
-        l = 2 * l;
+        l *= 2;
         for _i in 0..k {
             t = (&x * &x).into();
             x = (t % &n) + a;
@@ -728,6 +726,6 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_factor(env: JNIEnv, _
         let value_ptr = Box::into_raw(Box::new(v.clone())) as jlong;
         let key = env.new_object("palaiologos/scijava/SciInteger", "(J)V", &[JValue::Long(key_ptr)]).unwrap();
         let value = env.new_object("palaiologos/scijava/SciInteger", "(J)V", &[JValue::Long(value_ptr)]).unwrap();
-        dest.put(key, value);
+        let _ = dest.put(key, value);
     });
 }

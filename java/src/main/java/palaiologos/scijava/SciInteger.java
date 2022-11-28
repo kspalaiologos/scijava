@@ -18,12 +18,24 @@
 
 package palaiologos.scijava;
 
+import java.io.IOException;
 import java.lang.ref.Cleaner;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static palaiologos.scijava.NativeLibrary.load;
+import static palaiologos.scijava.NativeLibrary.resourceName;
+
 public class SciInteger implements Comparable<SciInteger>, Cloneable {
+    static {
+        try {
+            load(resourceName());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private final long ptr;
 
     private final Cleaner.Cleanable cleanable;
@@ -35,19 +47,15 @@ public class SciInteger implements Comparable<SciInteger>, Cloneable {
         });
     }
 
-    static {
-        System.loadLibrary("scijava");
-    }
-
     private static native void free(long ptr);
     
     private static native String toString(long i);
     private static native String toStringRadix(long i, int radix);
 
     private static native void add(long dest, long a, long b);
-    private static native void subtract(long dest, long a, long b);
-    private static native void multiply(long dest, long a, long b);
-    private static native void divide(long dest, long a, long b);
+    private static native void sub(long dest, long a, long b);
+    private static native void mul(long dest, long a, long b);
+    private static native void div(long dest, long a, long b);
     private static native void mod(long dest, long a, long b);
     private static native void pow(long dest, long a, int b);
     private static native void negate(long dest, long a);
@@ -120,19 +128,19 @@ public class SciInteger implements Comparable<SciInteger>, Cloneable {
     
     public static SciInteger subtract(SciInteger a, SciInteger b) {
         SciInteger result = SciInteger.fromInteger(0);
-        subtract(result.ptr, a.ptr, b.ptr);
+        sub(result.ptr, a.ptr, b.ptr);
         return result;
     }
 
     public static SciInteger multiply(SciInteger a, SciInteger b) {
         SciInteger result = SciInteger.fromInteger(0);
-        multiply(result.ptr, a.ptr, b.ptr);
+        mul(result.ptr, a.ptr, b.ptr);
         return result;
     }
 
     public static SciInteger divide(SciInteger a, SciInteger b) {
         SciInteger result = SciInteger.fromInteger(0);
-        divide(result.ptr, a.ptr, b.ptr);
+        div(result.ptr, a.ptr, b.ptr);
         return result;
     }
 
@@ -184,28 +192,28 @@ public class SciInteger implements Comparable<SciInteger>, Cloneable {
         return result;
     }
 
-    public static boolean lt(SciInteger a, SciInteger b) {
-        return lt(a.ptr, b.ptr);
+    public boolean lt(SciInteger b) {
+        return lt(ptr, b.ptr);
     }
 
-    public static boolean lte(SciInteger a, SciInteger b) {
-        return lte(a.ptr, b.ptr);
+    public boolean lte(SciInteger b) {
+        return lte(ptr, b.ptr);
     }
 
-    public static boolean gt(SciInteger a, SciInteger b) {
-        return gt(a.ptr, b.ptr);
+    public boolean gt(SciInteger b) {
+        return gt(ptr, b.ptr);
     }
 
-    public static boolean gte(SciInteger a, SciInteger b) {
-        return gte(a.ptr, b.ptr);
+    public boolean gte(SciInteger b) {
+        return gte(ptr, b.ptr);
     }
 
-    public static boolean eq(SciInteger a, SciInteger b) {
-        return eq(a.ptr, b.ptr);
+    public boolean eq(SciInteger b) {
+        return eq(ptr, b.ptr);
     }
 
-    public static boolean neq(SciInteger a, SciInteger b) {
-        return neq(a.ptr, b.ptr);
+    public boolean neq(SciInteger b) {
+        return neq(ptr, b.ptr);
     }
 
     public static SciInteger and(SciInteger a, SciInteger b) {
@@ -319,7 +327,7 @@ public class SciInteger implements Comparable<SciInteger>, Cloneable {
     }
 
     public static SciInteger min(SciInteger a, SciInteger b) {
-        if(SciInteger.lt(a, b)) {
+        if(a.lt(b)) {
             return a;
         } else {
             return b;
@@ -327,7 +335,7 @@ public class SciInteger implements Comparable<SciInteger>, Cloneable {
     }
 
     public static SciInteger max(SciInteger a, SciInteger b) {
-        if(SciInteger.gt(a, b)) {
+        if(a.gt(b)) {
             return a;
         } else {
             return b;

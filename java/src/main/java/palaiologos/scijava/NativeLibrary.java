@@ -48,7 +48,7 @@ class NativeLibrary {
         }
     }
 
-    private static String resourceName() {
+    static String resourceName() {
         return "/native/" + osName() + "-" + osArch() + "-scijava." + libExtension();
     }
 
@@ -57,7 +57,7 @@ class NativeLibrary {
     private NativeLibrary() {
     }
 
-    private static void load(String path) throws IOException {
+    static void load(String path) throws IOException {
         String[] parts = path.split("/");
         String filename = (parts.length > 1) ? parts[parts.length - 1] : null;
 
@@ -93,13 +93,5 @@ class NativeLibrary {
             throw new IOException("Failed to create temp directory " + generatedDir.getName());
 
         return generatedDir;
-    }
-
-    static {
-        try {
-            load(resourceName());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
