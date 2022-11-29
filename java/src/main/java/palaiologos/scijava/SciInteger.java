@@ -83,7 +83,7 @@ public class SciInteger implements Comparable<SciInteger>, Cloneable {
     private static native void testBit(long dest, long a, int b);
     private static native int bitCount(long a);
     private static native int bitLength(long a);
-    private static native boolean isPrime(long a);
+    private static native boolean isPrime(long a, int certainty);
     private static native void nextPrime(long dest, long a);
     private static native void clamp(long dest, long a, long min, long max);
     private static native void divmod(long destdiv, long destmod, long a, long b);
@@ -284,8 +284,8 @@ public class SciInteger implements Comparable<SciInteger>, Cloneable {
         return bitCount(a.ptr);
     }
 
-    public static boolean isPrime(SciInteger a) {
-        return isPrime(a.ptr);
+    public static boolean isPrime(SciInteger a, int certainty) {
+        return isPrime(a.ptr, certainty);
     }
 
     public static SciInteger nextPrime(SciInteger a) {

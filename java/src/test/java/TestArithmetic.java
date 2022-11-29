@@ -220,4 +220,28 @@ public class TestArithmetic {
         // try something big: 100
         Assertions.assertEquals(SciInteger.fibonacci(100), SciInteger.valueOf("354224848179261915075"));
     }
+
+    @Test
+    public void testPrimes() {
+        // try a negative number
+        Assertions.assertFalse(SciInteger.isPrime(SciInteger.valueOf(-1), 25));
+        // try zero
+        Assertions.assertFalse(SciInteger.isPrime(SciInteger.ZERO, 25));
+        // try one
+        Assertions.assertFalse(SciInteger.isPrime(SciInteger.ONE, 25));
+        // try 7
+        Assertions.assertTrue(SciInteger.isPrime(SciInteger.valueOf(7), 25));
+        // try some big composite number
+        Assertions.assertFalse(SciInteger.isPrime(SciInteger.valueOf("12345678901234567890123456789012345678901234567890123456789012345678901234567890"), 25));
+        // try some big prime number
+        Assertions.assertTrue(SciInteger.isPrime(SciInteger.valueOf("975319753197531975319"), 25));
+        // try negative certainty
+        Assertions.assertThrows(ArithmeticException.class, () -> SciInteger.isPrime(SciInteger.valueOf(7), -1));
+
+        // try nextPrime
+        Assertions.assertEquals(SciInteger.valueOf(7), SciInteger.nextPrime(SciInteger.valueOf(5)));
+        Assertions.assertEquals(SciInteger.valueOf(11), SciInteger.nextPrime(SciInteger.valueOf(7)));
+        // try some big number
+        Assertions.assertTrue(SciInteger.isPrime(SciInteger.nextPrime(SciInteger.valueOf("975319753197531975319")), 50));
+    }
 }
