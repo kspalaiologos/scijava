@@ -227,4 +227,4 @@ jobs:
       uses: actions/upload-artifact@v3.1.1
       with:
         name: scijava.jar
-        path: java/target/scijava-1.0.jar
+        path: java/target/scijava-1.0.0.jar
