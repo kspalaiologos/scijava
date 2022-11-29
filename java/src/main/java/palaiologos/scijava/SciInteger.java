@@ -56,7 +56,7 @@ public class SciInteger implements Comparable<SciInteger>, Cloneable {
     private static native void sub(long dest, long a, long b);
     private static native void mul(long dest, long a, long b);
     private static native void div(long dest, long a, long b);
-    private static native void mod(long dest, long a, long b);
+    private static native void rem(long dest, long a, long b);
     private static native void pow(long dest, long a, int b);
     private static native void negate(long dest, long a);
     private static native void abs(long dest, long a);
@@ -146,7 +146,7 @@ public class SciInteger implements Comparable<SciInteger>, Cloneable {
 
     public static SciInteger mod(SciInteger a, SciInteger b) {
         SciInteger result = SciInteger.fromInteger(0);
-        mod(result.ptr, a.ptr, b.ptr);
+        rem(result.ptr, a.ptr, b.ptr);
         return result;
     }
 

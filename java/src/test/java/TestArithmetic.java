@@ -50,4 +50,14 @@ public class TestArithmetic {
         // test base2
         Assertions.assertTrue(SciInteger.valueOf("1010", 2).eq(SciInteger.TEN));
     }
+
+    @Test
+    public void testModulus() {
+        // try dividing by zero
+        Assertions.assertThrows(ArithmeticException.class, () -> SciInteger.mod(SciInteger.TEN, SciInteger.ZERO));
+        // try something tame
+        Assertions.assertTrue(SciInteger.mod(SciInteger.TEN, SciInteger.FIVE).eq(SciInteger.ZERO));
+        // try something more interesting
+        Assertions.assertTrue(SciInteger.mod(SciInteger.TEN, SciInteger.valueOf(3)).eq(SciInteger.ONE));
+    }
 }
