@@ -33,4 +33,21 @@ public class TestArithmetic {
     public void testDivByZero() {
         Assertions.assertThrows(ArithmeticException.class, () -> SciInteger.divide(SciInteger.TEN, SciInteger.ZERO));
     }
+
+    @Test
+    public void testFromString() {
+        Assertions.assertTrue(SciInteger.valueOf("10").eq(SciInteger.TEN));
+    }
+
+    @Test
+    public void testfromStringRadix() {
+        // test invalid radix (-1, 0, 100)
+        Assertions.assertThrows(IllegalArgumentException.class, () -> SciInteger.valueOf("10", -1));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> SciInteger.valueOf("10", 0));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> SciInteger.valueOf("10", 100));
+        // test base16
+        Assertions.assertTrue(SciInteger.valueOf("A", 16).eq(SciInteger.TEN));
+        // test base2
+        Assertions.assertTrue(SciInteger.valueOf("1010", 2).eq(SciInteger.TEN));
+    }
 }

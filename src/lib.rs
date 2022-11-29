@@ -112,6 +112,11 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_fromStringRadix(env: 
         }
     };
 
+    if !(2..=36).contains(&radix) {
+        let _ = env.throw(("java/lang/IllegalArgumentException", "Radix must be between 2 and 36."));
+        return JObject::null().into_raw();
+    }
+
     let n = Integer::from_str_radix(&s, radix);
     let n = match n {
         Ok(n) => n,
