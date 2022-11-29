@@ -64,7 +64,7 @@ public class TestArithmetic {
     @Test
     public void testPower() {
         // try a negative power
-        Assertions.assertThrows(IllegalArgumentException.class, () -> SciInteger.pow(SciInteger.TEN, -1));
+        Assertions.assertThrows(ArithmeticException.class, () -> SciInteger.pow(SciInteger.TEN, -1));
         // try a zero power
         Assertions.assertTrue(SciInteger.pow(SciInteger.TEN, 0).eq(SciInteger.ONE));
         // try a positive power
