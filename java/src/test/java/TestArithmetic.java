@@ -160,4 +160,36 @@ public class TestArithmetic {
         factors = SciInteger.factor(SciInteger.ZERO);
         Assertions.assertEquals(0, factors.size());
     }
+
+    @Test
+    public void testClone() {
+        // try cloning a positive number
+        Assertions.assertTrue(SciInteger.TEN.clone().eq(SciInteger.TEN));
+        // try cloning a negative number
+        Assertions.assertTrue(SciInteger.valueOf(-10).clone().eq(SciInteger.valueOf(-10)));
+        // try cloning zero
+        Assertions.assertTrue(SciInteger.ZERO.clone().eq(SciInteger.ZERO));
+    }
+
+    @Test
+    public void testIntValue() {
+        // try a positive number
+        Assertions.assertEquals(10, SciInteger.TEN.intValue());
+        // try a negative number
+        Assertions.assertEquals(-10, SciInteger.valueOf(-10).intValue());
+        // try zero
+        Assertions.assertEquals(0, SciInteger.ZERO.intValue());
+        // try to overflow
+        Assertions.assertThrows(ArithmeticException.class, () -> SciInteger.valueOf("9e999").intValue());
+    }
+
+    @Test
+    public void testSquareSqrt() {
+        // try a positive number
+        Assertions.assertTrue(SciInteger.sqrt(SciInteger.square(SciInteger.TEN)).eq(SciInteger.TEN));
+        // try a negative number
+        Assertions.assertTrue(SciInteger.sqrt(SciInteger.square(SciInteger.valueOf(-10))).eq(SciInteger.valueOf(10)));
+        // try zero
+        Assertions.assertTrue(SciInteger.sqrt(SciInteger.ZERO).eq(SciInteger.ZERO));
+    }
 }
