@@ -91,6 +91,7 @@ public class SciInteger implements Comparable<SciInteger>, Cloneable {
     private static native void lucas(long dest, int a);
     private static native int hamming(long a, long b);
     private static native void sqrt(long dest, long a);
+    private static native void binomial(long dest, long a, int k);
     private static native void square(long dest, long a);
     private static native int jacobi(long a, long b);
     private static native int legendre(long a, long b);
@@ -300,6 +301,12 @@ public class SciInteger implements Comparable<SciInteger>, Cloneable {
         tab[1] = SciInteger.fromInteger(0);
         divmod(tab[0].ptr, tab[1].ptr, a.ptr, b.ptr);
         return tab;
+    }
+
+    public static SciInteger binomial(SciInteger a, int b) {
+        SciInteger result = SciInteger.fromInteger(0);
+        binomial(result.ptr, a.ptr, b);
+        return result;
     }
 
     public static SciInteger fibonacci(int n) {

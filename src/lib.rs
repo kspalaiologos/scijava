@@ -634,6 +634,20 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_jacobi(_env: JNIEnv, 
     a.jacobi(b)
 }
 
+// implement binomial
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_binomial(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong, b: jint) {
+    let dest = dest as *mut Integer;
+    let a = a as *mut Integer;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    if b < 0 {
+        let _ = _env.throw_new("java/lang/ArithmeticException", "Call to binomial with negative index");
+        return;
+    }
+    *dest = a.binomial_ref(b as u32).into();
+}
+
 #[no_mangle]
 pub extern "system" fn Java_palaiologos_scijava_SciInteger_copy(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong) {
     let dest = dest as *mut Integer;
