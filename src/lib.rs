@@ -241,7 +241,7 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_pow(_env: JNIEnv, _cl
     let dest = unsafe { &mut *dest };
     if b < 0 {
         let _ = _env.throw_new("java/lang/ArithmeticException", "Call to pow on SciInteger with negative argument.");
-        return 0;
+        return;
     }
     *dest = (a.pow(b as u32)).into();
 }
