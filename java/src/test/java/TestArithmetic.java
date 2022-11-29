@@ -192,4 +192,32 @@ public class TestArithmetic {
         // try zero
         Assertions.assertTrue(SciInteger.sqrt(SciInteger.ZERO).eq(SciInteger.ZERO));
     }
+
+    @Test
+    public void testMinMax() {
+        // try a positive number
+        Assertions.assertTrue(SciInteger.min(SciInteger.TEN, SciInteger.valueOf(20)).eq(SciInteger.TEN));
+        Assertions.assertTrue(SciInteger.max(SciInteger.TEN, SciInteger.valueOf(20)).eq(SciInteger.valueOf(20)));
+        // try a negative number
+        Assertions.assertTrue(SciInteger.min(SciInteger.valueOf(-10), SciInteger.valueOf(-20)).eq(SciInteger.valueOf(-20)));
+        Assertions.assertTrue(SciInteger.max(SciInteger.valueOf(-10), SciInteger.valueOf(-20)).eq(SciInteger.valueOf(-10)));
+        // try zero
+        Assertions.assertTrue(SciInteger.min(SciInteger.ZERO, SciInteger.valueOf(20)).eq(SciInteger.ZERO));
+        Assertions.assertTrue(SciInteger.max(SciInteger.ZERO, SciInteger.valueOf(20)).eq(SciInteger.valueOf(20)));
+    }
+
+    @Test
+    public void testFibonacci() {
+        // try a negative number
+        Assertions.assertThrows(ArithmeticException.class, () -> SciInteger.fibonacci(-1));
+        // try zero
+        Assertions.assertEquals(SciInteger.ZERO, SciInteger.fibonacci(0));
+        // try a few fibonacci numbers: 2,3,5,10
+        Assertions.assertEquals(SciInteger.fibonacci(2), SciInteger.valueOf(1));
+        Assertions.assertEquals(SciInteger.fibonacci(3), SciInteger.valueOf(2));
+        Assertions.assertEquals(SciInteger.fibonacci(5), SciInteger.valueOf(5));
+        Assertions.assertEquals(SciInteger.fibonacci(10), SciInteger.valueOf(55));
+        // try something big: 100
+        Assertions.assertEquals(SciInteger.fibonacci(100), SciInteger.valueOf("354224848179261915075"));
+    }
 }
