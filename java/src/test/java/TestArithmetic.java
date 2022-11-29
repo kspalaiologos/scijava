@@ -2,6 +2,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import palaiologos.scijava.SciInteger;
 
+import java.util.HashMap;
+
 public class TestArithmetic {
     @Test
     public void testAdd() {
@@ -71,5 +73,81 @@ public class TestArithmetic {
         Assertions.assertTrue(SciInteger.pow(SciInteger.TEN, 1).eq(SciInteger.TEN));
         // try a larger power
         Assertions.assertTrue(SciInteger.pow(SciInteger.TEN, 2).eq(SciInteger.valueOf(100)));
+    }
+
+    @Test
+    public void testNegate() {
+        Assertions.assertTrue(SciInteger.negate(SciInteger.TEN).eq(SciInteger.valueOf(-10)));
+        // try double negation:
+        Assertions.assertTrue(SciInteger.negate(SciInteger.negate(SciInteger.TEN)).eq(SciInteger.TEN));
+    }
+
+    @Test
+    public void testGcd() {
+        // try gcd of zero
+        Assertions.assertTrue(SciInteger.gcd(SciInteger.ZERO, SciInteger.TEN).eq(SciInteger.TEN));
+        // try gcd of two numbers
+        Assertions.assertTrue(SciInteger.gcd(SciInteger.TEN, SciInteger.valueOf(15)).eq(SciInteger.FIVE));
+        // try gcd of two numbers with a common factor
+        Assertions.assertTrue(SciInteger.gcd(SciInteger.TEN, SciInteger.valueOf(20)).eq(SciInteger.TEN));
+        // try negative gcd
+        Assertions.assertTrue(SciInteger.gcd(SciInteger.TEN, SciInteger.valueOf(-15)).eq(SciInteger.FIVE));
+    }
+
+    @Test
+    public void testLcm() {
+        // apply the same methods as in testGcd.
+        Assertions.assertTrue(SciInteger.lcm(SciInteger.ZERO, SciInteger.TEN).eq(SciInteger.ZERO));
+        Assertions.assertTrue(SciInteger.lcm(SciInteger.TEN, SciInteger.valueOf(15)).eq(SciInteger.valueOf(30)));
+        Assertions.assertTrue(SciInteger.lcm(SciInteger.TEN, SciInteger.valueOf(20)).eq(SciInteger.valueOf(20)));
+        Assertions.assertTrue(SciInteger.lcm(SciInteger.TEN, SciInteger.valueOf(-15)).eq(SciInteger.valueOf(30)));
+    }
+
+    @Test
+    public void testFactorials() {
+        // try a negative factorial
+        Assertions.assertThrows(ArithmeticException.class, () -> SciInteger.factorial(-1));
+        // try a zero factorial
+        Assertions.assertTrue(SciInteger.factorial(0).eq(SciInteger.ONE));
+        // try a positive factorial
+        Assertions.assertTrue(SciInteger.factorial(10).eq(SciInteger.valueOf(3628800)));
+        // try something bigger.
+        Assertions.assertTrue(SciInteger.factorial(20).eq(SciInteger.valueOf("2432902008176640000")));
+        // try factorial of 50
+        Assertions.assertTrue(SciInteger.factorial(50).eq(SciInteger.valueOf("30414093201713378043612608166064768844377641568960512000000000000")));
+    }
+
+    @Test
+    public void testSignum() {
+        // try a positive number
+        Assertions.assertTrue(SciInteger.signum(SciInteger.TEN).eq(SciInteger.ONE));
+        // try a negative number
+        Assertions.assertTrue(SciInteger.signum(SciInteger.valueOf(-10)).eq(SciInteger.valueOf(-1)));
+        // try zero
+        Assertions.assertTrue(SciInteger.signum(SciInteger.ZERO).eq(SciInteger.ZERO));
+    }
+
+    @Test
+    public void testToString() {
+        // try a positive number
+        Assertions.assertEquals("10", SciInteger.TEN.toString());
+        // try a negative number
+        Assertions.assertEquals("-10", SciInteger.valueOf(-10).toString());
+        // try zero
+        Assertions.assertEquals("0", SciInteger.ZERO.toString());
+        // try some other radix
+        Assertions.assertEquals("1010", SciInteger.TEN.toString(2));
+        // try bad radix
+        Assertions.assertThrows(IllegalArgumentException.class, () -> SciInteger.TEN.toString(-1));
+    }
+
+    @Test
+    public void testFactor() {
+        // 2^4 * 3^2 * 5 = 720
+        var factors = SciInteger.factor(SciInteger.valueOf(720));
+        Assertions.assertEquals(3, factors.size());
+        Assertions.assertTrue(factors.get(SciInteger.valueOf(2)).eq(SciInteger.valueOf(4)));
+        Assertions.assertTrue(factors.get(SciInteger.valueOf(3)).eq(SciInteger.valueOf(2)));
+        Assertions.assertTrue(factors.get(SciInteger.valueOf(5)).eq(SciInteger.ONE));
     }
 }

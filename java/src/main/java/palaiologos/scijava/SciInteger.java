@@ -387,7 +387,7 @@ public class SciInteger implements Comparable<SciInteger>, Cloneable {
         return result;
     }
 
-    public HashMap<SciInteger, SciInteger> factor(SciInteger a) {
+    public static HashMap<SciInteger, SciInteger> factor(SciInteger a) {
         HashMap<SciInteger, SciInteger> result = new HashMap<>();
         factor(result, a.ptr);
         return result;
@@ -395,6 +395,21 @@ public class SciInteger implements Comparable<SciInteger>, Cloneable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(ptr);
+        return Objects.hash(bitCount(this));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final SciInteger other = (SciInteger) obj;
+        return this.eq(other);
     }
 }

@@ -17,6 +17,7 @@
 */
 
 use std::collections::HashMap;
+use std::hash::Hash;
 use std::ops::{BitAnd, BitOr, BitXor, Not, Shl, Shr};
 
 // This is the interface to the JVM that we'll call the majority of our
@@ -502,9 +503,9 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_bitCount(_env: JNIEnv
     let a = a as *mut Integer;
     let a = unsafe { &*a };
     if a < &0 {
-        a.count_ones().unwrap() as jint
-    } else {
         a.count_zeros().unwrap() as jint
+    } else {
+        a.count_ones().unwrap() as jint
     }
 }
 
