@@ -27,7 +27,7 @@ import java.util.Objects;
 import static palaiologos.scijava.NativeLibrary.load;
 import static palaiologos.scijava.NativeLibrary.resourceName;
 
-public class SciInteger implements Comparable<SciInteger>, Cloneable {
+public final class SciInteger implements Comparable<SciInteger>, Cloneable {
     static {
         try {
             load(resourceName());
