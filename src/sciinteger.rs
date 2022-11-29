@@ -538,6 +538,10 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_clamp(_env: JNIEnv, _
     let min = unsafe { &*min };
     let max = unsafe { &*max };
     let dest = unsafe { &mut *dest };
+    if min > max {
+        let _ = _env.throw_new("java/lang/ArithmeticException", "Call to clamp with min > max");
+        return;
+    }
     *dest = a.clamp_ref(min, max).into();
 }
 

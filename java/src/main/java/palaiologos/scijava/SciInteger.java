@@ -593,6 +593,14 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
         return result;
     }
 
+    /**
+     * Clamp the value of a SciInteger to the range [min, max] to produce a new SciInteger instance.
+     * @param a the operand
+     * @param min the lower bound
+     * @param max the upper bound
+     * @return a new SciInteger instance, the result of min(max(a, min), max)
+     * @throws ArithmeticException if min > max
+     */
     public static SciInteger clamp(SciInteger a, SciInteger min, SciInteger max) {
         SciInteger result = SciInteger.fromInteger(0);
         clamp(result.ptr, a.ptr, min.ptr, max.ptr);

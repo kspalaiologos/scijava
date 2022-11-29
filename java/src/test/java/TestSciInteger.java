@@ -260,4 +260,23 @@ public class TestSciInteger {
         // try some big number
         Assertions.assertTrue(SciInteger.isPrime(SciInteger.nextPrime(SciInteger.valueOf("975319753197531975319")), 50));
     }
+
+    @Test
+    public void testClamp() {
+        // try a positive number
+        Assertions.assertTrue(SciInteger.clamp(SciInteger.TEN, SciInteger.valueOf(5), SciInteger.valueOf(20)).eq(SciInteger.TEN));
+        Assertions.assertTrue(SciInteger.clamp(SciInteger.TEN, SciInteger.valueOf(20), SciInteger.valueOf(5)).eq(SciInteger.TEN));
+        // try a negative number
+        Assertions.assertTrue(SciInteger.clamp(SciInteger.valueOf(-10), SciInteger.valueOf(-5), SciInteger.valueOf(-20)).eq(SciInteger.valueOf(-10)));
+        Assertions.assertTrue(SciInteger.clamp(SciInteger.valueOf(-10), SciInteger.valueOf(-20), SciInteger.valueOf(-5)).eq(SciInteger.valueOf(-10)));
+        // try zero
+        Assertions.assertTrue(SciInteger.clamp(SciInteger.ZERO, SciInteger.valueOf(5), SciInteger.valueOf(20)).eq(SciInteger.ZERO));
+        Assertions.assertTrue(SciInteger.clamp(SciInteger.ZERO, SciInteger.valueOf(20), SciInteger.valueOf(5)).eq(SciInteger.ZERO));
+        // try a number that is too small
+        Assertions.assertTrue(SciInteger.clamp(SciInteger.valueOf(3), SciInteger.valueOf(5), SciInteger.valueOf(20)).eq(SciInteger.valueOf(5)));
+        Assertions.assertTrue(SciInteger.clamp(SciInteger.valueOf(3), SciInteger.valueOf(20), SciInteger.valueOf(5)).eq(SciInteger.valueOf(5)));
+        // try a number that is too big
+        Assertions.assertTrue(SciInteger.clamp(SciInteger.valueOf(25), SciInteger.valueOf(5), SciInteger.valueOf(20)).eq(SciInteger.valueOf(20)));
+        Assertions.assertTrue(SciInteger.clamp(SciInteger.valueOf(25), SciInteger.valueOf(20), SciInteger.valueOf(5)).eq(SciInteger.valueOf(20)));
+    }
 }
