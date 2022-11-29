@@ -221,6 +221,7 @@ jobs:
         path: java/src/main/resources/natives
     - name: Build
       run: |
+        ls -R java
         cd java && mvn -B package --file pom.xml
     - name: Upload a fat JAR
       uses: actions/upload-artifact@v3.1.1
