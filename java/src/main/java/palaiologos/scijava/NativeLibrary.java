@@ -49,7 +49,8 @@ class NativeLibrary {
     }
 
     static String resourceName() {
-        return "/native/" + osName() + "-" + osArch() + "-scijava." + libExtension();
+        String str = osName() + "-" + osArch() + "-scijava." + libExtension();
+        return "/native/" + str + "/" + str;
     }
 
     private static File temporaryDir;

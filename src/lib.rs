@@ -729,3 +729,24 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_factor(env: JNIEnv, _
         let _ = dest.put(key, value);
     });
 }
+
+// stub out functions.
+macro_rules! stub {
+    ($name:ident) => {
+        #[no_mangle]
+        #[cfg(feature = "unwind-stubs")]
+        pub extern "C" fn $name() -> ! { loop {} }
+    };
+}
+
+stub!(_Unwind_Resume);
+stub!(_Unwind_GetIP);
+stub!(_Unwind_GetLanguageSpecificData);
+stub!(_Unwind_GetRegionStart);
+stub!(_Unwind_SetGR);
+stub!(_Unwind_GetGR);
+stub!(_Unwind_SetIP);
+stub!(_Unwind_GetDataRelBase);
+stub!(_Unwind_Backtrace);
+stub!(_Unwind_GetIPInfo);
+stub!(_Unwind_GetTextRelBase);

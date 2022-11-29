@@ -1,0 +1,268 @@
+name: Build fat JAR
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-x86_64-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Rust
+      run: curl https://sh.rustup.rs -sSf | sh -s -- -y
+    - name: Build
+      run: |
+        cargo build --verbose --release --features unwind-stubs
+        cp target/release/libscijava.so linux-amd64-scijava.so
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3.1.1
+      with:
+        name: linux-amd64-scijava.so
+        path: linux-amd64-scijava.so
+  build-arm64-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Rust & GCC
+      run: |
+        curl https://sh.rustup.rs -sSf | sh -s -- -y
+        sudo apt install -y gcc-aarch64-linux-gnu
+        rustup target add aarch64-unknown-linux-gnu
+    - name: Build
+      run: |
+        CC=aarch64-linux-gnu-gcc RUSTFLAGS="-C linker=aarch64-linux-gnu-gcc" cargo build --release --target aarch64-unknown-linux-gnu --features unwind-stubs
+        cp target/aarch64-unknown-linux-gnu/release/libscijava.so linux-aarch64-scijava.so
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3.1.1
+      with:
+        name: linux-aarch64-scijava.so
+        path: linux-aarch64-scijava.so
+  build-s390x-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Rust & GCC
+      run: |
+        curl https://sh.rustup.rs -sSf | sh -s -- -y
+        sudo apt install -y gcc-s390x-linux-gnu
+        rustup target add s390x-unknown-linux-gnu
+    - name: Build
+      run: |
+        CC=s390x-linux-gnu-gcc RUSTFLAGS="-C linker=s390x-linux-gnu-gcc" cargo build --release --target s390x-unknown-linux-gnu --features unwind-stubs
+        cp target/s390x-unknown-linux-gnu/release/libscijava.so linux-s390x-scijava.so
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3.1.1
+      with:
+        name: linux-s390x-scijava.so
+        path: linux-s390x-scijava.so
+  build-i686-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Rust & GCC
+      run: |
+        curl https://sh.rustup.rs -sSf | sh -s -- -y
+        sudo apt install -y gcc-i686-linux-gnu
+        rustup target add i686-unknown-linux-gnu
+    - name: Build
+      run: |
+        CC=i686-linux-gnu-gcc RUSTFLAGS="-C linker=i686-linux-gnu-gcc" cargo build --release --target i686-unknown-linux-gnu --features unwind-stubs
+        cp target/i686-unknown-linux-gnu/release/libscijava.so linux-i386-scijava.so
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3.1.1
+      with:
+        name: linux-i386-scijava.so
+        path: linux-i386-scijava.so
+  build-armhf-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Rust & GCC
+      run: |
+        curl https://sh.rustup.rs -sSf | sh -s -- -y
+        sudo apt install -y gcc-arm-linux-gnueabihf
+        rustup target add arm-unknown-linux-gnueabihf
+    - name: Build
+      run: |
+        CC=arm-linux-gnueabihf-gcc RUSTFLAGS="-C linker=arm-linux-gnueabihf-gcc" cargo build --release --target arm-unknown-linux-gnueabihf --features unwind-stubs
+        cp target/arm-unknown-linux-gnueabihf/release/libscijava.so linux-arm-scijava.so
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3.1.1
+      with:
+        name: linux-arm-scijava.so
+        path: linux-arm-scijava.so
+  build-mips64-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Rust & GCC
+      run: |
+        curl https://sh.rustup.rs -sSf | sh -s -- -y
+        sudo apt install -y gcc-mips64-linux-gnuabi64
+        rustup target add mips64-unknown-linux-gnuabi64
+    - name: Build
+      run: |
+        CC=mips64-linux-gnuabi64-gcc RUSTFLAGS="-C linker=mips64-linux-gnuabi64-gcc" cargo build --release --target mips64-unknown-linux-gnuabi64 --features unwind-stubs
+        cp target/mips64-unknown-linux-gnuabi64/release/libscijava.so linux-mips64-scijava.so
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3.1.1
+      with:
+        name: linux-mips64-scijava.so
+        path: linux-mips64-scijava.so
+  build-riscv64-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Rust & GCC
+      run: |
+        curl https://sh.rustup.rs -sSf | sh -s -- -y
+        sudo apt install -y gcc-10-riscv64-linux-gnu
+        rustup target add riscv64gc-unknown-linux-gnu
+    - name: Build
+      run: |
+        CC=riscv64-linux-gnu-gcc-10 RUSTFLAGS="-C linker=riscv64-linux-gnu-gcc-10" cargo build --release --target riscv64gc-unknown-linux-gnu --features unwind-stubs
+        cp target/riscv64gc-unknown-linux-gnu/release/libscijava.so linux-riscv64-scijava.so
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3.1.1
+      with:
+        name: linux-riscv64-scijava.so
+        path: linux-riscv64-scijava.so
+  build-powerpc64-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Rust & GCC
+      run: |
+        curl https://sh.rustup.rs -sSf | sh -s -- -y
+        sudo apt install -y gcc-powerpc64-linux-gnu
+        rustup target add powerpc64-unknown-linux-gnu
+    - name: Build
+      run: |
+        CC=powerpc64-linux-gnu-gcc RUSTFLAGS="-C linker=powerpc64-linux-gnu-gcc" cargo build --release --target powerpc64-unknown-linux-gnu --features unwind-stubs
+        cp target/powerpc64-unknown-linux-gnu/release/libscijava.so linux-ppc64-scijava.so
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3.1.1
+      with:
+        name: linux-ppc64-scijava.so
+        path: linux-ppc64-scijava.so
+  build-powerpc64le-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Rust & GCC
+      run: |
+        curl https://sh.rustup.rs -sSf | sh -s -- -y
+        sudo apt install -y gcc-powerpc64le-linux-gnu
+        rustup target add powerpc64le-unknown-linux-gnu
+    - name: Build
+      run: |
+        CC=powerpc64le-linux-gnu-gcc RUSTFLAGS="-C linker=powerpc64le-linux-gnu-gcc" cargo build --release --target powerpc64le-unknown-linux-gnu --features unwind-stubs
+        cp target/powerpc64le-unknown-linux-gnu/release/libscijava.so linux-ppc64le-scijava.so
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3.1.1
+      with:
+        name: linux-ppc64le-scijava.so
+        path: linux-ppc64le-scijava.so
+  build-x86_64-mingw:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Rust & GCC
+      run: |
+        curl https://sh.rustup.rs -sSf | sh -s -- -y
+        sudo apt install -y gcc-mingw-w64-x86-64
+        rustup target add x86_64-pc-windows-gnu
+    - name: Build
+      run: |
+        CC=x86_64-w64-mingw32-gcc RUSTFLAGS="-C linker=x86_64-w64-mingw32-gcc" cargo build --release --target x86_64-pc-windows-gnu
+        cp target/x86_64-pc-windows-gnu/release/scijava.dll win-amd64-scijava.dll
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3.1.1
+      with:
+        name: win-amd64-scijava.dll
+        path: win-amd64-scijava.dll
+  build-i686-mingw:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Rust & GCC
+      run: |
+        curl https://sh.rustup.rs -sSf | sh -s -- -y
+        sudo apt install -y gcc-mingw-w64-i686
+        rustup target add i686-pc-windows-gnu
+    - name: Build
+      run: |
+        CC=i686-w64-mingw32-gcc RUSTFLAGS="-C linker=i686-w64-mingw32-gcc -Clink-args=--disable-stdcall-fixup" cargo build --release --target i686-pc-windows-gnu --features unwind-stubs
+        cp target/i686-pc-windows-gnu/release/scijava.dll win-x86-scijava.dll
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3.1.1
+      with:
+        name: win-x86-scijava.dll
+        path: win-x86-scijava.dll
+  build-amd64-darwin:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Rust & GCC
+      run: |
+        curl https://sh.rustup.rs -sSf | sh -s -- -y
+        brew install gcc
+        rustup target add x86_64-apple-darwin
+    - name: Build
+      run: |
+        cargo build --release --target x86_64-apple-darwin --features unwind-stubs
+        cp target/x86_64-apple-darwin/scijava.dylib darwin-amd64-scijava.dylib
+        ls -R target
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3.1.1
+      with:
+        name: darwin-amd64-scijava.dylib
+        path: darwin-amd64-scijava.dylib
+  build-arm64-darwin:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Rust & GCC
+      run: |
+        curl https://sh.rustup.rs -sSf | sh -s -- -y
+        brew tap ArmMbed/homebrew-formulae
+        brew install arm-none-eabi-gcc
+        rustup target add aarch64-apple-darwin
+    - name: Build
+      run: |
+        CC=arm-none-eabi-gcc RUSTFLAGS="-C linker=arm-none-eabi-gcc" cargo build --release --target aarch64-apple-darwin --features unwind-stubs
+        ls -R target
+        cp target/aarch64-apple-darwin/scijava.dylib darwin-amd64-scijava.dylib
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3.1.1
+      with:
+        name: darwin-aarch64-scijava.dylib
+        path: darwin-aarch64-scijava.dylib
+  build-jar:
+    runs-on: ubuntu-latest
+    needs: [build-i686-mingw, build-x86_64-mingw, build-powerpc64le-linux, build-powerpc64-linux, build-riscv64-linux, build-mips64-linux, build-armhf-linux, build-i686-linux, build-s390x-linux, build-arm64-linux, build-x86_64-linux, build-amd64-darwin]
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-java@v3
+      with:
+        distribution: 'adopt'
+        java-version: '19'
+        cache: 'maven'
+    - name: Download artifacts
+      uses: actions/download-artifact@v3
+      with:
+        path: java/src/main/resources/natives
+    - name: Build
+      run: |
+        cd java && mvn -B package --file pom.xml
+    - name: Upload a fat JAR
+      uses: actions/upload-artifact@v3.1.1
+      with:
+        name: scijava.jar
+        path: java/target/scijava-1.0.jar

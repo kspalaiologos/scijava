@@ -1,0 +1,2646 @@
+2022-11-17  Vincent Lefevre  <vincent@vinc17.net>
+
+	Updated version to 4.1.1.
+
+2022-11-17  Vincent Lefevre  <vincent@vinc17.net>
+
+	[NEWS] Update for 4.1.1.
+
+	Removed "by using a recent texinfo.tex file" because GNU Texinfo 7.0
+	has been released in the mean time (we're actually using a slightly
+	more recent version, but the current version of the MPFR manual has
+	workarounds that do not need the latest fixes in texinfo.tex).
+
+2022-11-17  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Changed a @need command due to a bug in @need.
+
+	A page break was introduced for "@need 800" while there was the
+	space for 12 lines of text + 3 paragraph skips, as seen after the
+	change. That's much more than the 8/10 in needed by "@need 800".
+	So the page break was incorrect!
+
+2022-11-17  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Added @need commands to prevent page breaks.
+
+2022-11-17  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Hack to improve TeX output (PDF).
+
+	Define a @fptt macro to fix the TeX output (PDF) issue mentioned
+	in commit 1877cf9aef96c2280aab60f67e5e7302676d199a (if the style
+	of HTML output is fixed to be more like TeX output, this code will
+	need an update).
+
+2022-11-17  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Added a note about a TeX output (PDF) issue.
+
+	This affects "[]", which appears in the mpfr_sum and mpfr_dot
+	function prototypes.
+
+2022-11-16  Vincent Lefevre  <vincent@vinc17.net>
+
+	Consistency: s/non(zero|positive|negative)/non-$1/
+
+	Changed non(zero|positive|negative) to non-zero, etc. for consistency
+	(target files: src & tests directory, doc/README.dev, doc/mpfr.texi).
+	Did it this way because the former was in minority (21 vs 165) and
+	the IEEE 754-2019 standard uses a hyphen.
+
+2022-11-16  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Final typographic and style corrections.
+
+	Actually a bit more than that, since this affected the textual part
+	of the PDF file (used for searching and copy-paste): the underscore
+	character needs to be in something like @code or @samp to be present
+	in this textual part.
+
+2022-11-16  Vincent Lefevre  <vincent@vinc17.net>
+
+	Updated version to 4.1.1-rc1 again with the new tools/update-version.
+
+	All the expected replacements have now *really* been done thanks to
+	commit 9f1d88a7ab750a9f33ff5c7f6b27bc2e941ca4b6.
+
+2022-11-16  Vincent Lefevre  <vincent@vinc17.net>
+
+	[tools/update-version] Fixed replacements in "doc/mpfr.texi".
+
+	The change done in commits 4885b57add174f390eff29abe14d12fb5ebd6a61
+	and 7eda345244f503359d14cd5bae1ed42865d39ee8 was incorrect as there
+	are 2 identical replacements to do in "doc/mpfr.texi", not just one.
+	The previous code changed lines separately. But for the check of
+	failing replacements, a global change on the full file is needed;
+	thus the 2 identical replacements were expected to be done at the
+	same time, so that the "g" modifier is needed on the regexp.
+
+2022-11-15  Vincent Lefevre  <vincent@vinc17.net>
+
+	Updated doc/texinfo.tex to 2022-11-13.08
+
+2022-11-11  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/README.dev] Updated "To make a release".
+
+	[doc/README.dev] "To make a release": mention the README file.
+
+2022-11-11  Vincent Lefevre  <vincent@vinc17.net>
+
+	[README] Changed link to the README.dev file to the 4.1 branch.
+
+	It is probably better to give the link in the 4.1 branch, since
+	we are in the 4.1 branch: some changes in master may not apply
+	to the 4.1 branch (for instance, the list of macros and the list
+	of environment variables that affect the tests). Future changes
+	useful for the 4.1 branch could be cherry-picked if need be.
+
+2022-11-10  Vincent Lefevre  <vincent@vinc17.net>
+
+	Updated version to 4.1.1-rc1 again with the new tools/update-version.
+
+	All the expected replacements have now been done in doc/mpfr.texi,
+	thanks to commit 9645c5255492c6d00133a3a90e479d374b6c061d.
+
+2022-11-10  Vincent Lefevre  <vincent@vinc17.net>
+
+	[tools/update-version] Updated a replacement.
+
+	This was needed due to a change done on 2018-09-07 in doc/mpfr.texi
+	(commit 84796030c7c732e8e66e5e650ec929c541dd207f / SVN r13153), as
+	said in the previous commit.
+
+2022-11-10  Vincent Lefevre  <vincent@vinc17.net>
+
+	[tools/update-version] Check for failing replacements.
+
+	This script currently fails due to a change done on 2018-09-07 in
+	doc/mpfr.texi (commit 84796030c7c732e8e66e5e650ec929c541dd207f /
+	SVN r13153), and this issue remained unnoticed until now,
+	in particular due to the absence of checking for failing
+	replacements.
+
+	The penultimate non-patchlevel release was done on 2017-12-25, i.e.
+	before this change, and no patchlevel releases have been done yet
+	for the latest release, so that no current releases are affected by
+	this issue, but the 4.1.1 release candidate is affected.
+
+2022-11-09  Vincent Lefevre  <vincent@vinc17.net>
+
+	Updated doc/texinfo.tex to 2022-11-07.17 (from GNU Texinfo 7.0).
+
+2022-11-08  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Various corrections and improvements.
+
+	* mpfr_subnormalize: define EXP(x) and PREC(x).
+	* More typographic corrections and improvements.
+
+2022-11-07  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Added a comment (ref to the GNU Texinfo spacing bug).
+
+2022-11-07  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Remaining typographic correction for a math expression.
+
+	This is specific to the 4.1 branch as the text was removed in master
+	with the new function mpfr_rootn_si.
+
+2022-11-07  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Typographic corrections and English usage.
+
+	* More documentation for the @m{T,N} macro.
+	* Note a spacing bug in texi2dvi from GNU Texinfo 6.8 with macros
+	  (found while testing).
+	* Define macro @EXP (and \EXP in TeX).
+	* Typographic corrections for math expressions and English usage.
+
+2022-11-04  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Minor typographic correction.
+
+	This corrects commit d1a6e781428506bc49bc98d632265cf2d4406c9f.
+
+2022-11-04  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Updated the month.
+
+2022-11-04  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Various improvements and style corrections from master.
+
+	with conflict resolutions.
+
+2022-11-03  Vincent Lefevre  <vincent@vinc17.net>
+
+	[manual] For sqrt, mention the relation with rootn.
+
+	This corresponds to commit a9bdb273b79ae470ad2177c27e7e978f4bc9831e
+	from master, ignoring mpfr_rootn_si, which is not in the 4.1 branch.
+
+2022-11-03  Vincent Lefevre  <vincent@vinc17.net>
+
+	Fixed some minor mistakes.
+
+	* Minor mistakes in doc/mpfr.texi reported by Ivan Panchenko:
+	    https://sympa.inria.fr/sympa/arc/mpfr/2022-10/msg00020.html
+	  (spacing and italicization not fixed yet).
+	* Fixed similar mistakes in the other files.
+
+2022-11-03  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc] Update about "case insensitive" and issue with Turkish locales
+	for "I" / "i".
+
+	  * mpfr.texi: added "with the rules of the C locale" in the
+	    mpfr_strtofr description.
+	  * README.dev: completed information about Turkish locales.
+
+2022-11-03  Vincent Lefevre  <vincent@vinc17.net>
+
+	Updated doc/texinfo.tex to 2022-10-18.18
+
+	Update from the texinfo Git repository.
+	  * The generated mpfr.html and mpfr.info files remain the same.
+	  * For mpfr.pdf, there are some spacing improvements.
+
+2022-10-05  Vincent Lefevre  <vincent@vinc17.net>
+
+	ChangeLog update with tools/update-changelog
+
+	[tools/update-changelog] Use UTC to generate the ChangeLog file.
+
+2022-10-05  Vincent Lefevre  <vincent@vinc17.net>
+
+	[tools/gitlog-to-changelog] Improve --strip-cherry-pick for this repository.
+
+	Remove all the cherry-pick information from what can be found in
+	the 4.1 branch.
+
+2022-10-05  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/README.dev] "To make a release": corrections about the tag.
+
+	ChangeLog update with tools/update-changelog
+
+	[tests/tnrandom.c] Fixed compilation failure with mini-gmp.
+
+	ChangeLog update with tools/update-changelog
+
+2022-10-05  Vincent Lefevre  <vincent@vinc17.net>
+
+	[tools] Improvement for the ChangeLog generation.
+
+	* tools/gitlog-to-changelog: modified regexp for --strip-cherry-pick
+	  to support some log message in the MPFR Git repository (currently,
+	  only commit 4c5973c2f0153a3a4708cab79ed142e72c4a50eb, but similar
+	  ones could occur in the future).
+	* tools/update-changelog: use this --strip-cherry-pick option.
+
+2022-10-05  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/README.dev] "To make a release": update for the ChangeLog file.
+
+	See commit 1dc281851408fc7d330576327545857c93392521 for the reason.
+
+2022-10-05  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/README.dev] "To make a release": update for abi-compliance-checker.
+
+	Added an example of use of build-multi and abi-compliance-checker
+	for the 4.1.1 release candidate.
+
+2022-10-05  Vincent Lefevre  <vincent@vinc17.net>
+
+	Fix for "make dist" / "make distcheck" about ChangeLog regeneration.
+
+	The "ChangeLog: FORCE" rule in Makefile.am was incompatible with
+	GNU Automake's "make dist" / "make distcheck" because GNU Automake
+	creates a "distdir-am: $(DISTFILES)" rule, which was regenerating
+	the ChangeLog file in "make dist"; such a change is not allowed
+	(it fails with "make distcheck") and not wanted anyway.
+	Issue introduced by commit 52652c41978089be57aca658bacf19b758c73be4.
+
+	* Added tools/update-changelog sh script to update the ChangeLog file.
+	* Makefile.am: replaced the incorrect rule mentioned above by a rule
+	  update-changelog to run tools/update-changelog; added a comment.
+
+2022-10-05  Vincent Lefevre  <vincent@vinc17.net>
+
+	Corrected comment about the ".POSIX" line in all Makefile.am files.
+
+	[doc/README.dev] "To make a release": update for abi-compliance-checker.
+
+2022-10-05  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/README.dev] "To make a release": update about build-multi.
+
+	Needed due to the switch from InriaForge to Inria GitLab.
+
+2022-10-04  Vincent Lefevre  <vincent@vinc17.net>
+
+	[tests/tnrandom.c] Improved the support non-default seed.
+
+	As suggested by mpfrlint, use a different randstate rather than
+	re-seeding mpfr_rands (with a fixed seed). So the corresponding
+	test no longer needs to be at the end.
+
+2022-10-04  Vincent Lefevre  <vincent@vinc17.net>
+
+	[tests/tnrandom.c] Added a comment for tnrandom with an argument.
+
+	This concerns a slowness of mpfr_clear() in the MPFR tests due to
+	the O(n) search in tests_memory_find(), used to detect memory leaks.
+
+2022-10-04  Vincent Lefevre  <vincent@vinc17.net>
+
+	[tests/tnrandom.c] Support non-default seed (GMP_CHECK_RANDOMIZE).
+
+	This fixes a failure due to 98014bfa2e453dd96dece493a88f983f111fc6a3
+	when GMP_CHECK_RANDOMIZE is set.
+
+2022-10-04  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/README.dev] "To make a release": added note about GMP_CHECK_RANDOMIZE.
+
+2022-10-03  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc] Updated FAQ.html with update-faq.
+
+	[doc/update-faq] Ensure that the code is run from the doc directory.
+
+	[tools/coverage] Typo.
+
+	[doc/README.dev] Updated "To make a release".
+
+	[NEWS] Update for 4.1.1.
+
+	doc/mpfr.texi: Updated the month.
+
+	Updated version to 4.1.1-rc1 (with tools/update-version).
+
+	Updated URLs.
+
+2022-10-03  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/README.dev] Corrected "To make a release".
+
+	The addition of the <branch>-root tag applies only after a branch
+	is created, i.e. for non-patchlevel releases (item 0).
+
+2022-09-18  Vincent Lefevre  <vincent@vinc17.net>
+
+	Updated doc/texinfo.tex to 2022-09-14.01
+
+	Update from the texinfo Git repository.
+	  * The generated mpfr.html and mpfr.info files remain the same.
+	  * For mpfr.pdf, this version fixes all the issues I've reported.
+
+2022-09-07  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/README.dev] New C2x draft (N3054).
+
+2022-09-05  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/README.dev] Updated "To make a release" (about texinfo.tex).
+
+	[autogen.sh] Added a comment about files we handle in the repository.
+
+2022-09-05  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/.gitignore] Removed /texinfo.tex since it is in the repository.
+
+	doc/texinfo.tex was added to the Subversion repository on 2017-11-27
+	and the svn:ignore property should have been updated at this time,
+	but I forgot.
+
+2022-08-27  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/README.dev] Changed "trunk" (Subversion) to "master" (Git).
+
+2022-08-27  Vincent Lefevre  <vincent@vinc17.net>
+
+	[doc/README.dev] Update from master, minus a few things.
+
+	From the master version, removed
+	  * text that do not apply to the 4.1 branch;
+	  * an obsolete URL.
+
+2022-08-27  Vincent Lefevre  <vincent@vinc17.net>
+
+	Added m4/ax_pthread.m4 file, and related updates.
+
+	This adds m4/ax_pthread.m4 from master and changes the following files:
+	* acinclude.m4: updated comment; set CXX and CXXFLAGS.
+	* configure.ac: moved AC_CANONICAL_HOST earlier and added a comment
+	  (this was needed with an intermediate version of ax_pthread.m4,
+	  but this change is kept as this should be better).
+	* doc/README.dev: update about the AX_PTHREAD macro.
+
+2022-08-27  Vincent Lefevre  <vincent@vinc17.net>
+
+	Added tools/export-release sh script from master.
+
+	Export some release identified by a Git tag in order to get a tarball.
+
+2022-08-27  Vincent Lefevre  <vincent@vinc17.net>
+
+	[tools/ck-copyright-notice] Better indentation.
+
+	[tools/ck-copyright-notice] Support the future ChangeLog format.
+
+2022-08-27  Vincent Lefevre  <vincent@vinc17.net>
+
+	[tools/ck-copyright-notice] Better error handling.
+
+	Note: One currently gets a failure with the future ChangeLog format,
+	obtained with gitlog-to-changelog (via "make ChangeLog").
+
+2022-08-27  Vincent Lefevre  <vincent@vinc17.net>
+
+	Support ChangeLog regeneration from a Git working tree.
+
+	* Added tools/gitlog-to-changelog file from Gnulib.
+	* Makefile.am: added a rule for the Changelog file.
+
+	Needed as the GNU MPFR repository has been converted to Git.
+
+	The '%B%n' format string is used rather than the default '%s%n%b%n'
+	because Git's commit message convention is not always followed
+	(in particular before the conversion of the repository to Git).
+
+	Note: In the future, if there is any change to do to a Git commit
+	message (typo, etc.), the --amend option could be used.
+
+2022-08-27  Vincent Lefevre  <vincent@vinc17.net>
+
+	[tools/announce-text] Update from master.
+
+2022-08-27  Vincent Lefèvre  <vincent@vinc17.net>
+
+	With wget, use the --no-config option.
+
+	[INSTALL,doc/update-faq,tools/announce-text] With wget, use
+	the --no-config option as the user's .wgetrc file may significantly
+	change the behavior and possibly yield errors. See discussion at
+	<https://lists.debian.org/debian-user/2021/01/msg01021.html>.
+
+2022-08-23  Vincent Lefevre  <vincent@vinc17.net>
+
+	[codespell.ignore] Ignore RO and SIZ (codespell 2.2.0).
+
+	Corrected spelling mistake found by codespell 2.2.0
+
+	doc/mpfr.texi: Updated the month.
+
+2022-08-08  Vincent Lefevre  <vincent@vinc17.net>
+
+	version-ext.sh: replaced a remaining "sed" by "$SED".
+
+	Thanks to Trevor Spiteri for noticing that.
+
+2022-08-08  Vincent Lefevre  <vincent@vinc17.net>
+
+	version-ext.sh: handle the case where no Git branches are found.
+
+	This should solve the issue reported on 2022-08-08 by Trevor Spiteri:
+	https://sympa.inria.fr/sympa/arc/mpfr/2022-08/msg00002.html
+
+2022-08-08  Vincent Lefevre  <vincent@vinc17.net>
+
+	For version-ext.sh, use "$SED" instead of "sed".
+
+	* tests/Makefile.am: pass $SED to version-ext.sh.
+	* version-ext.sh: use $SED (default to "sed").
+
+2022-08-08  Vincent Lefevre  <vincent@vinc17.net>
+
+	Fixed version-ext.sh when in an origin/* remote branch.
+
+2022-07-06  Vincent Lefevre  <vincent@vinc17.net>
+
+	[configure.ac] Update about GNU gold ld and LD_RUN_PATH.
+
+	* Comment update: added URL of the upstream bug report.
+	* Mention the GNU gold linker in the warning.
+
+2022-07-06  Vincent Lefèvre  <vincent@vinc17.net>
+
+	Punctuation (missing comma after "however").
+
+2022-06-13  Vincent Lefevre  <vincent@vinc17.net>
+
+	[README] Replaced "Subversion" by "Git".
+
+2022-06-11  Vincent Lefevre  <vincent@vinc17.net>
+
+	Fixed tsprintf %a tests when GMP and libc produce different outputs.
+
+	With some 32-bit mingw-w64 implementations, the GMP and libc
+	formatted output functions produce different outputs for %a (this
+	is not completely specified by the C standard). In the MPFR tests
+	introduced by commit 26fa003bc51fd75c180b7bca8070d66ceb53da62 on
+	2022-05-20, the comparison is done between the MPFR result, which
+	is based on GMP, and the libc result; hence a failure.
+
+	So, changed the 4 concerned tests of tests/tsprintf.c to compare
+	the MPFR result with the GMP result (for the other tests on the
+	C native types, it is still better to compare MPFR with libc).
+
+	Bug report:
+	  https://sympa.inria.fr/sympa/arc/mpfr/2022-06/msg00004.html
+
+2022-05-20  Vincent Lefevre  <vincent@vinc17.net>
+
+	Fixes related to the native types in the formatted output functions.
+
+	* doc/mpfr.texi: clarification for the formatted output functions.
+	* src/vasprintf.c:
+	    - Made case ordering consistent (no change of behavior).
+	    - The l length modifier is now supported with the native FP types
+	      (a, A, e, E, f, g, G conversion specifiers), as required by the
+	      ISO C standard on printf and other formatted output functions.
+	      As specified, it is just ignored.
+	      For that, to improve code maintainability, the CASE_LONG_ARG()
+	      macro was simplified: The c and s conversion specifiers are
+	      always supported by this macro (this is a potential fix for
+	      implementations with incomplete wide-character handling,
+	      without any guarantee to work). A MPFR_RET_NEVER_GO_HERE()
+	      for unsupported conversion specifiers has been added (as
+	      specinfo_is_valid() is consistent with this macro, one should
+	      effectively never reach this case).
+	    - The F conversion specifier as defined by the C standard is not
+	      supported by the GMP formatted output functions because it is
+	      already used as the type specifier for mpf_t (which comes before
+	      the conversion specifier). Let's take this fact into account.
+	      Note: this conversion specifier is still allowed with MPFR numbers
+	      (e.g., "%RF") to avoid breaking the compatibility (it has never
+	      been an issue).
+	* tests/tsprintf.c: added related tests.
+
+2022-05-19  Vincent Lefevre  <vincent@vinc17.net>
+
+	[tests/tnrandom.c] With mini-gmp, disable the tests that check the values.
+
+2022-05-18  Vincent Lefevre  <vincent@vinc17.net>
+
+	[tests/tnrandom.c] Check some mpfr_nrandom values to detect changes.
+
+	The values should be the same on different machines and with
+	different MPFR versions (or this would be an ABI change).
+
+2022-05-10  Vincent Lefevre  <vincent@vinc17.net>
+
+	doc/mpfr.texi: Updated the month.
+
+	[NEWS] Update.
+
+2022-05-10  Vincent Lefevre  <vincent@vinc17.net>
+
+	Improved 2 macros of the custom interface and updated manual.
+
+	* src/mpfr.h: The mpfr_custom_init() and mpfr_custom_move() macros
+	  could not be used in contexts where an expression was expected.
+	  This limitation was not necessary and is now removed.
+	* doc/mpfr.texi: In commit 743a63c480318f60ac2a953007bac08f37b7d71d,
+	  the manual was clarified about the macros of the custom interface,
+	  i.e. behaving like macros, which may evaluate arguments multiple
+	  times or none. This was incomplete and error prone, in addition
+	  to being undocumented in the current MPFR versions. Almost all
+	  issues have now been fixed (the only minor limitation is that the
+	  mpfr_custom_init_set() macro is not usable in contexts where an
+	  expression is expected, but this cannot yield unnoticed bugs).
+	  So, changed the manual to reflect these fixes and added an item
+	  in Section "API Compatibility" (also removed an obsolete comment
+	  about that from src/mpfr.h).
+
+2022-05-06  Vincent Lefevre  <vincent@vinc17.net>
+
+	Testsuite: C++11 compatibility (GCC's -Wliteral-suffix).
+
+	With "g++ -Werror", several .c files in the "tests" directory were
+	yielding
+
+	  error: invalid suffix on literal; C++11 requires a space between
+	  literal and string macro [-Werror=literal-suffix]
+
+2022-05-06  Vincent Lefevre  <vincent@vinc17.net>
+
+	Fixed issues with the macro versions of the custom interface.
+
+	* src/mpfr.h:
+	    - fixed the mpfr_custom_* macros so that they behave like the
+	      associated functions (accept other types than those from the
+	      prototype, simulating implicit type conversion; evaluate each
+	      argument once);
+	    - avoid a -Wsign-conversion warning that could occur in user code
+	      (issue reported by Andreas Enge concerning PariTwine):
+	      added a cast in the mpfr_custom_get_size() macro so that a
+	      size_t * size_t product is done instead of mpfr_prec_t * size_t
+	      (where mpfr_prec_t is signed and size_t is unsigned, triggering
+	      a warning when GCC's -Wsign-conversion is used);
+	    - comments: changed "stack interface" and "mpfr_stack interface"
+	      to "(the) custom interface".
+	* src/stack_interface.c: in a comment, changed "mpfr_stack" to
+	  "custom interface".
+	* tests/tstckintc.c: added testcases for the macro/function mismatch
+	  issues, being careful with rules that are different in C and C++.
+
+2022-04-07  Vincent Lefevre  <vincent@vinc17.net>
+
+	doc/mpfr.texi: Updated the month.
+
+2022-04-06  Vincent Lefevre  <vincent@vinc17.net>
+
+	[src/log_ui.c] Updated comments to better understand that the code is correct.
+
+2022-04-04  Vincent Lefevre  <vincent@vinc17.net>
+
+	[src/root.c] Updated a comment for mpfr_rootn_ui.
+
+	This comment was correct for mpfr_root, but I forgot to update it when
+	changing this function to mpfr_rootn_ui (where this case differs) in
+	commit 117c726a863e243634c8e5fbaae0265cac90a4a1.
+
+2022-04-04  Vincent Lefevre  <vincent@vinc17.net>
+
+	[tests/tpow.c] Corrected messages.
+
+2022-04-04  Vincent Lefevre  <vincent@vinc17.net>
+
+	In the tests, fixed "randlimb () % 1", mistaken for "randlimb () & 1".
+
+	This occurred only in tests/tfmma.c (5 occurrences), with the
+	consequence of fewer cases of different kinds in the tests.
+
+	Such a kind of mistake is now detected by mpfrlint (commit 02a17d21a).
+
+2022-04-04  Vincent Lefevre  <vincent@vinc17.net>
+
+	mpfrlint: detect "% 1" (modulo 1), which always gives 0.
+
+	This is probably mistaken for "& 1" or "% 2", as currently in
+	"tests/tfmma.c".
+
+	(same as commit 2a90f0c91b35b23bd85a8a9ceb23426e3b36b91b)
+
+2022-03-30  Vincent Lefevre  <vincent@vinc17.net>
+
+	Fixed version-ext.sh, in particular when used after "./autogen.sh".
+
+	After running autogen.sh, version-ext.sh incorrectly detected files
+	as modified. Solution: refresh the git index before git diff-index.
+
+2022-03-30  Vincent Lefevre  <vincent@vinc17.net>
+
+	[acinclude.m4] Fix/improve MPFR_CHECK_LIBM and MPFR_CHECK_LIBQUADMATH.
+
+	With a GCC snapshot, -Werror=infinite-recursion was yielding an
+	error in AC_CHECK_LIB for function "main". So, define MPFR_HAVE_LIB
+	to be used instead of AC_CHECK_LIB when it is not needed to test any
+	function. So, use it in MPFR_CHECK_LIBM and MPFR_CHECK_LIBQUADMATH.
+	Also updated MPFR_CHECK_LIBM from the current libtool.m4 code, as
+	done in the past.
+
+2022-01-06  Vincent Lefevre  <vincent@vinc17.net>
+
+	Copyright notice update: added 2022.
+
+	Command used:
+	  perl -pi -e 's/ (\d{4}-)?(2021)(?= Free Software)/
+	               " ".($1||"$2-").($2+1)/e' **/*(^/)
+	under zsh.
+	Removed 2021 from the example in the doc/README.dev file.
+
+2021-12-26  Vincent Lefevre  <vincent@vinc17.net>
+
+	Corrected style (spurious space before comma).
+
+2021-12-26  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	gnu style
+
+2021-11-25  Vincent Lefevre  <vincent@vinc17.net>
+
+	Move code for git info to its own shell script "version-ext.sh".
+
+	* New version-ext.sh file: sh script to output MPFR version information
+	  for a Git working tree (old code from tests/Makefile.am).
+	* tests/Makefile.am: replace some output_info code by the use of this
+	  script.
+	* Makefile.am: add version-ext.sh to EXTRA_DIST as a consequence
+	  (a comment explains why).
+	* README: list this new version-ext.sh file as a consequence.
+
+2021-11-25  Vincent Lefevre  <vincent@vinc17.net>
+
+	Another fix in the code for git info output by "make check".
+
+	tests/Makefile.am: in output_info, replaced "grep" by "$(GREP)".
+
+2021-11-25  Vincent Lefevre  <vincent@vinc17.net>
+
+	Fixed git info output by "make check".
+
+	tests/Makefile.am: when discarding excluded branches, the match should
+	be done on the full branch name, not a subword; so, added the -x grep
+	option (specified by POSIX).
+
+2021-11-22  Vincent Lefevre  <vincent@vinc17.net>
+
+	Add git info for "make check".
+
+	tests/Makefile.am: in output_info, add git info:
+	  * the detected branch, which also works in detached HEAD state
+	    (<branch>-root tags are used to find the correct branch,
+	    by excluding branches created after the current HEAD);
+	  * the total commit count;
+	  * the commit id (hash);
+	  * " (modified)" when the working tree has been modified
+	    (compared to HEAD).
+
+2021-10-24  Vincent Lefevre  <vincent@vinc17.net>
+
+	Updated README due to the migration to Inria GitLab.
+
+	doc/mpfr.texi: Updated the month.
+
+2021-10-24  Vincent Lefevre  <vincent@vinc17.net>
+
+	mpfrlint: update for git.
+
+	This is used to check that the doc/mpfr.texi UPDATED-MONTH value is
+	up-to-date by comparing it with the date of the latest commit.
+
+2021-10-24  Vincent Lefevre  <vincent@vinc17.net>
+
+	In mpfr.texi, added a "@." to avoid a warning from mpfrlint.
+
+	Note: This is not needed at the end of a paragraph like here, but
+	this is a general warning, just in case text is added or moved.
+
+2021-10-24  Vincent Lefevre  <vincent@vinc17.net>
+
+	mpfr.texi cleanup: removed the obsolete @refill command.
+
+	This command was needed in the past, but it now generates a warning
+	"@refill is obsolete" (as of Texinfo 6.8 - 2021-07-03).
+	It is no longer needed, as least since Texinfo 4.2:
+	https://ftp.gnu.org/old-gnu/Manuals/texinfo-4.2/html_node/Refilling-Paragraphs.html
+
+2021-09-16  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Updated the month.
+
+2021-09-16  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Corrected garbled mpfr_set* description.
+
+	Thanks to Rob for noticing:
+	  https://sympa.inria.fr/sympa/arc/mpfr/2021-09/msg00003.html
+
+	The cause is a sentence that was inserted at the wrong place in r8225
+	(2012-06-25).
+
+	(merged changeset r14580 from the trunk)
+
+2021-09-13  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[configure.ac] Reverted r14572, which was solving an issue about the
+	ordering of macros with ax_pthread.m4 29.
+
+	But the change done in ax_pthread.m4 29
+	  https://github.com/autoconf-archive/autoconf-archive/commit/2567e0ce0f3a11b535c6b527386197fb49ff172b
+	was incorrect (see comments at this URL) and was reverted in
+	ax_pthread.m4 31:
+	  https://github.com/autoconf-archive/autoconf-archive/commit/59008cc7f85e1982eb298e1c424c2e6ad5942c4a
+	(Debian/unstable had the buggy version during a couple of weeks).
+
+2021-09-07  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/tests.c] Fixed bad_cases when y is ±0 (rare case).
+
+	(merged changeset r14570 from the trunk, with GMP_CHECK_RANDOMIZE value
+	in a comment changed for the current revision in the 4.1 branch)
+
+2021-09-07  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[configure.ac] Avoid an issue with ordering of macros we don't use
+	explicitly, which appears with ax_pthread.m4 29, i.e. with
+	  https://github.com/autoconf-archive/autoconf-archive/commit/2567e0ce0f3a11b535c6b527386197fb49ff172b
+
+	(merged changeset r14481 from the trunk)
+
+2021-09-07  Vincent Lefèvre  <vincent@vinc17.net>
+
+	Get rid of obsolescent AC_HEADER_TIME. Cleanup about sys/time.h usage.
+
+	The AC_HEADER_TIME macro is obsolescent in autoconf 2.69 (2012),
+	and autoconf 2.71 (2021) outputs a warning, which makes autogen.sh
+	fail due to "--warnings=all,error", so let's avoid the warnings.
+	This macro defines TIME_WITH_SYS_TIME, used only in tests/tests.c
+	(but actually not needed). We actually have two cases:
+	  1. HAVE_GETTIMEOFDAY is defined: we use gettimeofday(), which
+	     needs <sys/time.h>.
+	  2. Otherwise: we use time(), which needs <time.h>.
+
+	Based on that, we can simplify the condition in tests/tests.c for
+	the inclusion of time-related headers, and we no longer need to
+	check the <sys/time.h> availability. If gettimeofday() is defined
+	but <sys/time.h> is not available (which shouldn't occur), then
+	the current gettimeofday() usage may be incorrect anyway.
+
+	Changes:
+	  * acinclude.m4:
+	      - no longer use AC_HEADER_TIME;
+	      - no longer check the sys/time.h header.
+	  * tests/tests.c: simplify the inclusion of time-related headers.
+
+	(merged changeset r14479 from the trunk)
+
+2021-06-01  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/tests.c] fixed bug introduced in r13787, which invalidated data_check
+	in some cases
+
+	(merged changeset r14531 from the trunk)
+
+2021-05-17  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/tsprintf.c] Commented out a test added in r14524.
+
+	This test of length specifier 'P' with an empty precision field (only a
+	period) fails in the 4.1 branch due to an issue fixed only in the trunk
+	(r14155). In the 4.1 branch, the MPFR manual contains contradictory
+	information about this, which can be regarded as unspecified behavior.
+
+2021-05-17  Vincent Lefèvre  <vincent@vinc17.net>
+
+	Formatted output functions (mpfr_*printf): bug fix; added tests.
+
+	  * src/vasprintf.c: in buffer_cat, replaced incorrect assertion len > 0
+	    by a test.
+	    Note that len == 0 is possible when outputting an integer 0
+	    (either a native one or mpfr_prec_t) with precision field = 0.
+	    The consequence of this bug:
+	      - In debug mode (MPFR_ASSERTD assertion checking), one would get
+	        an assertion failure.
+	      - Otherwise, there should be no side effects since the code was
+	        valid for len == 0, possibly except with LTO (very unlikely,
+	        though).
+	    This incorrect assertion was added on 2009-03-13 in r6099.
+	  * tests/tsprintf.c: added tests of native integer 0 and mpfr_prec_t
+	    (specifier 'P') with precision field 0, both yielding a call to
+	    buffer_cat with len = 0.
+
+	(merged changesets r14514,14520-14521 from the trunk)
+
+2021-05-17  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Updated the month.
+
+2021-05-17  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Punctuation.
+
+	(merged changeset r14515 from the trunk)
+
+2021-04-23  Vincent Lefèvre  <vincent@vinc17.net>
+
+	Fixed bug in mpfr_get_str_ndigits.
+
+	* src/get_str.c: use MPFR_SAVE_EXPO_MARK / MPFR_SAVE_EXPO_FREE to fix
+	  2 issues in mpfr_get_str_ndigits: the inexact flag could be raised
+	  (bug reported by Pierre Chatelier[*]); undefined behavior in a very
+	  reduced exponent range.
+	* tests/tget_str.c: check the above issues in the tests.
+
+	[*] https://sympa.inria.fr/sympa/arc/mpfr/2021-04/msg00000.html
+
+	(merged changeset r14488 from the trunk)
+
+2021-03-09  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Updated the month.
+
+2021-03-09  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/{tset_si.c,tset_sj.c}] Fix when -DMPFR_USE_NO_MACRO is used.
+
+	The mpfr_get_exp() function checks that the argument is a regular
+	number, but the corresponding macro doesn't. The test code was
+	calling mpfr_get_exp() on 0, thus failed with MPFR_USE_NO_MACRO
+	defined. Here, the code was correct with the macro, because the
+	value was not used for the particular case 0.
+
+	This is fixed by testing 0 earlier (and doing a goto, but the code
+	has fewer tests and should be simpler to understand). Moreover,
+	mpfr_get_exp has been replaced by MPFR_GET_EXP, so that the argument
+	is checked with --enable-assert.
+
+	(merged changeset r14464 from the trunk)
+
+2021-03-09  Vincent Lefèvre  <vincent@vinc17.net>
+
+	In mpfr.h, fixed some macros implementing functions. Added tests.
+
+	* src/mpfr.h:
+	    - Macros mpfr_nan_p, mpfr_inf_p, mpfr_zero_p, mpfr_regular_p,
+	      mpfr_get_prec, mpfr_get_exp, mpfr_copysign and mpfr_signbit
+	      yielded a compilation error when the argument (the 3rd one
+	      for mpfr_copysign) was of type void *, for instance.
+	    - Macro mpfr_set had the same issue with the 2nd argument, but
+	      also evaluated this argument twice. The fix was possible only
+	      with a GNU extension. Thus this macro is available only with
+	      GCC and compatible compilers (see __GNUC__); otherwise, the
+	      mpfr_set function is used.
+	* src/ubf.c: added a missing cast (this issue became visible with
+	  the fix of the mpfr_get_prec macro).
+	* tests/mpfr-test.h: added macros for the new tests (tests with
+	  void * arguments are invalid in C++ and they trigger a warning
+	  with GCC's -Wc++-compat, so we need to avoid these issues).
+	* tests/*.c: added tests to check that some calls (potentially
+	  macros) behave like function calls. In detail:
+	    - tcopysign.c: mpfr_copysign and mpfr_setsign.
+	    - texceptions.c: mpfr_get_prec.
+	    - tisnan.c: mpfr_nan_p, mpfr_inf_p, mpfr_number_p (though not
+	      currently concerned here), mpfr_zero_p and mpfr_regular_p.
+	    - tset.c: mpfr_set.
+	    - tset_exp.c: mpfr_get_exp.
+	* doc/mpfr.texi: added some text in Section "Custom Interface" to
+	  clarify the usage of macros for this interface.
+
+	(merged changesets r14447-14463 from the trunk)
+
+2021-03-09  Vincent Lefèvre  <vincent@vinc17.net>
+
+	Completed tests/tcopysign.c to test with a reused argument.
+
+	(merged part of changeset r14227 from the trunk)
+
+2021-02-15  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/jyn_asympt.c] Fixed bug when s=0 at the end of the for loop.
+	[tests/mpfr-test.h] Added mpfr_cmp_si_2exp0 macro (check NaN).
+	[tests/tj1.c] Added testcase.
+	(merged changesets r14431,14434 from the trunk)
+
+	[src/digamma.c] Fixed a bug in mpfr_digamma_reflection.
+	[tests/tdigamma.c] Added testcase.
+	(merged changesets r14430,14432-14433 from the trunk)
+
+2021-02-10  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/jyn_asympt.c] Fixed bug when sin(z)±cos(z) rounds to 0.
+	[tests/tj0.c] Testcase.
+	(merged changesets r14400,14405 from the trunk)
+
+	[src/digamma.c] Fixed bug in mpfr_digamma_positive when t-u is zero.
+	[tests/tdigamma.c] Testcase.
+	(merged changesets r14399,14401-14404 from the trunk)
+
+	[src/digamma.c] Fixed bug in mpfr_digamma: if x is large, the
+	intermediate precision can be large. This issue may still occur,
+	but with a very low probability.
+	[tests/tdigamma.c] Testcase.
+	(merged changesets r14391-14398 from the trunk)
+
+2021-02-09  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src,tests] Consistency: in prototypes, changed
+	  const mpfr_t          to  mpfr_srcptr,
+	  mpfr_t                to  mpfr_ptr,
+	  mpz_t                 to  mpz_ptr,
+	  mpfr_random_deviate_t to mpfr_random_deviate_ptr,
+	in order to silence a warning from the future GCC 11 -Warray-parameter
+	option (included in -Wall).
+
+	This warning was making the MPFR build fail in combination with -Werror
+	(useful for testing), and there was no simple way to get rid of it in a
+	way independent of the GCC version (due to GCC bug 86134 / 99014, which
+	could also silently change the detected features in configure tests).
+	And as this inconsistency was also present in mpfr.h, this fix may also
+	benefit the build of software that uses MPFR.
+
+	(merged changesets r14103,14154 from the trunk)
+
+2021-01-03  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Updated the month.
+
+	Copyright notice update: added 2021 with
+	  perl -pi -e 's/ (\d{4}-)?(2020)(?= Free Software)/
+	               " ".($1||"$2-").($2+1)/e' **/*(^/)
+	under zsh. Removed 2020 from the example in the doc/README.dev file.
+
+2020-09-28  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/set_z_exp.c] Fixed overflow/underflow detection in exponent ranges
+	  where emax < 0 or emin >= 0 (bug introduced in r14147).
+	[tests/tset_z_exp.c] Added some tests in a reduced exponent range for
+	  the bug fixed here (and improved existing tests).
+	Note: this bug was detected with mini-gmp (for which mpfr_set_z_2exp is
+	used more often because a long does not fit into a limb).
+	(merged changesets r14146-14150 of src/set_z_2exp.c and
+	tests/tset_z_2exp.c from the trunk)
+
+2020-09-25  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/set_z_exp.c] Fixed possible integer overflows with huge mpz_t.
+	  Note: In practice, they may occur only with a 32-bit ABI. Moreover,
+	  with a usual compilation, they should have no effect, assuming the
+	  processor does signed addition and multiplication mod 2^32 (as usual).
+	  However, UBsan will detect the issue, and LTO might have unpredictable
+	  effects.
+
+	[tests/tset_z_exp.c] Added testcases, enabled only when the
+	MPFR_CHECK_LARGEMEM environment variable is set.
+
+	(merged changesets r14136-14145 of src/set_z_2exp.c and
+	tests/tset_z_2exp.c from the trunk)
+
+2020-09-17  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/mini-gmp] Say that the build with mini-gmp may require ISO C99+
+	features (as "long long" is currently needed by src/get_ld.c in the
+	case GMP_NUMB_BITS == 8).
+	(merged changeset r14131 from the trunk)
+
+	[src/get_ld.c] Bug fix with GMP_NUMB_BITS == 8 (thus mini-gmp) and
+	32-bit long (e.g. with -m32 on x86_64).
+	(merged changeset r14127 from the trunk)
+
+2020-09-15  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/random_deviate.c] Fixed non-portable code.
+	(merged changesets r14123-14124 from the trunk)
+
+	[src/mpfr-mini-gmp.c] Fixed bug in gmp_urandomb_ui when the parameter n
+	is equal to the width of unsigned long.
+	Note: This case occurs in function random_deviate_generate() from
+	src/random_deviate.c with a 32-bit ABI (thus 32-bit unsigned long)
+	since n = W, which is defined as 32.
+	(merged changeset r14117 from the trunk)
+
+	With mini-gmp, use the standard rand() and srand() functions instead of
+	the POSIX (thus less portable) lrand48() and srand48().
+	(merged changesets r14114-14116 from the trunk)
+
+2020-09-10  Vincent Lefèvre  <vincent@vinc17.net>
+
+	ChangeLog update with "LC_ALL=en_US.UTF8 TZ=UTC0 svn log -rHEAD:0 -v".
+	Note: this includes URL updates.
+
+	Updated URLs.
+	(merged changesets r14106-14110 from the trunk)
+
+	Updated a freebsd.org URL (bug tracker).
+	(merged changeset r14104 from the trunk)
+
+2020-07-20  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/get_d128.c] For the special values, avoid double to _Decimal128
+	conversions, as for such conversions, GCC generates from 2 to 3 MB in
+	the shared library when the decimal encoding is BID, and there will be
+	no fix in GCC:
+	  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96173
+	We now use computations on _Decimal128 constants directly, which could
+	thus be done at compile time. We expect no problems similar to double,
+	as the _Decimal128 implementation should follow the IEEE 754 rules.
+	This commit should avoid a large part of the problem reported at:
+	  https://gforge.inria.fr/tracker/?func=detail&atid=619&aid=21849&group_id=136
+	(merged changesets r14087-14088 from the trunk)
+
+	[tests] Various corrections for error messages in tests of long double
+	(and double).
+	  * tests.c: Simplified the d_trace and ld_trace functions:
+	    we do not need a union (with its potentional padding) as
+	    there are no aliasing issues with unsigned char.
+	  * tget_ld_2exp.c: Corrected a function call in an error message.
+	  * tset_ld.c: Fixed mpfr_out_str usage in error messages
+	    (see the change in r12520).
+	(merged changesets r14080-14083 from the trunk)
+
+	[examples/version.c] "Compiler:" line: detect TCC (__TINYC__ macro).
+	(merged changeset r14079 from the trunk)
+
+	[tests/tversion.c] "Compiler:" line: detect TCC (__TINYC__ macro).
+	(merged changeset r14078 from the trunk)
+
+2020-07-10  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/Makefile.am] Updated -version-info to 7:1:1 for MPFR 4.1.1.
+
+	Updated version to 4.1.1-dev.
+
+	ChangeLog update with "LC_ALL=en_US.UTF8 TZ=UTC0 svn log -rHEAD:0 -v".
+
+	Updated version to 4.1.0.
+
+	[doc/mpfr.texi] Updated the month.
+
+	[src/jyn_asympt.c] Partly solved the slowness of jn(733333,733333).
+	[tests/tjn.c] Added tests of jn(73333,73333) and jn(733333,733333),
+	  enabled only with MPFR_CHECK_EXPENSIVE.
+	[doc/README.dev] In the MPFR_CHECK_EXPENSIVE description, say that
+	  --enable-assert=full should not be used (too expensive, not needed).
+	(merged changesets r14053-14062 from the trunk)
+
+2020-07-01  Vincent Lefèvre  <vincent@vinc17.net>
+
+	ChangeLog update with "LC_ALL=en_US.UTF8 TZ=UTC0 svn log -rHEAD:0 -v".
+
+	Updated version to 4.1.0-rc2.
+
+	[NEWS] Added an item saying that TLS can safely be (re-)enabled
+	on Sparc.
+	(merged changeset r14047 from the trunk)
+
+2020-06-29  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/mpfr-test.h] Avoid a GCC bug on Sparc, at least when using TLS.
+	The MPFR library itself is not affected, only a particular test. Normal
+	code using the MPFR library should not be affected either, as the bug
+	occurs when accessing __gmpfr_flags directly (and the public mpfr.h
+	header file does not provide any macro that accesses an internal
+	variable directly). So a workaround for the tests is the best solution.
+	(merged changeset r14045 from the trunk)
+
+2020-06-18  Vincent Lefèvre  <vincent@vinc17.net>
+
+	Updated version to 4.1.0-dev (due to changes since 4.1.0-rc1).
+
+2020-06-18  Vincent Lefèvre  <vincent@vinc17.net>
+
+	Merged r14021-14036 from the trunk:
+
+	r14021:
+	[tests] Skip tabort_defalloc1 and tabort_defalloc2 under Valgrind, as
+	Valgrind complains due to the large allocation size.
+	  * mpfr-test.h, tests.c: added tests_run_within_valgrind() function to
+	    guess whether the test runs within Valgrind.
+	  * tabort_defalloc1.c, tabort_defalloc2.c: skip the test (exit code 77)
+	    if this function returns true.
+
+	r14022-14023:
+	[tests/tset_ld.c] In bug_20160907 (tests on subnormals, specific to
+	x86 extended precision):
+	  * Replaced an assertion by a test with detailed output.
+	  * In case of incorrect result, detect whether Valgrind is used and
+	    one gets the result obtained with Valgrind due to
+	      https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=890215
+	      https://bugs.kde.org/show_bug.cgi?id=421262
+	    (long double behaves as double); in this case, output a message
+	    without an error since Valgrind is the only cause of the
+	    miscalculation.
+	  * Corrected a value in a test, which did not match the comment.
+
+	r14024-14027:
+	[src/digamma.c]
+	  * Replaced some MPFR_EXP / mpfr_get_exp by MPFR_GET_EXP to check that
+	    the MPFR number has an exponent (i.e. it is not a special value).
+	  * Added an integer overflow check on a precision.
+	  * Fixed a bug: an exponent was read while the value could be zero.
+
+	r14028:
+	[tests/tdigamma.c] Increase the number of tests.
+
+	r14029,14031:
+	[doc/mpfr.texi] Specify the range of b for mpfr_get_str_ndigits.
+
+	r14030:
+	[src/get_str.c] Since the mpfr_get_str_ndigits function is in the
+	public API, use MPFR_ASSERTN instead of MPFR_ASSERTD on the condition
+	on the argument b in order to get an assertion failure (by default)
+	if this condition is not satisfied.
+
+	r14032,14035-14036:
+	[src/mpfr-longlong.h] Applied patch on
+	  https://gmplib.org/list-archives/gmp-bugs/2020-June/004807.html
+	to fix add_ssaaaa and sub_ddmmss on arm / aarch64, in order to resolve
+	  https://sympa.inria.fr/sympa/arc/mpfr/2020-06/msg00017.html
+	  https://sympa.inria.fr/sympa/arc/mpfr/2020-06/msg00059.html
+
+	r14034:
+	[tests/tcmp_ui.c] Added a comment about a failing test with tcc if
+	one adds tcc support for macros using __builtin_constant_p in mpfr.h
+	by testing __TINYC__.
+	Bug report against tcc: https://savannah.nongnu.org/bugs/?58606
+
+2020-06-13  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[configure.ac] No longer add -Wc++-compat to CFLAGS when the compiler
+	is GCC not in C++ mode (reverting the change done in r13406) since this
+	option is not available before GCC 4.1:
+	  https://sympa.inria.fr/sympa/arc/mpfr/2020-06/msg00008.html
+	(merged changeset r14018 from the trunk)
+
+2020-06-13  Vincent Lefèvre  <vincent@vinc17.net>
+
+	Merged the latest changes from the trunk:
+
+	r14012:
+	[tests/tfpif.c] Updated comment about the bug detected on AIX.
+
+	r14015:
+	[doc/mpfr.texi] ACM TOMS article: use the preferred DOI URL.
+
+2020-06-13  Vincent Lefèvre  <vincent@vinc17.net>
+
+	Merged the latest changes from the trunk:
+
+	r14008,14010:
+	[tools/announce-text] For release candidates, automatically adapt the
+	flow of the text.
+
+	r14009:
+	[NEWS] Updated mpfr.org URLs (http → https).
+
+2020-06-12  Vincent Lefèvre  <vincent@vinc17.net>
+
+	Merged the latest changes from the trunk:
+
+	r14003:
+	[tests/tfpif.c] Fixed a bug (in the test) detected on AIX[*], where
+	an fclose failed due to a previous read failure. At the same time,
+	check that a read failure no longer occurs. Note: the read failure
+	made mpfr_fpif_import fail, but this is a test where it is expected
+	to fail, i.e. we now check that it fails for a good reason.
+	[*] gcc119.fsffrance.org on the GCC Compile farm.
+
+	r14004:
+	[tests/tests.c] Removed a useless "#include <errno.h>" (added in r5252,
+	useless since r5253).
+
+	r14005:
+	[README] Added URL of the official GNU MPFR website and a note about the
+	future migration, since InriaForge will shut down in December 2020.
+
+2020-06-12  Vincent Lefèvre  <vincent@vinc17.net>
+
+	ChangeLog update with "LC_ALL=en_US.UTF8 TZ=UTC0 svn log -rHEAD:0 -v".
+
+	Updated version to 4.1.0-rc1.
+
+	[tools/update-version] Improved a message.
+	(merged changeset r13999 from the trunk)
+
+	[src/mpfr-longlong.h] Corrected a comment from GMP's longlong.h, which
+	makes codespell complain in particular.
+	(merged changeset r13997 from the trunk)
+
+	[tools/mpfrlint] Improved the __GMP_DECLSPEC test:
+	  * No longer exclude "src/mpfr.h".
+	  * Avoid false positives in "src/mpfr.h" and "src/mpfr-longlong.h".
+	(merged changeset r13995 from the trunk)
+
+	[doc/mpfr.texi] Updated the month.
+
+	ChangeLog update with "LC_ALL=en_US.UTF8 TZ=UTC0 svn log -rHEAD:0 -v".
+
+2020-06-11  Vincent Lefèvre  <vincent@vinc17.net>
+
+	Renamed mpfr_total_order to mpfr_total_order_p for consistency with the
+	other predicates (by convention, the function name should end with _p).
+
+	[NEWS] New function mpfr_total_order. Detailed mpfr_get_str_ndigits.
+
+	[doc/README.dev] Updated "To make a release".
+
+	[doc/README.dev] Updated "To make a release".
+
+	[src/Makefile.am] Updated -version-info to 7:0:1 for MPFR 4.1.0.
+
+	[NEWS] Additional details, in particular binary compatibility.
+
+	[NEWS] Some improvements.
+
+2020-06-11  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[doc/mini-gmp] one more test is skipped now
+
+	[doc/mini-gmp] add test results with reduced limb size (int)
+
+2020-06-11  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/README.dev] Updated "To make a release".
+
+2020-06-10  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[NEWS] Added release name for 4.1.0: "épinards à la crème".
+
+	[doc/mini-gmp] English usage improvement.
+
+	Fixed 2 issues with tests/tvalist.c:
+	  1. When building with mini-gmp (--with-mini-gmp=DIR) without
+	     optimizations (-O0), the build of tvalist was failing because
+	     the formatted output functions are not supported (this issue
+	     wasn't noticed with optimizations due to dead code elimination).
+	     Fix: this test is disabled with mini-gmp (not needed anyway).
+	  2. Dead code elimination with optimizations partly broke the goal
+	     of this test, i.e. checking that mpfr_vfprintf was available.
+	     This dead code was introduced in r7648 "Make sure that fct is
+	     used (avoid a warning)." (where fct = mpfr_vfprintf) but was
+	     actually not sufficient.
+	     Fix: call mpfr_vfprintf unconditionally, but on an empty string
+	     in order to avoid output to stdout.
+	In addition to these changes in tests/tvalist.c, src/mpfr-impl.h could
+	be simplified as a consequence.
+
+	Removed '# undef HAVE_STDARG' before '# include "config.h"' when it
+	was used, as it was not always undefined (e.g. in tests/tsprintf.c)
+	and there are no reasons to undefine this macro specifically.
+	Note: this code was introduced in r2665 (2004-02-06), perhaps for
+	the MPFR build inside GMP, which has been dropped a long time ago.
+
+	[tests/tvalist.c] Updated a comment.
+
+	[tests/tvalist.c] Correction when config.h is used (code copied from
+	src/inits.c).
+
+2020-06-10  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[doc/mini-gmp] review
+
+2020-06-10  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[NEWS] Typo in option name.
+
+	[src/mpfr-longlong.h]
+	  * Updated comment about this file and the changes against GMP 6.2.0.
+	  * Define __GMP_GNUC_PREREQ if it isn't defined (this is currently not
+	    needed since it is defined in gmp.h as used also there, but this is
+	    useful in case some future gmp.h version no longer defines it).
+
+	[src/mpfr-longlong.h] Update: applied the diff of GMP's longlong.h
+	between GMP 6.1.0 and GMP 6.2.0, after reverting changesets 13251,
+	11042, 11025, and 10727, as these changes are present in the diff.
+
+	[configure.ac] With mini-gmp, also check the availability of srand48.
+
+	[src/mpfr-mini-gmp.c] For gmp_randseed_ui, which uses srand48, use
+	a portable version of the conversion from unsigned long to long.
+
+	[doc/mini-gmp] Note also that the random functions are not thread-safe.
+
+	[doc/mini-gmp] Major update.
+
+	[NEWS] Removed a FIXME (no problems found).
+
+2020-06-09  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/tversion.c] Code style: replaced (mp_limb_t) -1 by MPFR_LIMB_MAX.
+
+	[src/mul_ui.c] Bug fix: in the code where MPFR_LONG_WITHIN_LIMB is
+	not defined, update the flags (needed for the possible overflow).
+
+	[tests/tmul_ui.c] Added an overflow check that fails in MPFR_RNDZ with
+	mini-gmp and mp_limb_t < long (e.g. "-DMINI_GMP_LIMB_TYPE=short").
+
+	[tests/tgeneric.c] In the MPFR_SUSPICIOUS_OVERFLOW case, output yprec.
+
+	[src/mpfr-impl.h] Changed the code that defines MPFR_LONG_WITHIN_LIMB
+	in order to support mini-gmp with -DMINI_GMP_LIMB_TYPE=...
+
+	[src/get_ld.c] Fixed build failure with GMP_NUMB_BITS == 8 due to the
+	use of uint64_t in src/get_ld.c, while <stdint.h> was not included:
+	replaced it by "unsigned long long", which does not need a specific
+	header (an exact 64-bit type is not needed, we just need at least a
+	64-bit width, which unsigned long long is guaranteed to have).
+	Note: unsigned long long may not be available with a pre-C99 compiler,
+	but this is not worse than uint64_t. This limitation is currently OK
+	as GMP_NUMB_BITS == 8 support is just for testing.
+
+	[acinclude.m4] Make MPFR_CHECK_MP_LIMB_T_VS_LONG and
+	MPFR_CHECK_MP_LIMB_T_VS_INTMAX similar:
+	  * Use AC_LINK_IFELSE in MPFR_CHECK_MP_LIMB_T_VS_LONG too: this
+	    is safer than AC_COMPILE_IFELSE, as it will detect undefined
+	    function-like macros.
+	  * Define MPFR_USE_STATIC_ASSERT in MPFR_CHECK_MP_LIMB_T_VS_INTMAX
+	    too in order to make sure that a static assertion is used (not
+	    the MPFR_ASSERTN fallback).
+	Note: These constitute redundant safeguards because if MPFR_ASSERTN
+	is used, it will be regarded as a function since the macro is not
+	defined in this context, and linking will fail as a consequence.
+	But this redundancy will protect more against MPFR code evolution.
+
+	[acinclude.m4] Fixed MPFR_CHECK_MP_LIMB_T_VS_LONG macro by forcing
+	MPFR_USE_STATIC_ASSERT to 1 before including mpfr-sassert.h, i.e.
+	by requiring static assertions: because AC_COMPILE_IFELSE is used
+	(i.e. just compiling, no linking), the test could incorrectly succeed
+	when MPFR_USE_STATIC_ASSERT was not defined, i.e. whatever the value
+	of "(mp_limb_t) -1 >= (unsigned long) -1"; indeed, in this case,
+	MPFR_ASSERTN() was used instead of a static assertion, and since the
+	macro was not defined here, MPFR_ASSERTN was regarded as a function
+	(without a prototype), which was fine for compiling (except when the
+	compiler is configured to regard warnings such as missing prototype
+	as errors). In short, one could get "yes" while long was larger than
+	mp_limb_t.
+	Note: In uncommon cases (non-standard compiler...), one can still get
+	"no" while a long fits in mp_limb_t, but this isn't much an issue as
+	the MPFR code should work in such a case. Moreover, src/mpfr-impl.h
+	will also have the chance to set MPFR_LONG_WITHIN_LIMB in practice.
+
+	Removed MPFR_DECL_STATIC_ASSERT macro as it was buggy, unused, rather
+	useless, and it had drawbacks. Details:
+	  * In src/mpfr-sassert.h, the default definition of this macro in the
+	    MPFR_USE_STATIC_ASSERT case ended with a spurious ";". Since this
+	    macro was unused, this wasn't noticeable... except in the configure
+	    test for static assertions, which failed in some cases (e.g. with
+	    CFLAGS="-std=c99 -pedantic-errors -Wno-error=overlength-strings")
+	    for this reason, which had the effect to let MPFR_USE_STATIC_ASSERT
+	    undefined, while static assertions were actually working.
+	  * Still in src/mpfr-sassert.h, but when MPFR_USE_STATIC_ASSERT is not
+	    defined, the MPFR_DECL_STATIC_ASSERT(c) expanded to nothing, which
+	    would yield invalid code as
+	      MPFR_DECL_STATIC_ASSERT(some_assertion);
+	    would yield an extra ";" (about the same issue as above). Given
+	    the fact that the portable MPFR_USE_STATIC_ASSERT code does not
+	    work with this compiler, it is not clear whether this is fixable
+	    in a completely reliable way.
+	  * MPFR_DECL_STATIC_ASSERT can be replaced by MPFR_STAT_STATIC_ASSERT
+	    after moving it to the statement section of a function, with almost
+	    no drawbacks (just a bit readability in some cases?).
+	  * When MPFR_USE_STATIC_ASSERT is not defined, MPFR_STAT_STATIC_ASSERT
+	    will check the assertion at run time (for free, since the result is
+	    known at compile time), while MPFR_DECL_STATIC_ASSERT would not be
+	    able to do anything useful.
+	Changes:
+	  * acinclude.m4: removed the test of MPFR_DECL_STATIC_ASSERT.
+	  * src/mpfr-sassert.h: removed MPFR_DECL_STATIC_ASSERT definitions.
+	  * tune/tuneup.c: removed MPFR_DECL_STATIC_ASSERT redefinition.
+
+2020-06-08  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[acinclude.m4] MPFR_CHECK_MP_LIMB_T_VS_LONG: updated comment to say
+	that using MPFR_ASSERTN (as the code tries to do if static assertions
+	are not supported, but currently fails) would be incorrect.
+
+	[acinclude.m4] In MPFR_CHECK_MP_LIMB_T_VS_INTMAX, do the test only if
+	intmax_t is defined (assuming that it is iff uintmax_t is defined).
+
+	[tests/tversion.c] Also output the results of the detection of
+	"long within limb" and "intmax_t within limb".
+
+2020-06-04  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[configure.ac] Removed an obsolete FIXME, which is probably wrong.
+
+	[configure.ac] Updated a comment, replacing a resolved FIXME.
+
+	[acinclude.m4] MPFR_CHECK_DBL2INT_BUG test: avoid potentially reserved
+	exit status.
+
+	[acinclude.m4] Fixed r13938: the new MPFR_C_REALFP_FORMAT macro also
+	needs to take the printf length modifier in argument.
+
+	[acinclude.m4] Improved the code to determine the format of double,
+	resolving the FIXME. The issue was that it used an AC_RUN_IFELSE,
+	so that the format could not be determined when cross-compiling.
+	The code to determine the format of long double did not have such
+	an issue: the object file was analyzed by an awk script. Since a
+	long double can have the same format as a double, this code was
+	already able to recognize a double, in particular. So the change
+	consisted in slightly adapting this code to accept the tested type
+	as an argument ("double" or "long double", the mpfr_cv_… variable
+	name being obtained thanks to AS_VAR_PUSHDEF) and reusing it for
+	the detection of the format of double.
+
+	[acinclude.m4] MPFR_C_LONG_DOUBLE_FORMAT cleanup:
+	  * Removed an unused AH_VERBATIM.
+	  * Removed "not available" condition, no longer possible since r13936.
+
+	[acinclude.m4] Fix concerning r13935: also removed code that tested
+	the availability of long double. This code was useless since it was
+	just outputting "not available" if long double was missing, and one
+	would get an error later since MPFR requires long double. But since
+	long double is in ISO C89, it is useless to add a test just to return
+	an error for pre-C89 compilers.
+
+	[acinclude.m4] Removed "AC_CHECK_TYPES([long double])", whose only
+	  purpose is to define a HAVE_LONG_DOUBLE macro.
+	[configure.ac] Removed HAVE_LONG_DOUBLE from the cleanup: no longer
+	  needed with the change in acinclude.m4.
+
+2020-06-03  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[configure.ac] Minor change in a comment.
+
+	Cleanup about the function detection by autoconf.
+	  * acinclude.m4: removed the detection of memmove, memset and strtol,
+	    which was not used (a macro "HAVE_..." was defined... to be removed
+	    in configure.ac!); for AC_CHECK_FUNCS, remove options starting with
+	    "-Werror" as they can yield a spurious failure due to the way this
+	    test is done (this occurred on memmove and memset with GCC due to
+	    builtins, and similar issues could still occur in practice with the
+	    remaining functions in the AC_CHECK_FUNCS list).
+	  * configure.ac: removed HAVE_STRTOL from the macro cleanup: no longer
+	    needed since strtol has been removed from the AC_CHECK_FUNCS list.
+
+	[acinclude.m4] Minor improvement: in the MPFR_CHECK_GMP test, changed
+	the exit status values 1..3 to 81..83 in order to avoid confusion, as
+	low values can typically be returned in case of compile or link error.
+
+2020-06-02  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/memory.c] Updated a comment.
+
+	[src/mpfr-longlong.h] Added code to check that mpfr-longlong.h is not
+	included directly; MPFR_NEED_LONGLONG_H must be defined instead.
+
+	[acinclude.m4] To complete r13928, one also needs to define
+	MPFR_NEED_INTMAX_H here when mpfr-intmax.h is used.
+
+	[src/{mpfr-impl.h,mpfr-intmax.h}] Added code to check that mpfr-intmax.h
+	is not included directly; MPFR_NEED_INTMAX_H must be defined instead.
+
+2020-06-01  Vincent Lefèvre  <vincent@vinc17.net>
+
+	Bug fixes and cleanup related to "src/mpfr-intmax.h" by introducing
+	a new macro MPFR_NEED_INTMAX_H, which should be defined instead of
+	using: #include "mpfr-intmax.h"
+
+	Details on the bugs fixed:
+	  * The code added in r13916 forgot a #include <limits.h> since this
+	    code does a test on ULLONG_MAX. With the cleanup, <limits.h> is
+	    already always included by mpfr-impl.h (early enough).
+	  * In src/get_str.c and tests/memory.c, a #include "config.h" was
+	    missing before #include "mpfr-intmax.h"; this issue would affect
+	    platforms where "config.h" is needed and where <inttypes.h> or
+	    <stdint.h> does not exist or does not work.
+
+2020-06-01  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/tgamma.c] For the non-regression test added in r13907, one
+	also needs to temporarily increase the memory limit, thus require
+	MPFR_CHECK_LARGEMEM too.
+
+2020-05-26  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[acinclude.m4] If decimal floats are explicitly disabled, do not do
+	the check of the bit-field ordering for _Decimal128.
+
+	[acinclude.m4] Fixed detection of bit-field ordering for _Decimal128:
+	a compiler error with exit status 1 was mixed up with little endian.
+
+2020-05-24  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/mpfr-intmax.h] Added support for Silicon Graphics IRIX 6.5 (1998)
+	with native /usr/bin/cc, which knows the long long type but defines
+	ULONGLONG_MAX, etc. instead of ULLONG_MAX, etc.
+
+	[tests/tget_ld_2exp.c] Reverted r13914 as we still need to support
+	pre-C99 compilers (and this change was useless).
+	If C99 syntax is needed, there should be a configure test, and the
+	code should be conditional.
+
+2020-05-23  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[tests/tget_ld_2exp.c] put expected value in hex in bug20180904()
+
+2020-05-20  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/README.dev] "To make a release": mention MPFR_CHECK_EXPENSIVE.
+
+2020-05-19  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[tests/tgamma.c] added comment about bug fix
+
+	[src/bernoulli.c] improve initial precision in mpfr_bernoulli_internal()
+			  (avoid failures for n <= 10000)
+
+	[src/bernoulli.c] fix bug with non-regression test added in r13907
+
+	[src/bernoulli.c] temporary fix for the bug in mpfr_gamma, something must be
+	                  wrong in the error analysis of mpfr_bernoulli_internal()
+
+	[doc/README.dev] added MPFR_CHECK_EXPENSIVE
+	[tests/tgamma.c] use MPFR_CHECK_EXPENSIVE
+
+	added non-regression test for bug reported by Frithjof Blomquist
+
+2020-05-04  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tools/mpfrlint] Use of codespell: better workaround to python ugliness.
+
+2020-04-27  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Section "Rounding" / even-rounding rule: the odd
+	radices β are actually not concerned since in such radices, β^k
+	is always odd, so that the exponent does not matter.
+
+	[doc/mpfr.texi] In Section "Rounding", for MPFR_RNDN, added a note
+	about the even-rounding rule in particular cases: 1-digit precision
+	and odd radices.
+	Note: A short explanation was already in the mpfr_get_str description,
+	which is where the issue could occur at the time the minimum precision
+	of MPFR numbers was 2. Now that the minimum precision is 1, this rule
+	in such special cases is more general.
+
+	[doc/mpfr.texi] + "than": also in a comment.
+
+	[doc/mpfr.texi] Corrected a typo. Changed "{less,greater} or equal to"
+	to the more common "{less,greater} than or equal to".
+
+2020-04-26  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] In the paragraph on mpfr_rnd_t, give a reference
+	to Section "Rounding".
+
+	[doc/mpfr.texi] s/can not/cannot/
+
+	[doc/mpfr.texi] Improved Section "Rounding" even more:
+	  * Added a note about the sign of the result (important for 0).
+	  * Described the directed rounding modes (BTW, this notion of
+	    "directed rounding modes" was used but never defined).
+
+	[doc/mpfr.texi] Improved the description of the rounding modes:
+	  * Be more clear that MPFR_RNDN uses the even rounding rule.
+	  * In "two representable numbers", add "consecutive".
+	  * Be more general than radix 2 (due to conversions to a string).
+	  * Consistent typography.
+
+2020-04-25  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi]
+	  * mpfr_init2: mention mpfr_prec_round; added a note about
+	    memory allocation.
+	  * mpfr_prec_round: clarification ("new allocation" could be
+	    surprising since one needs less memory).
+
+2020-04-25  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[doc/mpfr.texi] document that mpfr_prec_round does no new allocation
+			in case the allocated memory is enough
+
+2020-04-22  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/atan.c] Removing the FIXME: I can't see anything wrong in the
+	MPFR code. This could be a bug in GCC's analyzer (which is currently
+	experimental). And GCC bug 94713 in the analyzer prevents debugging
+	as it makes impossible to track uninitialized values: warnings do not
+	occur the first time an uninitialized value occurs.
+
+	[src/atan.c] Added an assertion.
+
+	[src/atan.c] Reduce the number of mpz_get_ui calls with assertions.
+
+	[src/atan.c] Added a FIXME.
+
+2020-04-14  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/texinfo.tex] Update to 2020-02-11.09 with "autoreconf -i -f"
+	under Debian/unstable.
+	Note: The generated mpfr.html and mpfr.info files remain the same.
+	In mpfr.pdf, there are minor changes concerning horizontal spacing
+	in paragraphs with a URL.
+
+2020-04-11  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/tget_set_d64.c] Fixed missing "#if _MPFR_IEEE_FLOATS" that
+	became visible with r13878 now that the encoding of decimal floats
+	can be detected at compile time. But by fixing the defined macros
+	manually, this issue could be visible before r13878.
+
+2020-04-10  Vincent Lefèvre  <vincent@vinc17.net>
+
+	Reworked decimal support and detection, resolving FIXMEs.
+	  * INSTALL, acinclude.m4, configure.ac: --enable-decimal-float can
+	    take new values. Change of macro DPD_FORMAT (DPD was assumed in
+	    case of cross-compilation, which could be wrong) to 3 new macros:
+	    DECIMAL_DPD_FORMAT, DECIMAL_BID_FORMAT, DECIMAL_GENERIC_CODE.
+	  * doc/README.dev: documented these 3 new macros.
+	  * src/mpfr-impl.h: the detection of the BID encoding can now be
+	    done at compile time when GCC defines __DECIMAL_BID_FORMAT__
+	    (as on x86); support of the 3 new macros.
+	  * src/{get_d64.c,set_d64.c,set_d128.c}: update.
+	  * tests/{tget_set_d64.c,tget_set_d128.c,tversion.c}: update.
+
+2020-04-08  Vincent Lefèvre  <vincent@vinc17.net>
+
+	Updated URLs of the GCC mailing-list archives.
+
+2020-04-06  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/mpfr-gmp.h] Updated FIXME about AC_FUNC_ALLOCA (in 2019-01, I
+	already noticed a probable bug in the AC_FUNC_ALLOCA description,
+	but forgot about it).
+
+	[doc/mpfr.texi] Updated the month.
+
+	[doc/mpfr.texi] Formatted output functions: added a comment with the URL
+	of the bug report.
+
+	[NEWS,doc/mpfr.texi] Documented the improvement in the formatted output
+	functions (mpfr_printf, etc.) with an empty precision field, about
+	trailing zeros.
+
+2020-04-03  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/tsub.c] Corrected MPFR_ASSERTD to MPFR_ASSERTN.
+
+	[tests/tsub.c] Reverted r13862 and fixed the test_ubf test: A random
+	precision was too small, so that an input for the test was not computed
+	exactly (I had modified the values of the inputs for better tests, but
+	forgot to change the minimum precision). Also check that the inputs are
+	computed exactly (which is what I often do, but here, I had forgotten),
+	in order to make errors like the above one easier to understand in case
+	the test will have to be modified later.
+	Note: With the incorrect input, the mpfr_sub1 result and flags were
+	actually correct, so that this was only a bug in the test.
+
+2020-04-03  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[INSTALL] update CompCert instructions
+
+2020-04-02  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[INSTALL] fixed CompCert instructions
+
+2020-04-02  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/tset_ld.c] Reverted r13858: the check_overflow test was already
+	in MPFR 4.0.1 and was succeeding on armv5tejl-unknown-linux-gnueabi,
+	which had mpfr_cv_c_long_double_format='IEEE double, little endian'.
+	The issue should be investigated.
+	Note: MPFR_LDBL_MANT_DIG may be larger than the actual number of bits,
+	but this should not cause a failure in the tests.
+
+	[tests/tget_ld_2exp.c] Proper fix: the bug20180904 test was designed
+	for the x87 extended precision, so enable it only in this case.
+
+2020-04-02  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[tests/tsub.c] modify test_ubf() to always hit a current failing test
+
+2020-04-02  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[configure.ac] Fixed the change done in r13853 (about removed macros),
+	making the code simpler and more maintainable at the same time.
+
+2020-04-02  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[INSTALL] added configuration for CompCert test
+
+2020-04-02  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/set_ld.c] Removed obsolete workaround due to LDBL_MAX being buggy
+	on old i386 systems (the tests were not using this workaround).
+
+2020-04-02  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[tests/tget_ld_2exp.c] fixed for case where long double = double
+	[tests/tset_ld.c]      likewise
+
+2020-04-02  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[configure.ac] Moved MPFR_CONFIGS invocation: MPFR_CONFIGS uses LDFLAGS,
+	thus must be invoked after LDFLAGS has been determined completely.
+
+2020-04-02  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[INSTALL] now all tests pass with compcert
+
+	[acinclude.m4] added missing LDFLAGS for long double test
+
+2020-04-02  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/README.dev] Added HAVE_ALLOCA description.
+
+	[configure.ac] Do not remove the HAVE_ALLOCA macro, which is now used
+	by MPFR to determine the default MPFR_ALLOCA_MAX value.
+
+2020-04-02  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[INSTALL] update CompCert instructions
+
+2020-04-02  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/tversion.c] Output whether MPFR is built with the GMP build,
+	and the MPFR_ALLOCA_MAX value if not.
+
+	[src/mpfr-gmp.h] If HAVE_ALLOCA is not defined, i.e. if alloca() is
+	not available (as detected by the configure script), then set the
+	default MPFR_ALLOCA_MAX value to 0 so that alloca() is not used.
+
+2020-04-02  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[INSTALL] added instructions for CompCert
+
+2020-04-02  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/README.dev] Updated MPFR_ALLOCA_MAX description.
+
+	[src/mpfr-gmp.h] When MPFR_ALLOCA_MAX = 0 (set at configure time),
+	do not reference alloca() since we don't need it.
+
+2020-03-31  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] About mpfr_printf with %Re and empty precision field,
+	added a comment with URLs of the discussion and the bug report.
+
+2020-03-30  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/sub1.c] Typo in a comment.
+
+	[configure.ac] Updated message output when the gmp.h vs libgmp test
+	fails: another cause may be that LD_RUN_PATH is not honored (problem
+	seen under OpenBSD 6.6 / gcc302.fsffrance.org).
+
+2020-03-27  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/tset_sj.c] Forgot a "#ifndef NPRINTF_J" for printf("%jd",...).
+
+	[src/set_uj.c] Fixed underflow detection.
+
+	[src/set_uj.c] Added early overflow detection to avoid a possible
+	integer overflow. Added a FIXME (incorrect underflow detection).
+
+	[tests/tset_sj.c] Added tests of mpfr_set_sj_2exp and mpfr_set_uj_2exp
+	in precision 3 with integers from -31 to 31 and exponents MPFR_EXP_MIN,
+	MPFR_EMIN_MIN-7 to MPFR_EMIN_MIN, MPFR_EMAX_MAX-7 to MPFR_EMAX_MAX,
+	MPFR_EXP_MAX-7 to MPFR_EXP_MAX (like in tset_si.c, see r13808), but
+	also exponents INTMAX_MIN and INTMAX_MAX. This shows bugs in set_uj.c,
+	to be fixed...
+
+	[src/set_sj.c] Coding style.
+
+	[src] Moved the definition of the numberof() macro from mpfr-gmp.h to
+	mpfr-impl.h in order to always use our own. Also make sure that the
+	type is signed, so that the value can be used in arbitrary expressions
+	without the risk of silently switching to unsigned arithmetic.
+
+2020-03-26  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/texpm1.c] Updated the bad_cases() parameters to increase the
+	proportion of generated bad cases.
+
+	[tests/tset_si.c] Forgot a cast for MPFR_EXP_FSPEC argument.
+
+	[doc/mpfr.texi] Updated the month.
+
+	Consistency: "a UBF" → "an UBF" since UBF stands for "unbounded float".
+
+	[src/mpfr-impl.h] Updated UBF comment about aliasing rules.
+
+	[src/mpfr-impl.h] Updated UBF comment about aliasing rules.
+
+	[src/mpfr-impl.h] Bug fix (MPFR_ZEXP(x) as used for an assignment
+	could yield undefined behavior on platforms where mpfr_exp_t has
+	trap representations); this is also a general improvement.
+
+	[tests/tsub.c] Avoid the build failure with -Werror=strict-aliasing by
+	replacing x[…] by p[…] (but this doesn't eliminate the problem itself).
+
+	[src/mpfr-impl.h] UBF: updated comment: this breaks aliasing rules, but
+	there isn't any other acceptable solution.
+	Note: when trying to build MPFR without --enable-assert, with GCC and
+	CFLAGS="-O2 -Werror=strict-aliasing", the compilation of tests/tsub.c
+	currently fails because of that.
+
+2020-03-25  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/tsub.c] Fixed tests on UBF.
+
+	[src/sub1.c] Fixed underflow handling in case c small (can occur only
+	with UBF).
+
+	[tests/tfma.c] Minor correction.
+
+	[tests/tfma.c] Changed a RND_LOOP to RND_LOOP_NO_RNDF as the behavior
+	with RNDF changed after a bug fix.
+
+	[tests/tsub.c] Completed tests for UBF (currently fail).
+
+	[src/sub1.c] Bug fix for UBF and MPFR_RNDF.
+
+	[src/set_{si,ui}_2exp.c] Bug fix in MPFR_LONG_WITHIN_LIMB defined case:
+	added early underflow/overflow checking to avoid integer overflow or
+	errors due to special exponent values.
+
+	[tests/tset_si.c] Added tests of mpfr_set_si_2exp and mpfr_set_ui_2exp
+	in precision 3 with integers from -31 to 31 and exponents MPFR_EXP_MIN,
+	MPFR_EMIN_MIN-7 to MPFR_EMIN_MIN, MPFR_EMAX_MAX-7 to MPFR_EMAX_MAX,
+	MPFR_EXP_MAX-7 to MPFR_EXP_MAX, showing bugs in these functions when
+	MPFR_LONG_WITHIN_LIMB is defined.
+
+2020-03-24  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/tsub.c] More tests on UBF. The results are not checked yet,
+	but running the tests with UBsan could allow one to trigger bugs
+	(such as the one fixed in r13806).
+
+	[src/sub1.c] If exp_b = MPFR_EXP_MIN, an integer overflow may occur in
+	the "MAX (aq, bq) + 2 <= diff_exp" branch. This is possible only with
+	UBF. Fixed this bug with an early underflow detection in the UBF case.
+
+	[tests/tfmma.c] Added extreme_underflow test: before the r13798 bug fix,
+	this was triggering an integer overflow.
+
+	[tests/tsub.c] Corrected a function name.
+
+	[tests/tsub.c] More tests on UBF, in particular with an exponent change
+	(including subnormal → normal and normal → overflow due to that).
+
+	[tests/tsub.c] Tests on UBF: underflow/overflow cases done.
+
+2020-03-23  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/tsub.c] More tests on UBF.
+
+	[src/mpfr-impl.h] UBF: reordered macro definitions.
+
+	[src]
+	  * mpfr-impl.h: define MPFR_UBF_GET_EXP macro.
+	  * add1.c, sub1.c: use this macro.
+
+	[src/sub1.c] Detect an underflow case (before the main detection) to
+	avoid a possible integer overflow with UBF.
+
+	[tests/tsub.c] Added comments.
+
+	[tests/tsub.c] First tests on UBF.
+
+	[src/agm.c] Avoid a potential integer overflow with huge precisions.
+
+2020-03-16  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/root.c] Removed useless cast in a comparison, as both operands are
+	non-negative.
+
+	[src/rem1.c]
+	  * Portability fix: when mpfr_exp_t <= long (which is the default),
+	    an addition was done in unsigned integer arithmetic instead of
+	    signed integer arithmetic, with a conversion back to a signed
+	    type, i.e. with potentially implementation-defined behavior.
+	    There could also be an integer overflow on huge-precision values
+	    if mp_bitcnt_t > unsigned long.
+	  * Updated a comment.
+
+	[src/pow.c]
+	  * Portability fix: when mpfr_exp_t <= long (which is the default),
+	    an addition with a negative result was done in unsigned integer
+	    arithmetic instead of signed integer arithmetic, with a conversion
+	    back to a signed type, i.e. with implementation-defined behavior.
+	    There could also be an integer overflow on huge-precision values
+	    if mp_bitcnt_t > unsigned long.
+	  * Updated comments.
+
+	[src/cos.c] Updated a comment.
+
+	[src/cos.c] Updated a comment.
+
+	[src/const_log2.c] Corrected type for the return value of mpz_scan1.
+
+2020-03-13  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/tests.c] Revert a change done in r13783 for function bad_cases():
+	  no longer fail if a generated value does not correspond to a bad case.
+	  But fail if the MPFR_CHECK_BADCASES environment variable is defined
+	  and too few bad cases are generated (less than 90%).
+	[doc/README.dev] Document MPFR_CHECK_BADCASES.
+
+	[tests] Update to test the ternary value in test5rm() when possible,
+	and support the exact cases.
+	  * tests.c:
+	      - test5rm(): modified the prototype again and the behavior.
+	        Now, either only one test is done and the ternary value is
+	        not checked, or the test is done in the 5 rounding modes and
+	        the ternary value is checked.
+	      - data_check(): corresponding update; updated description.
+	      - bad_cases(): test the exact cases too.
+	  * tatanh.c: for the bad_cases() call, reduce emax to avoid errors in
+	    the generation of bad cases due to the rounding of tanh(y) to 1,
+	    which does not correspond to a bad case for atanh, but to an exact
+	    case.
+	  * tlog1p.c: for the bad_cases() call, reduce emax to avoid errors in
+	    the generation of bad cases due to the rounding of expm1(y) to -1,
+	    which does not correspond to a bad case for log1p, but to an exact
+	    case.
+	  * trec_sqrt.c: corrected the bad_cases() call to avoid negative
+	    numbers.
+	Note: the following tests
+	  GMP_CHECK_RANDOMIZE=5 ./tacos
+	  GMP_CHECK_RANDOMIZE=6 ./tatan
+	  GMP_CHECK_RANDOMIZE=4 ./tcos
+	currently fail, but because of a change in r13783 (see associated log
+	for the reason). To be fixed later.
+
+	[tests/tests.c] Modified the prototype of test5rm() to support a
+	parameter "exact". Therefore the parameter "test_one" is now a boolean
+	(the value 2 is no longer supported, as redundant with "exact"), and
+	about data_check() with rnd = '*', the loop is now done in test5rm(),
+	i.e. test5rm() is called with test_one being false.
+
+2020-03-12  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/tsqrt.c] For bad_cases(), use the same pos and psup parameters
+	as in troot.c for "rootn[2]", allowing inexact cases.
+
+	[tests/tcbrt.c] For bad_cases(), use the same pos and psup parameters
+	as in troot.c for "rootn[3]", allowing inexact cases.
+
+	[tests]
+	  * tests.c, function bad_cases(): updated/added debug messages;
+	    assume that the parameters are chosen in such a way that this
+	    test always generates hard-to-round cases (including exact cases),
+	    i.e. exit with an error if one does not get a bad case, otherwise
+	    this can leave unexpected failures unnoticed (either due to a bug
+	    in the MPFR library or due to poorly chosen parameters such as in
+	    troot.c until now).
+	    Note: ideally, this would require a proof, but it is better to get
+	    (unlikely) spurious failures with a non-default GMP_CHECK_RANDOMIZE
+	    value than missing important tests.
+	  * troot.c, bad_cases() invocation:
+	      - corrected the pos parameter: when n is even, it is useless to
+	        generate a negative number as the function is not defined (the
+	        inverse function generates a positive number, and the mismatch
+	        now yields a failure due to the change in bad_cases); when n is
+	        odd, generate as many negative numbers as positive ones.
+	      - for n ≤ 5, reduce the psup parameter in order to also generate
+	        inexact cases, instead of always exact cases.
+
+	[tests/tests.c] Added a TODO for bad_cases, as the exact cases are not
+	tested yet. As a consequence, the bad_cases test added in tcbrt.c r13776
+	is not really useful yet, as the cbrt bad cases are only exact cases.
+
+	[tests/tests.c]
+	  * test5rm: removed additional useless tests added in r6037 in the
+	    case test_one true and rnd = MPFR_RNDZ or MPFR_RNDA, since the
+	    description was a bit incorrect and this was used only by
+	      - data/digamma, where this yielded only duplicate tests (mode *);
+	      - data/li2, where mode z is used on a few tests and could be
+	        replaced by mode Z (i.e. test_one false) if need be;
+	    updated description and added details.
+	  * data_check: corrected/updated description.
+
+	[tests/tests.c] Minor change in an initialization.
+
+	[tests/tget_set_{d64,d128}.c] Added a FIXME and improved a message.
+
+	[acinclude.m4] Added a FIXME: in case of cross-compiling, the guess
+	"DPD" can be wrong, e.g. for the build with MinGW under Linux. One
+	does not get a failure just because of other issues in the code,
+	forcing the portable implementation of the decimal functions.
+
+2020-03-11  Vincent Lefèvre  <vincent@vinc17.net>
+
+	Added bad_cases tests for mpfr_cbrt.
+
+	[src/cbrt.c] Improved the algorithm in the case the precision of the
+	input is larger than 3n, where n is the precision of the output, + 1
+	if the rounding mode is MPFR_RNDN: instead of truncating the output,
+	call mpz_root on the truncated input.
+
+	[tests/tcbrt.c] Test the ternary value on other exact cases.
+
+	[tests/tcbrt.c] Test the ternary value on special cases.
+
+	[src/cbrt.c] Description of the algorithm: improvement; corrected the
+	end, which was incorrect and did not match the code (the comment was
+	introduced in r2057 and was already incorrect in the round-down case;
+	then the round-to-nearest case was improved in r2070, but the comment
+	was not updated).
+
+	[src/cbrt.c] Description of the algorithm: correction; added a TODO.
+
+2020-03-10  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/cbrt.c] Description of the algorithm: corrected indentation;
+	renamed variable r to t in order to avoid confusion with the code
+	(where r has a different meaning).
+
+	[src/cbrt.c] Clarified a comment.
+
+	[src/cbrt.c] Resolved the second FIXME and simplified the code
+	(basically by removing duplicate code).
+
+	[src/cbrt.c] Description of the algorithm:
+	  * Since there was no upper bound on s, let's remove the upper bound
+	    on m (this now matches the code).
+	  * Replaced the FIXME by one due to the lack of upper bound on s.
+
+	[src/cbrt.c] Added another FIXME as the code does not match the
+	algorithm described in a comment.
+
+	[src/cbrt.c] Improved a condition to avoid operations that correspond
+	to a no-op.
+
+	[src/cbrt.c] Added an assertion.
+
+	[src/cbrt.c] Code cleanup and simplification. Added logging messages and
+	a FIXME about a comment (coming from r2057 with its associated code).
+
+	[src/cbrt.c] Removed a useless cast on a comparison operand, since
+	both operands are non-negative.
+
+	[src/atan.c] Added assertions.
+
+	[tools/mpfrlint] Workaround to Debian bug 953369 in libpython3.8-minimal
+	for the codespell invocation.
+
+2020-03-09  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/eint.c] Bug fix: possible integer overflow with some
+	C implementations (or some _MPFR_PREC_FORMAT / _MPFR_EXP_FORMAT values)
+	due to the use of incorrect integer types.
+
+	[src/eint.c] Added other logging messages.
+
+	[src/eint.c] Added some logging messages.
+
+2020-03-09  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[tests/tsin.c] added one test
+
+2020-03-04  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/sub1.c] cancel: also log its value; range checking/tracking.
+
+	[src/cmp2.c] Added a comment giving the range of the value returned
+	in "cancel" and explaining why there is no integer overflow in the
+	computation of this value.
+
+	[src/cmp2.c] Comment: some absolute values are not needed (again).
+
+	[src/cmp2.c] Minor correction for |EXP(b) - EXP(c)| >= MPFR_EXP_MAX.
+
+	[src/cmp2.c] Better explanation when |EXP(b) - EXP(c)| >= MPFR_EXP_MAX.
+
+2020-03-03  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/cmp2.c] Finished the review of mpfr_cmp2: simplified the code even
+	more; corrected/updated comments (in the case high_dif = 0, one can have
+	dif = 1 if c has entirely been taken into account, so that the comment
+	"dif > 1 here" was incorrect; only dif >= 1 is needed anyway).
+
+	[src/cmp2.c] Changed high_dif to type int since it is manipulated like
+	a boolean. Updated comments.
+
+2020-03-02  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/cmp2.c] Simplified the mpfr_cmp2 code and updated comments.
+
+	[src/cmp2.c] Updated comments.
+
+2020-03-02  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[src/mpfr.h] added comment
+
+2020-03-02  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/mpfr.h] _MPFR_PREC_FORMAT and _MPFR_EXP_FORMAT: improved comment.
+
+	[src/mpfr.h] _MPFR_PREC_FORMAT and _MPFR_EXP_FORMAT: added a detailed
+	comment (the previous comment was not obsolete, but misleading).
+
+2020-03-02  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[src/mpfr.h] removed obsolete comment (_MPFR_PREC_FORMAT=3 is the default
+		     under Linux x86_64)
+
+2020-03-01  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[src/sin.c] increase initial precision even more
+
+2020-03-01  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/tpow.c] Replaced mpfr_cmp by !mpfr_equal_p for NaN detection.
+
+	[tests/tsin.c] Replaced obsolete function mpfr_mul_2exp by mpfr_mul_2ui.
+
+2020-02-29  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[src/sin.c] increase initial precision when x is large
+
+2020-02-29  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[src/rem1.c] workaround for efficiency bug in mpz_powm_ui, which was making
+	argument reduction in mpfr_sin for huge x very slow.
+
+	Before:
+	$ ./mfv5 -p113 -e16384 -d-2 mpfr_sin
+	 mpfr_sin:	 3289620 / 3576511.59 / 6841956
+
+	After this commit:
+	 mpfr_sin:	 166868 / 182661.01 / 343224
+
+2020-02-29  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[tests/tpow.c] added one test
+
+	added value -2 for option -d to generate random number with exponent
+	exactly e. Example:
+	$ mfv5 -p113 -e16384 -d-2 -v mpfr_sin
+
+2020-02-28  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[tests/tpow.c] added a test
+
+	[tests/tsin.c] fixed and completed check_binary128()
+
+2020-02-28  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/cmp2.c] Started to review mpfr_cmp2. Minor changes.
+
+	[src/cmp2.c] Detailed a comment concerning UBF.
+
+2020-02-27  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/tsin.c] Cleanup of the latest test (note: mpfr_equal_p is better
+	than mpfr_cmp as it makes the test fail on a NaN result).
+
+2020-02-27  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[tests/tsin.c] added one test with precision 128
+
+2020-02-27  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/mpfr.h] Updated a comment (underscore version of attribute name).
+
+	[tools/mpfrlint] Detect the use of the non-underscore version of the
+	attribute names in mpfr.h (see README.dev).
+
+2020-02-25  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/mpfr.h] Use the underscore version of the attribute names.
+	[doc/README.dev] Added information on this subject.
+
+	[TODO] Added item on GNU Automake and -I options.
+
+2020-02-14  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/mpfr-impl.h] Removed an incorrect comment before MPFR_TMP_INIT1
+	(this macro does not allocate anything, and MPFR_TMP_INIT just after
+	can allocate more than 1 limb).
+
+	[TODO] About the use of MPFR_MANT(x).
+
+2020-02-13  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[TODO] Typo.
+
+2020-02-12  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/tcmpabs.c] Added missing tests of mpfr_cmpabs with NaN.
+
+	[tests/tcmpabs.c] For mpfr_cmpabs: like mpfr_cmpabs_ui, do each test
+	in 4 different contexts, combinations of:
+	  * flags all unset or flags all set;
+	  * usual exponent range or reduced exponent range.
+	Minor corrections in the old tests.
+
+	[tests/tcmpabs.c] For mpfr_cmpabs_ui: do each test in 4 different
+	contexts, combinations of:
+	  * flags all unset or flags all set;
+	  * usual exponent range or reduced exponent range.
+
+2020-02-12  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[tests/tcmpabs.c] added tests for mpfr_cmpabs_ui
+
+2020-02-12  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/mpfr-impl.h]
+	  * MPFR_ALIAS: use the comma operator instead of "do ... while (0)"
+	    so that this macro can be used in an expression context.
+	  * MPFR_TMP_INIT_ABS, MPFR_TMP_INIT_NEG: use MPFR_ALIAS.
+
+	[src/mpfr.h] Added prototype for mpfr_cmpabs_ui.
+
+	[doc/mpfr.texi] Added mpfr_cmpabs_ui to Section "Added Functions"
+	(API Compatibility).
+
+	[tests/trint.c] Replaced obsolete mpfr_cmp_abs by mpfr_cmpabs.
+
+	[doc/mpfr.texi] Typo from r13708.
+
+2020-02-12  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[NEWS] mention new mpfr_cmpabs_ui
+
+	added new function mpfr_cmpabs_ui
+
+	renamed cmp_abs.c to cmpabs.c
+
+2020-02-12  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[TODO] Typo.
+
+	[TODO] + Serialization / Deserialization (suggested by Frédéric Pétrot).
+	I've also added an idea of implementation to reuse most of the code and
+	change very little.
+
+	[src/ubf.c]
+	  * Optimized mpfr_init_get_zexp() for _MPFR_EXP_FORMAT <= 3
+	    (as in the default configuration).
+	  * Updated comments.
+
+	[src/mpfr-impl.h] Added UBF-related comments.
+
+	[src/mpfr-impl.h] Added UBF-related comments.
+
+	[src/mpfr-impl.h] Added a comment for UBF and types.
+
+2020-02-11  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/mpfr-impl.h] Added a comment for INEXPOS.
+
+	[src/mpfr-impl.h] INEXPOS and VSIGN code improvement.
+
+	Removed duplicate macro definitions.
+
+	[tests/tfmma.c] Use mpfr_set_str instead of mpfr_set_d.
+
+	[src/sub1.c] Got rid of some goto's. Added log messages.
+
+2020-02-10  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/sub1.c] Bug fix: the underflow case (possible with UBF, e.g. via
+	mpfr_fmma or mpfr_fmms) was not tested in the case c small.
+	Note: this completes r11418 and r12752 for underflow detection.
+
+	[src/sub1.c] Added log messages and checked the UBF cases yielding
+	exp_b == MPFR_EXP_MAX and/or diff_exp == MPFR_EXP_MAX.
+
+2020-02-08  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/vasprintf.c] Added log messages for MPFR_PREC_ARG ('P' specifier).
+
+	[tests/tsprintf.c] Fixed some tests: the 'P' specifier was missing.
+
+2020-02-06  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/fmma.c] Reverted the mpfr_check_range from r13688.
+	The exponent range has not been extended by mpfr_fmma_aux, and the
+	result comes from mpfr_add, mpfr_sub, or mpfr_set_1_2, which return
+	results in the current range. If the result of mpfr_fmma_aux is not
+	in the current range, this is due to a bug in one of these functions.
+	Note: mpfr_add and mpfr_sub accept UBF inputs.
+
+2020-02-06  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[src/fmma.c] fixed bug (result might be out of exponent range)
+	[tests/tfmma.c] added non-regression test
+
+2020-02-03  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Updated the month.
+
+	[doc/mpfr.texi] In the paragraph "MPFR internal data such as flags",
+	no longer mention caches as caches may now also be global when MPFR
+	has been compiled as thread safe (locking is used). Caches have been
+	discussed earlier in the section anyway.
+
+2020-01-23  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[INSTALL] URL update.
+
+2020-01-20  Vincent Lefèvre  <vincent@vinc17.net>
+
+	ChangeLog update with "LC_ALL=en_US.UTF8 TZ=UTC svn log -rHEAD:0 -v".
+
+	[tests/Makefile.am] Updated a comment; in particular, replaced the two
+	obsolete gmane.org URLs by lists.gnu.org/archive/html/bug-gnulib ones.
+
+	[INSTALL] Removed reference to a gmane.org URL, which no longer exists.
+
+2020-01-16  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/beta.c,tests/ttanh.c] towards → toward (for consistency).
+
+2020-01-10  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/{tfprintf.c,tprintf.c}] Updated an error message about MinGW,
+	now output only if MinGW is used.
+
+	[doc/README.dev] Concerning MinGW, added a sentence about the use of
+	the __USE_MINGW_ANSI_STDIO macro, confirming the existing note.
+
+	[TODO] Removed obsolete item on MinGW and -D__USE_MINGW_ANSI_STDIO.
+
+	[INSTALL] Update concerning MinGW and the __USE_MINGW_ANSI_STDIO macro.
+
+	[doc/mpfr.texi] Updated mpfr_get_str documentation, correcting r13666
+	(we still need the extra two bytes and to take -@Inf@ into account).
+
+2020-01-10  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[mpfr.texi] fixed out-dated documentation for mpfr_get_str
+
+2020-01-09  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/README.dev] In the latest update, forgot to remove the CC=...
+
+	[doc/README.dev] Update about the test under Wine.
+
+	[acinclude.m4,configure.ac]
+	  * Moved the code that tries to determine the format of double from
+	    configure.ac to acinclude.m4 in MPFR_CONFIGS (as required), just
+	    before the one for long double.
+	  * Added a FIXME comment: This code uses AC_RUN_IFELSE, which cannot
+	    run the test when cross-compiling; use a test like for long double
+	    instead.
+
+	[acinclude.m4] English usage.
+
+	[acinclude.m4] Updated messages about the format of "long double".
+	[configure.ac] Ditto for "double". Added missing AC_MSG_RESULT.
+
+	[tests/tversion.c] Updated/fixed an output line to match the other ones.
+
+	[tests/tsprintf.c] Added tests for %Ra and %Rb on the value 0 with an
+	empty precision field.
+
+	[src/vasprintf.c] Fixed output precision bug with decimal output
+	(i.e. e, f and g conversion specifiers) and an empty precision field
+	on the value 0.
+
+	[tests/tsprintf.c] Also added tests with %Rf, %Rg and %#Rg on 0.
+
+	[tests/tsprintf.c] Added a test with %Re and an empty precision field
+	on the value 0; it currently fails.
+
+2020-01-08  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tools/ck-copyright-notice] Added a note about the mpfr.pc.in file.
+
+	Copyright notice update: added 2020 with
+	  perl -pi -e 's/ (\d{4}-)?(2019)(?= Free Software)/
+	               " ".($1||"$2-").($2+1)/e' **/*(^/)
+	under zsh. Removed 2019 from the example in the doc/README.dev file.
+
+	[TODO] + base conversion with the round-trip property using a minimal
+	precision, such as the to_chars functions from the C++ standard.
+
+	[doc/mpfr.texi] Updated the month.
+
+	[doc/mpfr.texi] Formatted output: improved the text concerning the
+	empty precision field, i.e. focus on the chosen precision rather
+	than the round-trip property (as the rounding mode is not necessarily
+	to nearest).
+
+	[doc/mpfr.texi] Formatted output with %Re (empty precision field):
+	added a reference to mpfr_get_str_ndigits.
+
+	[src/vasprintf.c] Simplified the conditions under which trailing zeros
+	are kept (the spec_g variable is no longer needed as a consequence).
+
+	[tests/tsprintf.c] Re-added tests changed by r13644 and r13645, but
+	with a variable of smaller precision in order to get the same output
+	as before.
+
+	[tests/tsprintf.c] Updated other two tests (in da_DK locale).
+
+2020-01-08  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	fixed tests for new more precise semantics for mpfr_printf ("%Re", x),
+	and documented it
+
+	[src/vasprintf.c] tentative fix so that mpfr_printf ("%.Re", x) prints a number
+			  of decimal digits independent from x
+
+2019-12-24  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[INSTALL,doc/mpfr.texi] Typography.
+
+2019-10-10  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/algorithms.tex] Ulp calculus: put the old Rule 8 just after Rule 2,
+	as the old Rule 3 (now Rule 4) uses it directly (proof updated).
+
+	[doc/algorithms.tex] Ulp calculus: simplified the proof of Rule 8.
+
+	[doc/algorithms.tex] Ulp calculus Rule 3: missing absolute values in
+	the proof.
+
+	[doc/algorithms.tex] Actually assume that no underflows nor overflows
+	occur for the whole section "Error calculus".
+
+	[doc/algorithms.tex] Ulp calculus Rule 6: corrected it (we need to
+	assume no underflows nor overflows) and its proof, and generalized
+	it with absolute values (like in the previous rules).
+
+2019-10-07  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/algorithms.tex] Ulp calculus Rule 3: more powerful result and
+	much simpler proof.
+
+	[doc/algorithms.tex] Section 2 (Error calculus): When n was a precision,
+	replaced it by p as this is the usual notation (see Section 1) and n
+	sometimes had a double meaning.
+
+2019-10-04  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/tcmp_ui.c] Updated comment: this is a bug in Clang 9.
+
+	[tests/tcmp_ui.c] Added a comment: failure of a test with the
+	clang-9 1:9-1 Debian package.
+
+2019-10-01  Vincent Lefèvre  <vincent@vinc17.net>
+
+	Clean-up concerning the tests of subnormals for double and float.
+	  * acinclude.m4: renamed variables
+	      mpfr_cv_have_denorms_flt to mpfr_cv_have_subnorm_flt
+	      mpfr_cv_have_denorms     to mpfr_cv_have_subnorm_dbl
+	    and improved messages.
+	  * acinclude.m4, tests/tget_flt.c: renamed macro
+	      HAVE_DENORMS_FLT to HAVE_SUBNORM_FLT
+	  * acinclude.m4, tests/{tests.c,tset_d.c,tsprintf.c}: renamed macro
+	      HAVE_DENORMS     to HAVE_SUBNORM_DBL
+	  * doc/README.dev: updated / completed the corresponding documentation.
+	  * tests/tget_d.c: renamed function check_denorms to check_subnorm.
+
+	[acinclude.m4] Updated comment about the tests for subnormal numbers.
+
+	[acinclude.m4] Added a comment about the tests for subnormal numbers.
+
+2019-09-24  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/Makefile.am] Added missing texinfo.tex prerequisite.
+
+2019-09-16  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests] Added FIXME comment in tfprintf.c, tout_str.c and tprintf.c:
+	The output is not tested (thus coverage data are meaningless).
+
+2019-09-10  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/{add1sp.c,sub1sp.c}] Get rid of useless goto's.
+
+2019-09-06  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Updated the month.
+
+	[src/hypot.c] Replaced a TODO by a FIXME.
+
+	The mpfr_out_str function now accepts bases from -2 to -36, in order to
+	follow mpfr_get_str and GMP's mpf_out_str functions.
+
+	[doc/mpfr.texi] Changed an incorrect use of @xref, which must always
+	occur at the beginning of a sentence (use "see @ref{...}" instead).
+
+	[doc/mpfr.texi] At the end of "Arithmetic Functions", added a sentence
+	referencing the power functions (since x^n is an arithmetic function).
+
+2019-09-05  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[doc/mpfr.texi] Removed the useless "Float ..." index entries.
+
+	[doc/mpfr.texi] Moved the mpfr_pow class of functions from
+	"Arithmetic Functions" to "Transcendental Functions".
+
+	[doc/mpfr.texi] Added "Float transcendental functions" to the index
+	for consistency ("transcendental functions" implies floating point,
+	but the user should expect to find it with the other index terms
+	starting with "Float").
+
+	[doc/mpfr.texi] Renamed "Basic Arithmetic Functions" to just
+	"Arithmetic Functions".
+
+	[doc/mpfr.texi] Transcendental functions: added a sentence to the
+	important note (about cases theoretically very hard to round).
+
+	[doc/mpfr.texi] Renamed Section "Special Functions" to
+	"Transcendental Functions" (as after changes in r13605 and r13606,
+	it now contains only the transcendental functions), and slightly
+	rewrote its important note.
+
+	[doc/mpfr.texi] Moved mpfr_free_cache, mpfr_free_cache2, mpfr_free_pool
+	and mpfr_mp_memory_cleanup from "Special Functions" to a new section
+	"Memory Handling Functions".
+
+	[doc/mpfr.texi]
+	  * Moved mpfr_fac_ui, mpfr_fma, mpfr_fms, mpfr_fmma, mpfr_fmms,
+	    mpfr_hypot, mpfr_sum and mpfr_dot from "Special Functions" to
+	    "Basic Arithmetic Functions" (as these are functions based on
+	    +, -, *, / and roots).
+	  * Added a FIXME for mpfr_pow: does this function really belong
+	    to "Basic Arithmetic Functions"?
+
+	[doc/mpfr.texi] Improved warning about huge precisions.
+
+	[src/mul.c] For the --enable-assert=full test, also test the flags
+	(like what has been done for mpfr_add1sp and mpfr_sub1sp).
+
+	[src/sub1sp.c] For the --enable-assert=full test, improved output of
+	ternary value and flags, like in r13582 for mpfr_add1sp.
+
+	[src/add1sp.c] Cosmetic change (consistent ordering).
+
+2019-09-04  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[tests/tsub1sp.c] added non-regression test for bug in mpfr_sub1sp2n
+	[src/sub1sp.c] fixed that bug
+
+2019-09-04  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[acinclude.m4] Fixed MPFR_C_LONG_DOUBLE_FORMAT macro for MS-Windows.
+
+	[NEWS] More details about mpfr_add and mpfr_sub.
+
+2019-09-04  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[NEWS] mention that mpfr_sub was also improved for 128 bits
+
+	[NEWS] coverage improved to 98.6% on x86_64
+
+	[tests/tadd1sp.c] improve coverage
+
+2019-09-04  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[acinclude.m4] Fixed MPFR_C_LONG_DOUBLE_FORMAT macro: the patch had
+	a spurious ";" at the end of conftest.c, which made its compilation
+	fail with -pedantic -Werror (using gcc or clang).
+
+2019-09-04  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[src/sub1sp.c] rewrote mpfr_sub1sp2n (inspired from mpfr_sub1sp1n)
+
+2019-09-04  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[acinclude.m4] Updated MPFR_C_LONG_DOUBLE_FORMAT to support compilation
+	with GCC's and clang's LTO (-flto). This new test is inspired by the one
+	used by GMP for the double type.
+	Thanks to Paul Mulders for a preliminary version of the patch for MPFR.
+
+2019-09-03  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[src/sub1sp.c] added new function mpfr_sub1sp2n for p = 2*GMP_NUMB_BITS
+		       (still to be tested)
+
+2019-09-03  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[tests/tadd1sp.c] bug20190903:
+	  * Fixed the second test for GMP_NUMB_BITS != 64.
+	  * Updated comments.
+
+2019-09-03  Paul Zimmermann  <Paul.Zimmermann@inria.fr>
+
+	[src/add1sp.c] improved comment
+
+2019-09-03  Vincent Lefèvre  <vincent@vinc17.net>
+
+	[src/add1sp.c] mpfr_add1sp2n: improved a comment.
+
+	[src/add1sp.c] Fixed the bug.
+
+	[tests/tadd1sp.c] bug20190903: do the second test in MPFR_RNDU too.
+
+	[tests/tadd1sp.c] bug20190903: in the second test, check the mpfr_t
+	value, the ternary value and the flags, in order to get a failure
+	even without "--enable-assert=full".
+
+	[tests/tadd1sp.c] When testing mpfr_add, use a wrapper mpfr_add_cf
+	that calls mpfr_clear_flags first, so that if --enable-assert=full
+	is used, the flags can be better checked too (and automatically).
+	Now tadd1sp outputs with --enable-assert=full, as wanted:
+	  add1  : ternary = -1, flags = inexact (8)
+	  add1sp: ternary =  0, flags = none (0)
+
+	[src]
+... (truncated)

@@ -17,5 +17,15 @@ debug = false
 rug = "1.18.0"
 jni = "0.20.0"
 
+[patch.crates-io]
+gmp-mpfr-sys = { path = "gmp-mpfr-sys/" }
+
+[dependencies.gmp-mpfr-sys]
+version = "1.4.11"
+features = ["mpfr", "mpc", "force-cross"]
+
 [lib]
 crate-type = ["cdylib"]
+
+[features]
+unwind-stubs = []
