@@ -218,7 +218,7 @@ jobs:
     - name: Download artifacts
       uses: actions/download-artifact@v3
       with:
-        path: java/src/main/resources/natives
+        path: java/src/main/resources/native
     - name: Build
       run: |
         ls -R java
