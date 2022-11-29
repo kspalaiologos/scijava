@@ -149,5 +149,15 @@ public class TestArithmetic {
         Assertions.assertTrue(factors.get(SciInteger.valueOf(2)).eq(SciInteger.valueOf(4)));
         Assertions.assertTrue(factors.get(SciInteger.valueOf(3)).eq(SciInteger.valueOf(2)));
         Assertions.assertTrue(factors.get(SciInteger.valueOf(5)).eq(SciInteger.ONE));
+        // -1 * 2^4 * 3^2 * 5 = -720
+        factors = SciInteger.factor(SciInteger.valueOf(-720));
+        Assertions.assertEquals(4, factors.size());
+        Assertions.assertTrue(factors.get(SciInteger.valueOf(-1)).eq(SciInteger.ONE));
+        Assertions.assertTrue(factors.get(SciInteger.valueOf(2)).eq(SciInteger.valueOf(4)));
+        Assertions.assertTrue(factors.get(SciInteger.valueOf(3)).eq(SciInteger.valueOf(2)));
+        Assertions.assertTrue(factors.get(SciInteger.valueOf(5)).eq(SciInteger.ONE));
+        // factor 0
+        factors = SciInteger.factor(SciInteger.ZERO);
+        Assertions.assertEquals(0, factors.size());
     }
 }
