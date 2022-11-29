@@ -607,6 +607,10 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_sqrt(_env: JNIEnv, _c
     let a = a as *mut Integer;
     let a = unsafe { &*a };
     let dest = unsafe { &mut *dest };
+    if a < &0 {
+        let _ = _env.throw_new("java/lang/ArithmeticException", "Call to sqrt with negative number");
+        return;
+    }
     *dest = a.sqrt_ref().into();
 }
 

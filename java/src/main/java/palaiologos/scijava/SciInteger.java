@@ -607,18 +607,35 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
         return result;
     }
 
+    /**
+     * Return the n-th Lucas number.
+     * @param n the index of the Lucas number to compute
+     * @return a new SciInteger instance, the n-th Lucas number
+     * @throws ArithmeticException if n is negative
+     */
     public static SciInteger lucas(int n) {
         SciInteger result = SciInteger.fromInteger(0);
         lucas(result.ptr, n);
         return result;
     }
 
-    public static SciInteger hamming(int n) {
-        SciInteger result = SciInteger.fromInteger(0);
-        hamming(result.ptr, n);
-        return result;
+    /**
+     * Compute the Hamming distance between two SciIntegers. Does not modify the operands.
+     * The Hamming distance is simply the amount of bits that differ between the two operands.
+     * @param a the first operand
+     * @param b the second operand
+     * @return the Hamming distance between a and b
+     */
+    public static int hamming(SciInteger a, SciInteger b) {
+        return hamming(a.ptr, b.ptr);
     }
 
+    /**
+     * Yield the smaller of two SciIntegers.
+     * @param a the first operand
+     * @param b the second operand
+     * @return the smaller of a and b
+     */
     public static SciInteger min(SciInteger a, SciInteger b) {
         if(a.lt(b)) {
             return a;
@@ -627,6 +644,12 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
         }
     }
 
+    /**
+     * Yield the larger of two SciIntegers.
+     * @param a the first operand
+     * @param b the second operand
+     * @return the larger of a and b
+     */
     public static SciInteger max(SciInteger a, SciInteger b) {
         if(a.gt(b)) {
             return a;
@@ -635,44 +658,91 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
         }
     }
 
+    /**
+     * Compute the integer square root of a SciInteger to produce a new SciInteger instance.
+     * @param a the operand
+     * @return a new SciInteger instance, the integer square root of a
+     * @throws ArithmeticException if a is negative
+     */
     public static SciInteger sqrt(SciInteger a) {
         SciInteger result = SciInteger.fromInteger(0);
         sqrt(result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Compute the square of a SciInteger to produce a new SciInteger instance.
+     * @param a the operand
+     * @return a new SciInteger instance, the square of a
+     */
     public static SciInteger square(SciInteger a) {
         SciInteger result = SciInteger.fromInteger(0);
         square(result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Compute the value of the Legendre symbol of a and p.
+     * @param a the first operand
+     * @param p the second operand
+     * @return the value of the Legendre symbol of a and p
+     */
     public static int legendre(SciInteger a, SciInteger p) {
         return legendre(a.ptr, p.ptr);
     }
 
+    /**
+     * Compute the value of the Jacobi symbol of a and p.
+     * @param a the first operand
+     * @param p the second operand
+     * @return the value of the Jacobi symbol of a and p
+     */
     public static int jacobi(SciInteger a, SciInteger p) {
         return jacobi(a.ptr, p.ptr);
     }
 
+    /**
+     * Try to turn the SciInteger into a Java int.
+     * @return the value of the SciInteger as a Java int
+     * @throws ArithmeticException if the value of the SciInteger is too large to fit in a Java int
+     */
     public int intValue() {
         return toInteger(ptr);
     }
 
+    /**
+     * Turn a SciInteger into a string. The string is formatted in base 10.
+     * @return the value of the SciInteger as a string
+     */
     @Override
     public String toString() {
         return toString(ptr);
     }
 
+    /**
+     * Turn a SciInteger into a string. The string is formatted in the given base.
+     * @param radix the base to format the string in
+     * @return the value of the SciInteger as a string
+     * @throws IllegalArgumentException if radix is not between 2 and 36
+     */
     public String toString(int radix) {
         return toStringRadix(ptr, radix);
     }
 
+    /**
+     * Return the value of applying the three-way comparison operator between two SciIntegers.
+     * @param o the other SciInteger.
+     * @return -1 if this is less than o, 0 if this is equal to o, 1 if this is greater than o
+     */
     @Override
     public int compareTo(SciInteger o) {
         return compare(ptr, o.ptr);
     }
 
+    /**
+     * Copy a SciInteger to produce a new SciInteger instance.
+     * @return a new SciInteger instance, a copy of `this`
+     */
     @Override
     public SciInteger clone() {
         SciInteger result = SciInteger.fromInteger(0);
@@ -680,17 +750,39 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
         return result;
     }
 
+    /**
+     * Factor a SciInteger into its prime factors using the Pollard rho algorithm.
+     * If a is negative, then the prime factors of -a are returned with an additional -1 factor in the result.
+     * The result is a list of pairs of SciIntegers (represented as a {@link HashMap}), where the first element of the
+     * pair is the prime factor and the second element is the exponent.
+     * @param a the operand
+     * @return the factorisation of a
+     */
     public static HashMap<SciInteger, SciInteger> factor(SciInteger a) {
         HashMap<SciInteger, SciInteger> result = new HashMap<>();
         factor(result, a.ptr);
         return result;
     }
 
+    /**
+     * Compute the hash code of this object.
+     * The value returned depends on the population count of this object. The primary design decision
+     * that lead to this choice is to allow SciIntegers as keys for a HashMap, where we can easily bucket
+     * them by the population count yielding a somewhat uniform distribution. This is not a great hashing solution,
+     * but it's pretty darn fast.
+     * @return the hash code of this object
+     */
     @Override
     public int hashCode() {
         return Objects.hash(bitCount(this));
     }
 
+    /**
+     * Check for equality with another object. Takes care of funny cases like comparing a SciInteger to an object
+     * of different type and two SciIntegers being physically equal before using the eq method.
+     * @param obj the other object
+     * @return true if the two objects are equal, false otherwise
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -703,6 +795,9 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
             return false;
         }
         final SciInteger other = (SciInteger) obj;
+        if (this.ptr == other.ptr) {
+            return true;
+        }
         return this.eq(other);
     }
 }
