@@ -60,4 +60,16 @@ public class TestArithmetic {
         // try something more interesting
         Assertions.assertTrue(SciInteger.mod(SciInteger.TEN, SciInteger.valueOf(3)).eq(SciInteger.ONE));
     }
+
+    @Test
+    public void testPower() {
+        // try a negative power
+        Assertions.assertThrows(IllegalArgumentException.class, () -> SciInteger.pow(SciInteger.TEN, -1));
+        // try a zero power
+        Assertions.assertTrue(SciInteger.pow(SciInteger.TEN, 0).eq(SciInteger.ONE));
+        // try a positive power
+        Assertions.assertTrue(SciInteger.pow(SciInteger.TEN, 1).eq(SciInteger.TEN));
+        // try a larger power
+        Assertions.assertTrue(SciInteger.pow(SciInteger.TEN, 2).eq(SciInteger.valueOf(100)));
+    }
 }
