@@ -623,3 +623,54 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_tanh(
         dest.tanh_mut();
     }
 }
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_asinh(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.asinh_mut();
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.asinh_mut();
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_acosh(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.acosh_mut();
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.acosh_mut();
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_atanh(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.atanh_mut();
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.atanh_mut();
+    }
+}
