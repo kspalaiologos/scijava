@@ -58,6 +58,9 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void sec(int precision, int roundingMode, long dest, long a);
     private static native void csc(int precision, int roundingMode, long dest, long a);
     private static native void cot(int precision, int roundingMode, long dest, long a);
+    private static native void asin(int precision, int roundingMode, long dest, long a);
+    private static native void acos(int precision, int roundingMode, long dest, long a);
+    private static native void atan(int precision, int roundingMode, long dest, long a);
     private static native void cbrt(int precision, int roundingMode, long dest, long a);
     private static native void neg(int precision, int roundingMode, long dest, long a);
     private static native void abs(int precision, int roundingMode, long dest, long a);
@@ -153,6 +156,24 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     public static SciFloat cot(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.cot(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat asin(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.asin(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat acos(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.acos(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat atan(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.atan(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
