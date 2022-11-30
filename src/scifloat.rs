@@ -126,6 +126,25 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_fromString(
 }
 
 #[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_agm(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong, b: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let b = b as *mut Float;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.agm_mut(b);
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.agm_mut(b);
+    }
+}
+
+#[no_mangle]
 pub extern "system" fn Java_palaiologos_scijava_SciFloat_add(
         _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong, b: jlong) {
     let dest = dest as *mut Float;
@@ -285,6 +304,23 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_abs(
         *dest = a.clone();
         dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
         dest.abs_mut();
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_digamma(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.digamma_mut();
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.digamma_mut();
     }
 }
 

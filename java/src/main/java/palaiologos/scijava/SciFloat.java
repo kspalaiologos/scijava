@@ -46,6 +46,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
 
     private static native void free(long ptr);
     private static native String toString(long i);
+    private static native void agm(int precision, int roundingMode, long dest, long a, long b);
     private static native void add(int precision, int roundingMode, long dest, long a, long b);
     private static native void sub(int precision, int roundingMode, long dest, long a, long b);
     private static native void mul(int precision, int roundingMode, long dest, long a, long b);
@@ -73,6 +74,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void cbrt(int precision, int roundingMode, long dest, long a);
     private static native void neg(int precision, int roundingMode, long dest, long a);
     private static native void abs(int precision, int roundingMode, long dest, long a);
+    private static native void digamma(int precision, int roundingMode, long dest, long a);
     private static native void factorial(int precision, int roundingMode, long dest, int a);
     private static native MathContext getMathContext(long ptr);
     private static native boolean lt(long a, long b);
@@ -104,6 +106,12 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
 
     public static SciFloat valueOf(MathContext mc, SciInteger i) {
         return fromSciInteger(mc.precision(), mc.roundingMode().ordinal(), i.ptr);
+    }
+
+    public static SciFloat agm(MathContext mc, SciFloat a, SciFloat b) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        agm(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr, b.ptr);
+        return result;
     }
 
     public static SciFloat add(MathContext mc, SciFloat a, SciFloat b) {
@@ -255,6 +263,12 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     public static SciFloat cbrt(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.cbrt(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat digamma(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.digamma(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
