@@ -75,6 +75,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void neg(int precision, int roundingMode, long dest, long a);
     private static native void abs(int precision, int roundingMode, long dest, long a);
     private static native void digamma(int precision, int roundingMode, long dest, long a);
+    private static native void Ei(int precision, int roundingMode, long dest, long a);
     private static native void factorial(int precision, int roundingMode, long dest, int a);
     private static native MathContext getMathContext(long ptr);
     private static native boolean lt(long a, long b);
@@ -269,6 +270,12 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     public static SciFloat digamma(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.digamma(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat Ei(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.Ei(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
