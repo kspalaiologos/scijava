@@ -33,7 +33,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
         }
     }
 
-    private final long ptr;
+    final long ptr;
 
     private final Cleaner.Cleanable cleanable;
 
@@ -85,6 +85,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void copy(long dest, long src);
     private static native SciFloat fromString(int precision, int roundingMode, String s);
     private static native SciFloat fromInteger(int precision, int roundingMode, int n);
+    private static native SciFloat fromSciInteger(int precision, int roundingMode, long n);
     private static native boolean isFinite(long ptr);
 
     // Public API
@@ -99,6 +100,10 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
 
     public static SciFloat valueOf(MathContext mc, String s) {
         return fromString(mc.precision(), mc.roundingMode().ordinal(), s);
+    }
+
+    public static SciFloat valueOf(MathContext mc, SciInteger i) {
+        return fromSciInteger(mc.precision(), mc.roundingMode().ordinal(), i.ptr);
     }
 
     public static SciFloat add(MathContext mc, SciFloat a, SciFloat b) {

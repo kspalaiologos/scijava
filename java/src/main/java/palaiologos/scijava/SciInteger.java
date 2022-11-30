@@ -47,7 +47,7 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
         }
     }
 
-    private final long ptr;
+    final long ptr;
 
     private final Cleaner.Cleanable cleanable;
 

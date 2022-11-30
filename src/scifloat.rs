@@ -31,7 +31,7 @@ use jni::objects::{JClass, JString, JObject, JValue, JMap};
 // can't return one of the objects with lifetime information because the
 // lifetime checker won't let us.
 use jni::sys::{jstring, jlong, jint, jobject, jboolean};
-use rug::Float;
+use rug::{Float, Integer};
 use rug::float::Round;
 use rug::ops::NegAssign;
 
@@ -54,6 +54,23 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_free(_env: JNIEnv, _cla
 #[no_mangle]
 pub extern "system" fn Java_palaiologos_scijava_SciFloat_fromInteger(
         env: JNIEnv, _class: JClass, precision: jint, _rounding_mode: jint, n: jint) -> jobject {
+    let n = Float::with_val(precision as u32, n);
+    let ptr = Box::into_raw(Box::new(n));
+    let ptr = ptr as jlong;
+    let obj = env.new_object("palaiologos/scijava/SciFloat", "(J)V", &[ptr.into()]);
+    match obj {
+        Ok(obj) => obj.into_raw(),
+        Err(_) => {
+            let _ = env.throw(("java/lang/RuntimeException", "Failed to allocate object."));
+            JObject::null().into_raw()
+        }
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_fromSciInteger(
+        env: JNIEnv, _class: JClass, precision: jint, _rounding_mode: jint, n: jlong) -> jobject {
+    let n: &Integer = unsafe { &*(n as *const Integer) };
     let n = Float::with_val(precision as u32, n);
     let ptr = Box::into_raw(Box::new(n));
     let ptr = ptr as jlong;
