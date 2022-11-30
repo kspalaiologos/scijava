@@ -58,4 +58,8 @@ public record MathContext(int precision, palaiologos.scijava.MathContext.Roundin
                 ", roundingMode=" + roundingMode +
                 '}';
     }
+
+    // Some default contexts:
+    public static final MathContext MC53 = new MathContext(53, RoundingMode.NEAREST);
+    public static final MathContext MC24 = new MathContext(24, RoundingMode.NEAREST);
 }

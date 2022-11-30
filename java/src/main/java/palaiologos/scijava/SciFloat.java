@@ -61,6 +61,9 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void asin(int precision, int roundingMode, long dest, long a);
     private static native void acos(int precision, int roundingMode, long dest, long a);
     private static native void atan(int precision, int roundingMode, long dest, long a);
+    private static native void asin_inplace(int precision, int roundingMode, long a);
+    private static native void acos_inplace(int precision, int roundingMode, long a);
+    private static native void atan_inplace(int precision, int roundingMode, long a);
     private static native void cbrt(int precision, int roundingMode, long dest, long a);
     private static native void neg(int precision, int roundingMode, long dest, long a);
     private static native void abs(int precision, int roundingMode, long dest, long a);
@@ -79,6 +82,11 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native boolean isFinite(long ptr);
 
     // Public API
+    public static SciFloat ONE = SciFloat.valueOf(MathContext.MC24, 1);
+    public static SciFloat ZERO = SciFloat.valueOf(MathContext.MC24, 0);
+    public static SciFloat HALF = SciFloat.valueOf(MathContext.MC24, "0.5");
+
+
     public static SciFloat valueOf(MathContext mc, int n) {
         return fromInteger(mc.precision(), mc.roundingMode().ordinal(), n);
     }
@@ -174,6 +182,26 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     public static SciFloat atan(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.atan(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+    public static SciFloat asec(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.div(mc.precision(), mc.roundingMode().ordinal(), result.ptr, ONE.ptr, a.ptr);
+        SciFloat.acos_inplace(mc.precision(), mc.roundingMode().ordinal(), result.ptr);
+        return result;
+    }
+
+    public static SciFloat acsc(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.div(mc.precision(), mc.roundingMode().ordinal(), result.ptr, ONE.ptr, a.ptr);
+        SciFloat.asin_inplace(mc.precision(), mc.roundingMode().ordinal(), result.ptr);
+        return result;
+    }
+
+    public static SciFloat acot(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.div(mc.precision(), mc.roundingMode().ordinal(), result.ptr, ONE.ptr, a.ptr);
+        SciFloat.atan_inplace(mc.precision(), mc.roundingMode().ordinal(), result.ptr);
         return result;
     }
 

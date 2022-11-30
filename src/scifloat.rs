@@ -481,8 +481,6 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_cot(
     }
 }
 
-// implement arcus functions
-
 #[no_mangle]
 pub extern "system" fn Java_palaiologos_scijava_SciFloat_asin(
         _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
@@ -497,6 +495,19 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_asin(
         *dest = a.clone();
         dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
         dest.asin_mut();
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_asin_inplace(
+        _env: JNIEnv, _class: JClass, precision: jint, _rounding_mode: jint, a: jlong) {
+    let a = a as *mut Float;
+    let a = unsafe { &mut *a };
+    if a.prec() == precision as u32 {
+        a.asin_mut();
+    } else {
+        a.set_prec(precision as u32);
+        a.asin_mut();
     }
 }
 
@@ -518,6 +529,19 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_acos(
 }
 
 #[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_acos_inplace(
+        _env: JNIEnv, _class: JClass, precision: jint, _rounding_mode: jint, a: jlong) {
+    let a = a as *mut Float;
+    let a = unsafe { &mut *a };
+    if a.prec() == precision as u32 {
+        a.acos_mut();
+    } else {
+        a.set_prec(precision as u32);
+        a.acos_mut();
+    }
+}
+
+#[no_mangle]
 pub extern "system" fn Java_palaiologos_scijava_SciFloat_atan(
         _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
     let dest = dest as *mut Float;
@@ -531,5 +555,18 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_atan(
         *dest = a.clone();
         dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
         dest.atan_mut();
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_atan_inplace(
+        _env: JNIEnv, _class: JClass, precision: jint, _rounding_mode: jint, a: jlong) {
+    let a = a as *mut Float;
+    let a = unsafe { &mut *a };
+    if a.prec() == precision as u32 {
+        a.atan_mut();
+    } else {
+        a.set_prec(precision as u32);
+        a.atan_mut();
     }
 }
