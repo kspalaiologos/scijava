@@ -24,7 +24,7 @@ import java.lang.ref.Cleaner;
 import static palaiologos.scijava.NativeLibrary.load;
 import static palaiologos.scijava.NativeLibrary.resourceName;
 
-public final class SciFloat {
+public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     static {
         try {
             load(resourceName());
@@ -52,11 +52,25 @@ public final class SciFloat {
     private static native void div(int precision, int roundingMode, long dest, long a, long b);
     private static native void mod(int precision, int roundingMode, long dest, long a, long b);
     private static native void sqrt(int precision, int roundingMode, long dest, long a);
+    private static native void sin(int precision, int roundingMode, long dest, long a);
+    private static native void cos(int precision, int roundingMode, long dest, long a);
+    private static native void tan(int precision, int roundingMode, long dest, long a);
+    private static native void sec(int precision, int roundingMode, long dest, long a);
+    private static native void csc(int precision, int roundingMode, long dest, long a);
+    private static native void cot(int precision, int roundingMode, long dest, long a);
     private static native void cbrt(int precision, int roundingMode, long dest, long a);
     private static native void neg(int precision, int roundingMode, long dest, long a);
     private static native void abs(int precision, int roundingMode, long dest, long a);
     private static native void factorial(int precision, int roundingMode, long dest, int a);
+    private static native MathContext getMathContext(long ptr);
+    private static native boolean lt(long a, long b);
+    private static native boolean lte(long a, long b);
+    private static native boolean gt(long a, long b);
+    private static native boolean gte(long a, long b);
     private static native boolean eq(long a, long b);
+    private static native boolean neq(long a, long b);
+    private static native int compare(long a, long b);
+    private static native void copy(long dest, long src);
     private static native SciFloat fromString(int precision, int roundingMode, String s);
     private static native SciFloat fromInteger(int precision, int roundingMode, int n);
     private static native boolean isFinite(long ptr);
@@ -106,6 +120,42 @@ public final class SciFloat {
         return result;
     }
 
+    public static SciFloat sin(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.sin(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat cos(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.cos(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat tan(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.tan(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat sec(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.sec(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat csc(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.csc(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat cot(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.cot(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
     public static SciFloat cbrt(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.cbrt(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
@@ -138,6 +188,26 @@ public final class SciFloat {
         return eq(ptr, other.ptr);
     }
 
+    public boolean neq(SciFloat other) {
+        return neq(ptr, other.ptr);
+    }
+
+    public boolean lt(SciFloat other) {
+        return lt(ptr, other.ptr);
+    }
+
+    public boolean lte(SciFloat other) {
+        return lte(ptr, other.ptr);
+    }
+
+    public boolean gt(SciFloat other) {
+        return gt(ptr, other.ptr);
+    }
+
+    public boolean gte(SciFloat other) {
+        return gte(ptr, other.ptr);
+    }
+
     @Override
     public boolean equals(Object other) {
         if (other == this) {
@@ -154,5 +224,17 @@ public final class SciFloat {
     @Override
     public String toString() {
         return toString(ptr);
+    }
+
+    @Override
+    public int compareTo(SciFloat o) {
+        return compare(ptr, o.ptr);
+    }
+
+    @Override
+    protected Object clone() {
+        SciFloat result = SciFloat.valueOf(getMathContext(ptr), 0);
+        copy(result.ptr, ptr);
+        return result;
     }
 }

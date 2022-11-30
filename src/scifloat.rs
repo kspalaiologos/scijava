@@ -284,8 +284,43 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_factorial(
 }
 
 #[no_mangle]
-pub extern "system" fn Java_palaiologos_scijava_SciFloat_eq(
-        _env: JNIEnv, _class: JClass, a: jlong, b: jlong) -> jboolean {
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_lt(_env: JNIEnv, _class: JClass, a: jlong, b: jlong) -> jboolean {
+    let a = a as *mut Float;
+    let b = b as *mut Float;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    (a < b) as jboolean
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_lte(_env: JNIEnv, _class: JClass, a: jlong, b: jlong) -> jboolean {
+    let a = a as *mut Float;
+    let b = b as *mut Float;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    (a <= b) as jboolean
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_gt(_env: JNIEnv, _class: JClass, a: jlong, b: jlong) -> jboolean {
+    let a = a as *mut Float;
+    let b = b as *mut Float;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    (a > b) as jboolean
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_gte(_env: JNIEnv, _class: JClass, a: jlong, b: jlong) -> jboolean {
+    let a = a as *mut Float;
+    let b = b as *mut Float;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    (a >= b) as jboolean
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_eq(_env: JNIEnv, _class: JClass, a: jlong, b: jlong) -> jboolean {
     let a = a as *mut Float;
     let b = b as *mut Float;
     let a = unsafe { &*a };
@@ -294,9 +329,154 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_eq(
 }
 
 #[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_neq(_env: JNIEnv, _class: JClass, a: jlong, b: jlong) -> jboolean {
+    let a = a as *mut Float;
+    let b = b as *mut Float;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    (a != b) as jboolean
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_compare(_env: JNIEnv, _class: JClass, a: jlong, b: jlong) -> jint {
+    let a = a as *mut Float;
+    let b = b as *mut Float;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    a.total_cmp(b) as jint
+}
+
+#[no_mangle]
 pub extern "system" fn Java_palaiologos_scijava_SciFloat_isFinite(
         _env: JNIEnv, _class: JClass, ptr: jlong) -> jboolean {
     let ptr = ptr as *mut Float;
     let n = unsafe { &*ptr };
     n.is_finite() as jboolean
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_copy(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.clone();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_getMathContext(
+        env: JNIEnv, _class: JClass, ptr: jlong) -> jobject {
+    let ptr = ptr as *mut Float;
+    let n = unsafe { &*ptr };
+    let precision = n.prec() as jint;
+    let mc = env.new_object("palaiologos/scijava/MathContext", "(II)V", &[JValue::Int(precision), JValue::Int(0)]);
+    match mc {
+        Ok(mc) => mc.into_raw(),
+        Err(e) => {
+            let _ = env.throw_new("java/lang/RuntimeException", format!("Error creating MathContext: {}", e));
+            JObject::null().into_raw()
+        }
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_sin(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.sin_mut();
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.sin_mut();
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_cos(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.cos_mut();
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.cos_mut();
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_tan(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.tan_mut();
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.tan_mut();
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_sec(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.sec_mut();
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.sec_mut();
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_csc(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.csc_mut();
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.csc_mut();
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_cot(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.cot_mut();
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.cot_mut();
+    }
 }
