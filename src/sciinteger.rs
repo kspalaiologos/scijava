@@ -35,7 +35,7 @@ use jni::sys::{jstring, jlong, jint, jobject, jboolean};
 
 use rug::integer::IsPrime;
 use rug::ops::Pow;
-use rug::{Integer, Complete};
+use rug::{Integer, Complete, Float};
 
 #[no_mangle]
 pub extern "system" fn Java_palaiologos_scijava_SciInteger_free(_env: JNIEnv, _class: JClass, ptr: jlong) {
@@ -46,6 +46,30 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_free(_env: JNIEnv, _c
 #[no_mangle]
 pub extern "system" fn Java_palaiologos_scijava_SciInteger_fromInteger(env: JNIEnv, _class: JClass, n: jint) -> jobject {
     let n = Integer::from(n);
+    let ptr = Box::into_raw(Box::new(n));
+    let ptr = ptr as jlong;
+    let obj = env.new_object("palaiologos/scijava/SciInteger", "(J)V", &[ptr.into()]);
+    match obj {
+        Ok(obj) => obj.into_raw(),
+        Err(_) => {
+            let _ = env.throw(("java/lang/RuntimeException", "Failed to allocate object."));
+            JObject::null().into_raw()
+        }
+    }
+}
+
+// fromSciFloat
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_fromSciFloat(env: JNIEnv, _class: JClass, ptr: jlong) -> jobject {
+    let ptr = ptr as *mut Float;
+    let n = unsafe { &*ptr };
+    let n = match n.to_integer() {
+        Some(n) => n,
+        None => {
+            let _ = env.throw(("java/lang/ArithmeticException", "Failed to convert Float to Integer, (Float not finite?)."));
+            return JObject::null().into_raw();
+        }
+    };
     let ptr = Box::into_raw(Box::new(n));
     let ptr = ptr as jlong;
     let obj = env.new_object("palaiologos/scijava/SciInteger", "(J)V", &[ptr.into()]);

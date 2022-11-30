@@ -107,6 +107,7 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
     private static native int jacobi(long a, long b);
     private static native int legendre(long a, long b);
     private static native SciInteger fromInteger(int i);
+    private static native SciInteger fromSciFloat(long i);
     private static native SciInteger fromString(String s);
     private static native SciInteger fromStringRadix(String s, int radix);
     private static native int toInteger(long i);
@@ -166,6 +167,16 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
      */
     public static SciInteger valueOf(String s, int radix) {
         return fromStringRadix(s, radix);
+    }
+
+    /**
+     * Return a new SciInteger with the value of the specified SciFloat.
+     * @param f the SciFloat to convert
+     * @return a new SciInteger instance
+     * @throws ArithmeticException if the SciFloat is not finite.
+     */
+    public static SciInteger valueOf(SciFloat f) {
+        return fromSciFloat(f.ptr);
     }
 
     /**
