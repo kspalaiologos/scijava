@@ -924,8 +924,6 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_fract(
     }
 }
 
-// gamma and gamma_inc
-
 #[no_mangle]
 pub extern "system" fn Java_palaiologos_scijava_SciFloat_gamma(
         _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
@@ -959,5 +957,40 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_gamma_inc(
         *dest = a.clone();
         dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
         dest.gamma_inc_mut(x);
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_hypot(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong, b: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let b = b as *mut Float;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.hypot_mut(b);
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.hypot_mut(b);
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_ldexp(
+        env: JNIEnv, _class: JClass, precision: jint, _rounding_mode: jint, a: jint, b: jint) -> jobject {
+    let n = Float::with_val(precision as u32, Float::i_exp(a, b));
+    let n = Box::into_raw(Box::new(n));
+    let n = n as jlong;
+    let obj = env.new_object("palaiologos/scijava/SciFloat", "(J)V", &[JValue::Long(n)]);
+    match obj {
+        Ok(obj) => obj.into_raw(),
+        Err(e) => {
+            let _ = env.throw(("java/lang/RuntimeException", "Error allocating SciFloat."));
+            JObject::null().into_raw()
+        }
     }
 }

@@ -90,6 +90,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native SciFloat fromString(int precision, int roundingMode, String s);
     private static native SciFloat fromInteger(int precision, int roundingMode, int n);
     private static native SciFloat fromSciInteger(int precision, int roundingMode, long n);
+    private static native SciFloat ldexp(int precision, int roundingMode, int x, int exp);
     private static native boolean isFinite(long ptr);
     private static native void ceil(int precision, int roundingMode, long dest, long a);
     private static native void floor(int precision, int roundingMode, long dest, long a);
@@ -101,6 +102,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void fract(int precision, int roundingMode, long dest, long a);
     private static native void gamma(int precision, int roundingMode, long dest, long a);
     private static native void gamma_inc(int precision, int roundingMode, long dest, long a);
+    private static native void hypot(int precision, int roundingMode, long dest, long a, long b);
 
     // Public API
     public static SciFloat ONE = SciFloat.valueOf(MathContext.MC24, 1);
@@ -371,6 +373,16 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.clamp(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr, min.ptr, max.ptr);
         return result;
+    }
+
+    public static SciFloat hypot(MathContext mc, SciFloat a, SciFloat b) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.hypot(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr, b.ptr);
+        return result;
+    }
+
+    public static SciFloat ldexp(MathContext mc, int a, int b) {
+        return ldexp(mc.precision(), mc.roundingMode().ordinal(), a, b);
     }
 
     public boolean isFinite() {
