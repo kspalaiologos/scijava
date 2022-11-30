@@ -94,7 +94,11 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void ceil(int precision, int roundingMode, long dest, long a);
     private static native void floor(int precision, int roundingMode, long dest, long a);
     private static native void erf(int precision, int roundingMode, long dest, long a);
-
+    private static native void exp(int precision, int roundingMode, long dest, long a);
+    private static native void exp2(int precision, int roundingMode, long dest, long a);
+    private static native void exp10(int precision, int roundingMode, long dest, long a);
+    private static native void ln(int precision, int roundingMode, long dest, long a);
+    private static native void fract(int precision, int roundingMode, long dest, long a);
 
     // Public API
     public static SciFloat ONE = SciFloat.valueOf(MathContext.MC24, 1);
@@ -104,6 +108,36 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     public static SciFloat erf(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         erf(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat exp(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        exp(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat exp2(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        exp2(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat exp10(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        exp10(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat ln(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        ln(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat fract(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        fract(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
