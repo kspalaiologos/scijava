@@ -76,6 +76,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void abs(int precision, int roundingMode, long dest, long a);
     private static native void digamma(int precision, int roundingMode, long dest, long a);
     private static native void Ei(int precision, int roundingMode, long dest, long a);
+    private static native void clamp(int precision, int roundingMode, long dest, long a, long min, long max);
     private static native void factorial(int precision, int roundingMode, long dest, int a);
     private static native MathContext getMathContext(long ptr);
     private static native boolean lt(long a, long b);
@@ -90,12 +91,33 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native SciFloat fromInteger(int precision, int roundingMode, int n);
     private static native SciFloat fromSciInteger(int precision, int roundingMode, long n);
     private static native boolean isFinite(long ptr);
+    private static native void ceil(int precision, int roundingMode, long dest, long a);
+    private static native void floor(int precision, int roundingMode, long dest, long a);
+    private static native void erf(int precision, int roundingMode, long dest, long a);
+
 
     // Public API
     public static SciFloat ONE = SciFloat.valueOf(MathContext.MC24, 1);
     public static SciFloat ZERO = SciFloat.valueOf(MathContext.MC24, 0);
     public static SciFloat HALF = SciFloat.valueOf(MathContext.MC24, "0.5");
 
+    public static SciFloat erf(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        erf(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat ceil(MathContext mc, SciFloat a) {
+        var result = SciFloat.valueOf(mc, 0);
+        SciFloat.ceil(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat floor(MathContext mc, SciFloat a) {
+        var result = SciFloat.valueOf(mc, 0);
+        SciFloat.floor(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
 
     public static SciFloat valueOf(MathContext mc, int n) {
         return fromInteger(mc.precision(), mc.roundingMode().ordinal(), n);
@@ -294,6 +316,12 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     public static SciFloat factorial(MathContext mc, int a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.factorial(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a);
+        return result;
+    }
+
+    public static SciFloat clamp(MathContext mc, SciFloat a, SciFloat min, SciFloat max) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.clamp(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr, min.ptr, max.ptr);
         return result;
     }
 

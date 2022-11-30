@@ -745,3 +745,97 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_atanh(
         dest.atanh_mut();
     }
 }
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_clamp(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong, min: jlong, max: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let min = min as *mut Float;
+    let max = max as *mut Float;
+    let a = unsafe { &*a };
+    let min = unsafe { &*min };
+    let max = unsafe { &*max };
+    let dest = unsafe { &mut *dest };
+    if min > max {
+        let _ = _env.throw_new("java/lang/ArithmeticException", "Call to clamp with min > max");
+        return;
+    }
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.clamp_mut(min, max);
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.clamp_mut(min, max);
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_ceil(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.ceil_mut();
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.ceil_mut();
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_floor(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.floor_mut();
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.floor_mut();
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_erf(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.erf_mut();
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.erf_mut();
+    }
+}
+
+// erfc
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_erfc(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.erfc_mut();
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.erfc_mut();
+    }
+}
