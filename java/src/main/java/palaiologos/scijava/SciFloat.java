@@ -99,6 +99,8 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void exp10(int precision, int roundingMode, long dest, long a);
     private static native void ln(int precision, int roundingMode, long dest, long a);
     private static native void fract(int precision, int roundingMode, long dest, long a);
+    private static native void gamma(int precision, int roundingMode, long dest, long a);
+    private static native void gamma_inc(int precision, int roundingMode, long dest, long a);
 
     // Public API
     public static SciFloat ONE = SciFloat.valueOf(MathContext.MC24, 1);
@@ -344,6 +346,18 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     public static SciFloat abs(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.abs(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat gamma(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.gamma(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat igamma(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.gamma_inc(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 

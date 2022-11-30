@@ -923,3 +923,41 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_fract(
         dest.fract_mut();
     }
 }
+
+// gamma and gamma_inc
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_gamma(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.gamma_mut();
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.gamma_mut();
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_gamma_inc(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong, x: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let x = x as *mut Float;
+    let a = unsafe { &*a };
+    let x = unsafe { &*x };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.gamma_inc_mut(x);
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.gamma_inc_mut(x);
+    }
+}
