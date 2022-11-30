@@ -52,4 +52,11 @@ public class TestSciFloat {
         SciFloat b = SciFloat.valueOf(mc1, "19.2958127");
         Assertions.assertEquals(SciFloat.div(mc1, a, b), SciFloat.valueOf(mc1, "9.4589057396893161177917113592181"));
     }
+
+    @Test
+    public void testDivByZero() {
+        SciFloat a = SciFloat.valueOf(mc1, "182.5172735");
+        SciFloat b = SciFloat.valueOf(mc1, "0");
+        Assertions.assertFalse(SciFloat.div(mc1, a, b).isFinite());
+    }
 }

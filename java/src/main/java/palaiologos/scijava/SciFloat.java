@@ -50,9 +50,16 @@ public final class SciFloat {
     private static native void sub(int precision, int roundingMode, long dest, long a, long b);
     private static native void mul(int precision, int roundingMode, long dest, long a, long b);
     private static native void div(int precision, int roundingMode, long dest, long a, long b);
+    private static native void mod(int precision, int roundingMode, long dest, long a, long b);
+    private static native void sqrt(int precision, int roundingMode, long dest, long a);
+    private static native void cbrt(int precision, int roundingMode, long dest, long a);
+    private static native void neg(int precision, int roundingMode, long dest, long a);
+    private static native void abs(int precision, int roundingMode, long dest, long a);
+    private static native void factorial(int precision, int roundingMode, long dest, int a);
     private static native boolean eq(long a, long b);
     private static native SciFloat fromString(int precision, int roundingMode, String s);
     private static native SciFloat fromInteger(int precision, int roundingMode, int n);
+    private static native boolean isFinite(long ptr);
 
     // Public API
     public static SciFloat valueOf(MathContext mc, int n) {
@@ -85,6 +92,46 @@ public final class SciFloat {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.div(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr, b.ptr);
         return result;
+    }
+
+    public static SciFloat mod(MathContext mc, SciFloat a, SciFloat b) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.mod(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr, b.ptr);
+        return result;
+    }
+
+    public static SciFloat sqrt(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.sqrt(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat cbrt(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.cbrt(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat neg(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.neg(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat abs(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.abs(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    public static SciFloat factorial(MathContext mc, int a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.factorial(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a);
+        return result;
+    }
+
+    public boolean isFinite() {
+        return isFinite(ptr);
     }
 
     public boolean eq(SciFloat other) {
