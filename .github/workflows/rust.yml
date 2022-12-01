@@ -32,6 +32,7 @@ jobs:
     - name: Install Rust & GCC
       run: |
         curl https://sh.rustup.rs -sSf | sh -s -- -y
+        sudo apt update -y && sudo apt upgrade -y
         sudo apt install -y gcc-aarch64-linux-gnu
         rustup target add aarch64-unknown-linux-gnu
     - name: Build
@@ -50,6 +51,7 @@ jobs:
     - name: Install Rust & GCC
       run: |
         curl https://sh.rustup.rs -sSf | sh -s -- -y
+        sudo apt update -y && sudo apt upgrade -y
         sudo apt install -y gcc-s390x-linux-gnu
         rustup target add s390x-unknown-linux-gnu
     - name: Build
@@ -68,6 +70,7 @@ jobs:
     - name: Install Rust & GCC
       run: |
         curl https://sh.rustup.rs -sSf | sh -s -- -y
+        sudo apt update -y && sudo apt upgrade -y
         sudo apt install -y gcc-i686-linux-gnu
         rustup target add i686-unknown-linux-gnu
     - name: Build
@@ -86,6 +89,7 @@ jobs:
     - name: Install Rust & GCC
       run: |
         curl https://sh.rustup.rs -sSf | sh -s -- -y
+        sudo apt update -y && sudo apt upgrade -y
         sudo apt install -y gcc-arm-linux-gnueabihf
         rustup target add arm-unknown-linux-gnueabihf
     - name: Build
@@ -104,6 +108,7 @@ jobs:
     - name: Install Rust & GCC
       run: |
         curl https://sh.rustup.rs -sSf | sh -s -- -y
+        sudo apt update -y && sudo apt upgrade -y
         sudo apt install -y gcc-mips64-linux-gnuabi64
         rustup target add mips64-unknown-linux-gnuabi64
     - name: Build
@@ -122,6 +127,7 @@ jobs:
     - name: Install Rust & GCC
       run: |
         curl https://sh.rustup.rs -sSf | sh -s -- -y
+        sudo apt update -y && sudo apt upgrade -y
         sudo apt install -y gcc-10-riscv64-linux-gnu
         rustup target add riscv64gc-unknown-linux-gnu
     - name: Build
@@ -140,6 +146,7 @@ jobs:
     - name: Install Rust & GCC
       run: |
         curl https://sh.rustup.rs -sSf | sh -s -- -y
+        sudo apt update -y && sudo apt upgrade -y
         sudo apt install -y gcc-powerpc64-linux-gnu
         rustup target add powerpc64-unknown-linux-gnu
     - name: Build
@@ -158,6 +165,7 @@ jobs:
     - name: Install Rust & GCC
       run: |
         curl https://sh.rustup.rs -sSf | sh -s -- -y
+        sudo apt update -y && sudo apt upgrade -y
         sudo apt install -y gcc-powerpc64le-linux-gnu
         rustup target add powerpc64le-unknown-linux-gnu
     - name: Build
@@ -176,6 +184,7 @@ jobs:
     - name: Install Rust & GCC
       run: |
         curl https://sh.rustup.rs -sSf | sh -s -- -y
+        sudo apt update -y && sudo apt upgrade -y
         sudo apt install -y gcc-mingw-w64-x86-64
         rustup target add x86_64-pc-windows-gnu
     - name: Build
@@ -195,6 +204,7 @@ jobs:
       run: |
         curl https://sh.rustup.rs -sSf | sh -s -- -y
         sudo apt install -y gcc-mingw-w64-i686
+        sudo apt update -y && sudo apt upgrade -y
         rustup target add i686-pc-windows-gnu
     - name: Build
       run: |
