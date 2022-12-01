@@ -35,6 +35,7 @@ use jni::sys::{jstring, jlong, jint, jobject, jboolean};
 
 use rug::integer::IsPrime;
 use rug::ops::Pow;
+use rug::rand::RandState;
 use rug::{Integer, Complete, Float};
 
 #[no_mangle]
@@ -783,6 +784,48 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_factor(env: JNIEnv, _
         let value = env.new_object("palaiologos/scijava/SciInteger", "(J)V", &[JValue::Long(value_ptr)]).unwrap();
         let _ = dest.put(key, value);
     });
+}
+
+// randomRange and randomBits
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_randomRange(env: JNIEnv, _class: JClass, rand: jlong, max: jlong) -> jobject {
+    let rand = rand as *mut RandState;
+    let max = max as *mut Integer;
+    let rand = unsafe { &mut *rand };
+    let max = unsafe { &*max };
+    if max <= &Integer::from(0) {
+        let _ = env.throw_new("java/lang/IllegalArgumentException", "Call to randomRange with non-positive max");
+        return JObject::null().into_raw();
+    }
+    let result = max.clone().random_below(rand);
+    let class = env.new_object("palaiologos/scijava/SciInteger", "(J)V", &[JValue::Long(Box::into_raw(Box::new(result)) as jlong)]);
+    match class {
+        Ok(x) => x.into_raw(),
+        Err(_) => {
+            let _ = env.throw_new("java/lang/OutOfMemoryError", "Could not allocate memory for SciInteger");
+            JObject::null().into_raw()
+        }
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_randomBits(env: JNIEnv, _class: JClass, rand: jlong, bits: jint) -> jobject {
+    let rand = rand as *mut RandState;
+    let rand = unsafe { &mut *rand };
+    if bits <= 0 {
+        let _ = env.throw_new("java/lang/IllegalArgumentException", "Call to randomBits with non-positive bits");
+        return JObject::null().into_raw();
+    }
+    let result: Integer = Integer::random_bits(bits as u32, rand).into();
+    let class = env.new_object("palaiologos/scijava/SciInteger", "(J)V", &[JValue::Long(Box::into_raw(Box::new(result)) as jlong)]);
+    match class {
+        Ok(x) => x.into_raw(),
+        Err(_) => {
+            let _ = env.throw_new("java/lang/OutOfMemoryError", "Could not allocate memory for SciInteger");
+            JObject::null().into_raw()
+        }
+    }
 }
 
 // stub out functions.

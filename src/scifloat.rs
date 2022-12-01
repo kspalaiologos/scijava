@@ -31,6 +31,7 @@ use jni::objects::{JClass, JString, JObject, JValue, JMap};
 // can't return one of the objects with lifetime information because the
 // lifetime checker won't let us.
 use jni::sys::{jstring, jlong, jint, jobject, jboolean};
+use rug::rand::RandState;
 use rug::{Float, Integer};
 use rug::float::Round;
 use rug::ops::NegAssign;
@@ -1137,4 +1138,21 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_isNaN(
     let a = a as *mut Float;
     let a = unsafe { &*a };
     a.is_nan() as jboolean
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_random(
+        env: JNIEnv, _class: JClass, precision: jint, _rounding_mode: jint, randptr: jlong) -> jobject {
+    let randptr = randptr as *mut RandState;
+    let randptr = unsafe { &mut *randptr };
+    let a = Float::with_val(precision as u32, Float::random_cont(randptr));
+    let ptr = Box::into_raw(Box::new(a)) as jlong;
+    let class = env.new_object("palaiologos/scijava/SciFloat", "(J)V", &[JValue::Long(ptr)]);
+    match class {
+        Ok(class) => class.into_raw(),
+        Err(_) => {
+            let _ = env.throw(("java/lang/RuntimeException", "Failed to create SciFloat"));
+            JObject::null().into_raw()
+        }
+    }
 }

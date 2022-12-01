@@ -113,6 +113,8 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
     private static native int toInteger(long i);
     private static native void copy(long dest, long src);
     private static native void factor(Map<SciInteger, SciInteger> destFactors, long a);
+    private static native SciInteger randomBits(long rptr, int bits);
+    private static native SciInteger randomRange(long rptr, long max);
 
     /**
      * The SciInteger constant 0.
@@ -138,6 +140,20 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
      * The SciInteger constant 10.
      */
     public static final SciInteger TEN = fromInteger(10);
+
+    /**
+     * Generate a SciInteger with a random value that has N bits.
+     * @param random
+     * @param bits
+     * @return
+     */
+    public static SciInteger randomBits(Random random, int bits) {
+        return randomBits(random.ptr, bits);
+    }
+
+    public static SciInteger randomRange(Random random, SciInteger max) {
+        return randomRange(random.ptr, max.ptr);
+    }
 
     /**
      * Return a new SciInteger with the value of the specified integer.

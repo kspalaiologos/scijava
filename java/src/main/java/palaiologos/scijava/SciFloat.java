@@ -126,6 +126,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void chop(int precision, int roundingMode, long dest, long a, long eps);
     private static native boolean isNaN(long ptr);
     private static native boolean isInf(long ptr);
+    private static native SciFloat random(int precision, int roundingMode, long randptr);
 
     // Public API
     /**
@@ -142,6 +143,17 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      * The SciFloat constant 0.5.
      */
     public static SciFloat HALF = SciFloat.valueOf(MathContext.MC24, "0.5");
+
+    /**
+     * Generate a random number in range 0 <= x < 1.
+     * @param mc the math context to use for the operation.
+     * @param random the random number generator instance to be used for generating
+     *               the resulting value.
+     * @return A random number in range 0 <= x < 1.
+     */
+    public static SciFloat random(MathContext mc, Random random) {
+        return random(mc.precision(), mc.roundingMode().hashCode(), random.ptr);
+    }
 
     /**
      * Determine if the SciFloat is NaN.
