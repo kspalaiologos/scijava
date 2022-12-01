@@ -143,14 +143,24 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
 
     /**
      * Generate a SciInteger with a random value that has N bits.
-     * @param random
-     * @param bits
-     * @return
+     * @param random the random number generator to use
+     * @param bits the number of bits
+     * @return a random SciInteger
+     * @throws NullPointerException if random is null
+     * @throws IllegalArgumentException if bits is negative
      */
     public static SciInteger randomBits(Random random, int bits) {
         return randomBits(random.ptr, bits);
     }
 
+    /**
+     * Generate a SciInteger with a random value that is less than max.
+     * @param random random number generator instance
+     * @param max maximum value
+     * @return random SciInteger
+     * @throws NullPointerException if random or max is null
+     * @throws IllegalArgumentException if max is negative
+     */
     public static SciInteger randomRange(Random random, SciInteger max) {
         return randomRange(random.ptr, max.ptr);
     }
