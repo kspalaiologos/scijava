@@ -1177,3 +1177,93 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_pi(
         }
     }
 }
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_euler_gamma(
+        env: JNIEnv, _class: JClass, precision: jint) -> jobject {
+    let a = Float::with_val(precision as u32, Constant::Euler);
+    let ptr = Box::into_raw(Box::new(a)) as jlong;
+    let class = env.new_object("palaiologos/scijava/SciFloat", "(J)V", &[JValue::Long(ptr)]);
+    match class {
+        Ok(class) => class.into_raw(),
+        Err(_) => {
+            let _ = env.throw(("java/lang/RuntimeException", "Failed to create SciFloat"));
+            JObject::null().into_raw()
+        }
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_degree(
+        env: JNIEnv, _class: JClass, precision: jint) -> jobject {
+    let a = Float::with_val(precision as u32, Constant::Pi) / 180;
+    let ptr = Box::into_raw(Box::new(a)) as jlong;
+    let class = env.new_object("palaiologos/scijava/SciFloat", "(J)V", &[JValue::Long(ptr)]);
+    match class {
+        Ok(class) => class.into_raw(),
+        Err(_) => {
+            let _ = env.throw(("java/lang/RuntimeException", "Failed to create SciFloat"));
+            JObject::null().into_raw()
+        }
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_e(
+        env: JNIEnv, _class: JClass, precision: jint) -> jobject {
+    let a = Float::with_val(precision as u32, 1).exp();
+    let ptr = Box::into_raw(Box::new(a)) as jlong;
+    let class = env.new_object("palaiologos/scijava/SciFloat", "(J)V", &[JValue::Long(ptr)]);
+    match class {
+        Ok(class) => class.into_raw(),
+        Err(_) => {
+            let _ = env.throw(("java/lang/RuntimeException", "Failed to create SciFloat"));
+            JObject::null().into_raw()
+        }
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_phi(
+        env: JNIEnv, _class: JClass, precision: jint) -> jobject {
+    let a = (Float::with_val(precision as u32, 5).sqrt() + 1) / 2;
+    let ptr = Box::into_raw(Box::new(a)) as jlong;
+    let class = env.new_object("palaiologos/scijava/SciFloat", "(J)V", &[JValue::Long(ptr)]);
+    match class {
+        Ok(class) => class.into_raw(),
+        Err(_) => {
+            let _ = env.throw(("java/lang/RuntimeException", "Failed to create SciFloat"));
+            JObject::null().into_raw()
+        }
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_catalan(
+        env: JNIEnv, _class: JClass, precision: jint) -> jobject {
+    let a = Float::with_val(precision as u32, Constant::Catalan);
+    let ptr = Box::into_raw(Box::new(a)) as jlong;
+    let class = env.new_object("palaiologos/scijava/SciFloat", "(J)V", &[JValue::Long(ptr)]);
+    match class {
+        Ok(class) => class.into_raw(),
+        Err(_) => {
+            let _ = env.throw(("java/lang/RuntimeException", "Failed to create SciFloat"));
+            JObject::null().into_raw()
+        }
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_apery(
+        env: JNIEnv, _class: JClass, precision: jint) -> jobject {
+    let a = Float::with_val(precision as u32, 3).zeta();
+    let ptr = Box::into_raw(Box::new(a)) as jlong;
+    let class = env.new_object("palaiologos/scijava/SciFloat", "(J)V", &[JValue::Long(ptr)]);
+    match class {
+        Ok(class) => class.into_raw(),
+        Err(_) => {
+            let _ = env.throw(("java/lang/RuntimeException", "Failed to create SciFloat"));
+            JObject::null().into_raw()
+        }
+    }
+}

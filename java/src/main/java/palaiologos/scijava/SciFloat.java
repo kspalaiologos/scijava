@@ -132,6 +132,12 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native boolean isInf(long ptr);
     private static native SciFloat random(int precision, int roundingMode, long randptr);
     private static native SciFloat pi(int precision);
+    private static native SciFloat euler_gamma(int precision);
+    private static native SciFloat degree(int precision);
+    private static native SciFloat e(int precision);
+    private static native SciFloat phi(int precision);
+    private static native SciFloat catalan(int precision);
+    private static native SciFloat apery(int precision);
 
     // Public API
     /**
@@ -149,8 +155,74 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      */
     public static SciFloat HALF = SciFloat.valueOf(MathContext.MC24, "0.5");
 
+    /**
+     * Return the value of the constant pi with the given precision.
+     *
+     * @param mc The precision of the constant.
+     * @return The value of pi.
+     */
     public static SciFloat pi(MathContext mc) {
         return pi(mc.precision());
+    }
+
+    /**
+     * Return the value of one degree in radians.
+     *
+     * @param mc The precision of the constant.
+     * @return The value of 1 degree.
+     */
+    public static SciFloat degree(MathContext mc) {
+        return degree(mc.precision());
+    }
+
+    /**
+     * Return the value of the constant that is the base of the natural logarithm.
+     *
+     * @param mc The precision of the constant.
+     * @return The value of e.
+     */
+    public static SciFloat e(MathContext mc) {
+        return e(mc.precision());
+    }
+
+    /**
+     * Return the value of the Golden ratio.
+     *
+     * @param mc The precision of the constant.
+     * @return The value of phi.
+     */
+    public static SciFloat phi(MathContext mc) {
+        return phi(mc.precision());
+    }
+
+    /**
+     * Return the value of the Catalan constant.
+     *
+     * @param mc The precision of the constant.
+     * @return The value of the Catalan's constant.
+     */
+    public static SciFloat catalan(MathContext mc) {
+        return catalan(mc.precision());
+    }
+
+    /**
+     * Return the value of the Apery's constant.
+     *
+     * @param mc The precision of the constant.
+     * @return The value of Apery's constant.
+     */
+    public static SciFloat apery(MathContext mc) {
+        return apery(mc.precision());
+    }
+
+    /**
+     * Return the value of the Euler's gamma constant (approx. 0.577) with the given precision.
+     *
+     * @param mc The precision of the constant.
+     * @return The value of Euler's gamma constant.
+     */
+    public static SciFloat eulerGamma(MathContext mc) {
+        return euler_gamma(mc.precision());
     }
 
     /**
