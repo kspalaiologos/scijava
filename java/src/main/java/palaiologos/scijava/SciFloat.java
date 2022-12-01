@@ -138,6 +138,8 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native SciFloat phi(int precision);
     private static native SciFloat catalan(int precision);
     private static native SciFloat apery(int precision);
+    private static native void root(int precision, int roundingMode, long dest, long a, int n);
+    private static native void log(int precision, int roundingMode, long dest, long a, long base);
 
     // Public API
     /**
@@ -154,6 +156,34 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      * The SciFloat constant 0.5.
      */
     public static SciFloat HALF = SciFloat.valueOf(MathContext.MC24, "0.5");
+
+    /**
+     * Compute the logarithm in a given base of a SciFloat value.
+     * @param mc The MathContext to use for the computation.
+     * @param a The value to compute the logarithm of.
+     * @param base The base of the logarithm.
+     * @return The logarithm of a in selected base.
+     * @throws IllegalArgumentException when base <= 0
+     */
+    public static SciFloat log(MathContext mc, SciFloat a, SciFloat base) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        log(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr, base.ptr);
+        return result;
+    }
+
+    /**
+     * Computes the n-th root of a SciFloat.
+     * @param mc The MathContext to use.
+     * @param a The SciFloat to compute the root of.
+     * @param n The degree of the root to compute.
+     * @return The n-th root of a.
+     * @throws IllegalArgumentException when n <= 0.
+     */
+    public static SciFloat root(MathContext mc, SciFloat a, int n) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        root(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr, n);
+        return result;
+    }
 
     /**
      * Return the value of the constant pi with the given precision.

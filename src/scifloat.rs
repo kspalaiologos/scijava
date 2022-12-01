@@ -17,6 +17,7 @@
 */
 
 use std::hint::unreachable_unchecked;
+use std::ops::DivAssign;
 
 // This is the interface to the JVM that we'll call the majority of our
 // methods on.
@@ -1266,4 +1267,44 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_apery(
             JObject::null().into_raw()
         }
     }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_root(
+        env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong, n: jint)  {
+    let a = unsafe { &*(a as *const Float) };
+    let dest = unsafe { &mut *(dest as *mut Float) };
+    if n <= 0 {
+        let _ = env.throw(("java/lang/IllegalArgumentException", "n must be positive"));
+        return;
+    }
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.root_mut(n as u32);
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.root_mut(n as u32);
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_log(
+        env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong, k: jlong)  {
+    let a = unsafe { &*(a as *const Float) };
+    let dest = unsafe { &mut *(dest as *mut Float) };
+    let k = unsafe { &*(k as *const Float) };
+    if k <= &0 {
+        let _ = env.throw(("java/lang/IllegalArgumentException", "k must be positive"));
+        return;
+    }
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+    }
+    dest.ln_mut();
+    let lnk = k.clone().ln();
+    dest.div_assign(&lnk);
 }
