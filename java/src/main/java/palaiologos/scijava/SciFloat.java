@@ -123,6 +123,9 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void li2(int precision, int roundingMode, long dest, long a);
     private static native void log10(int precision, int roundingMode, long dest, long a);
     private static native void log2(int precision, int roundingMode, long dest, long a);
+    private static native void chop(int precision, int roundingMode, long dest, long a, long eps);
+    private static native boolean isNaN(long ptr);
+    private static native boolean isInf(long ptr);
 
     // Public API
     /**
@@ -139,6 +142,36 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      * The SciFloat constant 0.5.
      */
     public static SciFloat HALF = SciFloat.valueOf(MathContext.MC24, "0.5");
+
+    /**
+     * Determine if the SciFloat is NaN.
+     * @return true if the SciFloat is NaN, false otherwise.
+     */
+    public boolean isNaN() {
+        return isNaN(ptr);
+    }
+
+    /**
+     * Determine if the SciFloat is infinite.
+     * @return true if the SciFloat is infinite, false otherwise.
+     */
+    public boolean isInf() {
+        return isInf(ptr);
+    }
+
+    /**
+     * Converts numbers close to another numbers to that number.
+     * For example, chop(1e-10, 1e-8) = 0, chop(0.99999999999923, 1e-10) = 1
+     * @param mc The math context to use during the operation.
+     * @param a The number to chop.
+     * @param eps The epsilon value.
+     * @return The chopped number.
+     */
+    public static SciFloat chop(MathContext mc, SciFloat a, SciFloat eps) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        chop(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr, eps.ptr);
+        return result;
+    }
 
     /**
      * The error function.

@@ -16,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use std::cmp::Ordering;
 use std::hint::unreachable_unchecked;
 
 // This is the interface to the JVM that we'll call the majority of our
@@ -1095,4 +1096,46 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_log10(
         dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
         dest.log10_mut();
     }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_chop(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong, eps: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let eps = eps as *mut Float;
+    let a = unsafe { &*a };
+    let eps = unsafe { &*eps };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+    }
+    let mut fract = Float::with_val(precision as u32, a.fract_ref());
+    if fract.total_cmp(eps).is_le() {
+        dest.trunc_mut();
+        return;
+    }
+    fract -= 1;
+    if fract.total_cmp(eps).is_le() {
+        dest.ceil_mut();
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_isInf(
+        _env: JNIEnv, _class: JClass, a: jlong) -> jboolean {
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    a.is_infinite() as jboolean
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_isNaN(
+        _env: JNIEnv, _class: JClass, a: jlong) -> jboolean {
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    a.is_nan() as jboolean
 }
