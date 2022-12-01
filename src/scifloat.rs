@@ -33,7 +33,7 @@ use jni::objects::{JClass, JString, JObject, JValue, JMap};
 use jni::sys::{jstring, jlong, jint, jobject, jboolean};
 use rug::rand::RandState;
 use rug::{Float, Integer};
-use rug::float::{Round, FreeCache};
+use rug::float::{Round, FreeCache, Constant};
 use rug::ops::NegAssign;
 
 fn xlat_rounding(mode: jint) -> Round {
@@ -1161,4 +1161,19 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_random(
 pub extern "system" fn Java_palaiologos_scijava_SciFloat_drop_caches(
         _env: JNIEnv, _class: JClass) {
     rug::float::free_cache(FreeCache::All)
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_pi(
+        env: JNIEnv, _class: JClass, precision: jint) -> jobject {
+    let a = Float::with_val(precision as u32, Constant::Pi);
+    let ptr = Box::into_raw(Box::new(a)) as jlong;
+    let class = env.new_object("palaiologos/scijava/SciFloat", "(J)V", &[JValue::Long(ptr)]);
+    match class {
+        Ok(class) => class.into_raw(),
+        Err(_) => {
+            let _ = env.throw(("java/lang/RuntimeException", "Failed to create SciFloat"));
+            JObject::null().into_raw()
+        }
+    }
 }
