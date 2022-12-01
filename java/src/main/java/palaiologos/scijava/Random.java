@@ -39,7 +39,7 @@ public class Random {
     private static native void free(long ptr);
     private static native long newMersenneTwister();
 
-    private static native long range(long ptr, long max);
+    private static native long range(long ptr, int max);
     private static native void seed(long ptr, long src);
 
     // Public API:
@@ -49,7 +49,7 @@ public class Random {
      * @return a random number in the range [0, max).
      * @throws IllegalArgumentException if max is negative or zero.
      */
-    public long range(long max) {
+    public long range(int max) {
         return range(ptr, max);
     }
 

@@ -39,14 +39,14 @@ pub extern "system" fn Java_palaiologos_scijava_Random_free(_env: JNIEnv, _class
 }
 
 #[no_mangle]
-pub extern "system" fn Java_palaiologos_scijava_Random_newMersenneTwister(env: JNIEnv, _class: JClass) -> jlong {
+pub extern "system" fn Java_palaiologos_scijava_Random_newMersenneTwister(_env: JNIEnv, _class: JClass) -> jlong {
     let state = RandState::new_mersenne_twister();
     let ptr = Box::into_raw(Box::new(state));
     ptr as jlong
 }
 
 #[no_mangle]
-pub extern "system" fn Java_palaiologos_scijava_Random_range(env: JNIEnv, _class: JClass, ptr: jlong, max: jlong) -> jlong {
+pub extern "system" fn Java_palaiologos_scijava_Random_range(env: JNIEnv, _class: JClass, ptr: jlong, max: jint) -> jlong {
     let state = unsafe { &mut *(ptr as *mut RandState) };
     if max < 1 {
         let _ = env.throw(("java/lang/IllegalArgumentException", "max must be positive and nonzero"));
