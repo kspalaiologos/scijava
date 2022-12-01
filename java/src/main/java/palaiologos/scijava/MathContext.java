@@ -28,6 +28,8 @@ package palaiologos.scijava;
  *     <li>rounding mode: the algorithm to be used for rounding</li>
  * </ul>
  *
+ * @param precision The precision in binary digits represented by this object.
+ * @param roundingMode The rounding mode represented by this object.
  * @author Kamila Szewczyk
  * @see SciFloat
  */

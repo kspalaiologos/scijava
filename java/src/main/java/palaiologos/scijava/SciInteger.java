@@ -251,8 +251,8 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
      * Does not modify the operand.
      * @param a the first operand
      * @param b the second operand
-     * @return a new SciInteger instance, the result of a ^ b
-     * @throws ArithmeticException if b < 0
+     * @return a new SciInteger instance, the result of {@code a ^ b}
+     * @throws ArithmeticException if {@code b < 0}
      */
     public static SciInteger pow(SciInteger a, int b) {
         SciInteger result = SciInteger.fromInteger(0);
@@ -314,7 +314,7 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
      * Compute the factorial of a natural number to produce a new SciInteger instance.
      * @param a the operand
      * @return a new SciInteger instance, the result of a!
-     * @throws ArithmeticException if a < 0
+     * @throws ArithmeticException if {@code a < 0}
      */
     public static SciInteger factorial(int a) {
         SciInteger result = SciInteger.fromInteger(0);
@@ -325,7 +325,7 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
     /**
      * Compute the sign of a SciInteger.
      * @param a the operand
-     * @return -1 if a < 0, 0 if a = 0, 1 if a > 0
+     * @return -1 if {@code a < 0}, 0 if {@code a = 0}, 1 if {@code a > 0}
      */
     public static SciInteger signum(SciInteger a) {
         SciInteger result = SciInteger.fromInteger(0);
@@ -400,7 +400,7 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
      * Does not modify the operands.
      * @param a the first operand
      * @param b the second operand
-     * @return a new SciInteger instance, the result of a & b
+     * @return a new SciInteger instance, the result of {@code a & b}
      */
     public static SciInteger and(SciInteger a, SciInteger b) {
         SciInteger result = SciInteger.fromInteger(0);
@@ -451,7 +451,7 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
      * Does not modify the operands.
      * @param a the first operand
      * @param b the second operand
-     * @return a new SciInteger instance, the result of a << b
+     * @return a new SciInteger instance, the result of {@code a << b}
      */
     public static SciInteger shl(SciInteger a, int b) {
         SciInteger result = SciInteger.fromInteger(0);
@@ -464,7 +464,7 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
      * Does not modify the operands.
      * @param a the first operand
      * @param b the second operand
-     * @return a new SciInteger instance, the result of a >> b
+     * @return a new SciInteger instance, the result of {@code a >> b}
      */
     public static SciInteger shr(SciInteger a, int b) {
         SciInteger result = SciInteger.fromInteger(0);
@@ -476,7 +476,7 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
      * Set the specified bit of a SciInteger to 1. Does not modify the operand.
      * @param a the operand
      * @param b the bit index
-     * @return a new SciInteger instance, the result of a | (1 << b)
+     * @return a new SciInteger instance, the result of {@code a | (1 << b)}
      * @throws ArithmeticException if b is negative
      */
     public static SciInteger setBit(SciInteger a, int b) {
@@ -489,7 +489,7 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
      * Set the specified bit of a SciInteger to 0. Does not modify the operand.
      * @param a the operand
      * @param b the bit index
-     * @return a new SciInteger instance, the result of a & ~(1 << b)
+     * @return a new SciInteger instance, the result of {@code a & ~(1 << b)}
      * @throws ArithmeticException if b is negative
      */
     public static SciInteger clearBit(SciInteger a, int b) {
@@ -513,7 +513,7 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
      * Flip the value of the bit at the specified index of a SciInteger. Does not modify the operand.
      * @param a the operand
      * @param b the bit index
-     * @return a new SciInteger instance, the result of a ^ (1 << b)
+     * @return a new SciInteger instance, the result of {@code a ^ (1 << b)}
      * @throws ArithmeticException if b is negative
      */
     public static SciInteger flipBit(SciInteger a, int b) {

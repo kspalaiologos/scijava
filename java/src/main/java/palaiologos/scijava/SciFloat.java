@@ -208,8 +208,8 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     }
 
     /**
-     * Extract the fractional part of a number, can be thought of as x - floor(x) for x >= 0
-     * and x - ceil(x) for x < 0.
+     * Extract the fractional part of a number, can be thought of as {@code x - floor(x)} for {@code x >= 0}
+     * and {@code x - ceil(x)} for {@code x < 0}.
      * @param mc The math context to use while performing computations.
      * @param a The argument.
      * @return The fractional part of a.
@@ -736,7 +736,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
 
     /**
      * Check whether a SciFloat value is finite, that is, not NaN or infinity.
-     * @return
+     * @return true if the value is finite, false otherwise.
      */
     public boolean isFinite() {
         return isFinite(ptr);
@@ -831,7 +831,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     /**
      * Return the value of performing three-way comparison between this SciFloat value and another SciFloat value.
      * @param o the object to be compared.
-     * @return a negative integer when this < other, zero when this = other, or a positive integer when this > other.
+     * @return a negative integer when {@code this < other}, zero when {@code this = other}, or a positive integer when {@code this > other}.
      */
     @Override
     public int compareTo(SciFloat o) {
