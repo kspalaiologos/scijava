@@ -16,7 +16,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use std::cmp::Ordering;
 use std::hint::unreachable_unchecked;
 
 // This is the interface to the JVM that we'll call the majority of our
