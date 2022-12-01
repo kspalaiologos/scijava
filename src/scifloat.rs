@@ -994,3 +994,71 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_ldexp(
         }
     }
 }
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_j0(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.j0_mut();
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.j0_mut();
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_j1(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.j1_mut();
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.j1_mut();
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_jn(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong, n: jint) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.jn_mut(n);
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.jn_mut(n);
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_li2(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    if a.prec() == precision as u32 {
+        *dest = a.clone();
+        dest.li2_mut();
+    } else {
+        *dest = a.clone();
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+        dest.li2_mut();
+    }
+}

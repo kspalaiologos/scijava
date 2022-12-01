@@ -117,6 +117,10 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void gamma(int precision, int roundingMode, long dest, long a);
     private static native void gamma_inc(int precision, int roundingMode, long dest, long a);
     private static native void hypot(int precision, int roundingMode, long dest, long a, long b);
+    private static native void j0(int precision, int roundingMode, long dest, long a);
+    private static native void j1(int precision, int roundingMode, long dest, long a);
+    private static native void jn(int precision, int roundingMode, long dest, long a, int b);
+    private static native void li2(int precision, int roundingMode, long dest, long a);
 
     // Public API
     /**
@@ -851,5 +855,54 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     @Override
     public int hashCode() {
         return toString().hashCode();
+    }
+
+    /**
+     * Return the value of the Bessel function of order zero.
+     * @param mc The math context to use while performing computations.
+     * @param a The argument.
+     * @return bessel_j0(a).
+     */
+    public SciFloat j0(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.j0(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    /**
+     * Return the value of the Bessel function of order one.
+     * @param mc The math context to use while performing computations.
+     * @param a The argument.
+     * @return bessel_j1(a).
+     */
+    public SciFloat j1(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.j1(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    /**
+     * Return the value of the Bessel function of order n.
+     * @param mc The math context to use while performing computations.
+     * @param a The argument.
+     * @param n The order.
+     * @return bessel_jn(a).
+     */
+    public SciFloat jn(MathContext mc, int n, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.jn(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr, n);
+        return result;
+    }
+
+    /**
+     * Compute the value of the dilogarithm of a given SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The argument.
+     * @return Li2(a)
+     */
+    public SciFloat li2(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.li2(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
     }
 }
