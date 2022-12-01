@@ -54,6 +54,9 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private SciFloat(long ptr) {
         this.ptr = ptr;
         cleanable = CleanerSingleton.CLEANER.register(this, () -> {
+            synchronized (SciFloat.class) {
+                drop_caches();
+            }
             SciFloat.free(ptr);
         });
     }
@@ -92,6 +95,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void Ei(int precision, int roundingMode, long dest, long a);
     private static native void clamp(int precision, int roundingMode, long dest, long a, long min, long max);
     private static native void factorial(int precision, int roundingMode, long dest, int a);
+    private static native void drop_caches();
     private static native MathContext getMathContext(long ptr);
     private static native boolean lt(long a, long b);
     private static native boolean lte(long a, long b);
