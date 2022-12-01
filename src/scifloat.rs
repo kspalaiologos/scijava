@@ -988,7 +988,7 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_ldexp(
     let obj = env.new_object("palaiologos/scijava/SciFloat", "(J)V", &[JValue::Long(n)]);
     match obj {
         Ok(obj) => obj.into_raw(),
-        Err(e) => {
+        Err(_) => {
             let _ = env.throw(("java/lang/RuntimeException", "Error allocating SciFloat."));
             JObject::null().into_raw()
         }

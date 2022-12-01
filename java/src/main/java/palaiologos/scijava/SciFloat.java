@@ -24,6 +24,20 @@ import java.lang.ref.Cleaner;
 import static palaiologos.scijava.NativeLibrary.load;
 import static palaiologos.scijava.NativeLibrary.resourceName;
 
+/**
+ * Arbitrary precision floating point numbers provided by SciJava.
+ *
+ * <p> SciFloat provides methods similar to these found in {@link java.math.BigDecimal} with
+ * a few firm differences. SciFloat is backed by the MPFR library, and as such the
+ * internal representation of the number is not decimal, but binary. As a consequence of this,
+ * the {@link MathContext} precision field represents the precision in <b>binary digits</b>,
+ * not decimal digits.
+ *
+ * <p> SciFloat provides many methods that are not present in {@link java.math.BigDecimal}, such as
+ * the gamma, digamma and Riemann Zeta functions, among others, with considerably better performance.
+ *
+ * @author Kamila Szewczyk
+ */
 public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     static {
         try {
@@ -105,165 +119,372 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void hypot(int precision, int roundingMode, long dest, long a, long b);
 
     // Public API
+    /**
+     * The SciFloat constant 1.
+     */
     public static SciFloat ONE = SciFloat.valueOf(MathContext.MC24, 1);
+
+    /**
+     * The SciFloat constant 0.
+     */
     public static SciFloat ZERO = SciFloat.valueOf(MathContext.MC24, 0);
+
+    /**
+     * The SciFloat constant 0.5.
+     */
     public static SciFloat HALF = SciFloat.valueOf(MathContext.MC24, "0.5");
 
+    /**
+     * The error function.
+     *
+     * @param mc The math context to use while performing computations.
+     * @param a The argument.
+     * @return The value of the error function for argument a.
+     */
     public static SciFloat erf(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         erf(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * The exponential function. Defined as e^a, where e is the Napier constant,
+     * commonly known as the base of the natural logarithm.
+     *
+     * @param mc The math context to use while performing computations.
+     * @param a The argument.
+     * @return The value of exp(a).
+     */
     public static SciFloat exp(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         exp(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * The base-2 exponential function. Defined as 2^a.
+     *
+     * @param mc The math context to use while performing computations.
+     * @param a The argument.
+     * @return The value of exp2(a).
+     */
     public static SciFloat exp2(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         exp2(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * The base-10 exponential function. Defined as 10^a.
+     *
+     * @param mc The math context to use while performing computations.
+     * @param a The argument.
+     * @return The value of exp10(a).
+     */
     public static SciFloat exp10(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         exp10(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * The natural logarithm. Often denoted as ln(a) to avoid confusion with
+     * the base-10 or base-2 logarithm.
+     *
+     * @param mc The math context to use while performing computations.
+     * @param a The argument.
+     * @return The value of ln(a).
+     */
     public static SciFloat ln(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         ln(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Extract the fractional part of a number, can be thought of as x - floor(x) for x >= 0
+     * and x - ceil(x) for x < 0.
+     * @param mc The math context to use while performing computations.
+     * @param a The argument.
+     * @return The fractional part of a.
+     */
     public static SciFloat fract(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         fract(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Round up a number to the next higher integer.
+     *
+     * @param mc The math context to use while performing computations.
+     * @param a The argument.
+     * @return The smallest integer greater than or equal to a.
+     */
     public static SciFloat ceil(MathContext mc, SciFloat a) {
         var result = SciFloat.valueOf(mc, 0);
         SciFloat.ceil(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Round down a number to the next lower integer.
+     *
+     * @param mc The math context to use while performing computations.
+     * @param a The argument.
+     * @return The largest integer less than or equal to a.
+     */
     public static SciFloat floor(MathContext mc, SciFloat a) {
         var result = SciFloat.valueOf(mc, 0);
         SciFloat.floor(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Convert an integer value to a SciFloat.
+     *
+     * @param mc The math context to use for the resulting SciFloat.
+     * @param n The integer value to convert.
+     * @return The SciFloat representation of n.
+     */
     public static SciFloat valueOf(MathContext mc, int n) {
         return fromInteger(mc.precision(), mc.roundingMode().ordinal(), n);
     }
 
+    /**
+     * Parse a string value to a SciFloat.
+     *
+     * @param mc The math context to use for the resulting SciFloat.
+     * @param s The string value to parse.
+     * @return The SciFloat representation of s.
+     * @throws NumberFormatException If the string is not a valid representation of a SciFloat.
+     */
     public static SciFloat valueOf(MathContext mc, String s) {
         return fromString(mc.precision(), mc.roundingMode().ordinal(), s);
     }
 
+    /**
+     * Convert a SciInteger value to a SciFloat.
+     *
+     * @param mc The math context to use for the resulting SciFloat.
+     * @param i The SciInteger value to convert.
+     * @return The SciFloat representation of i.
+     */
     public static SciFloat valueOf(MathContext mc, SciInteger i) {
         return fromSciInteger(mc.precision(), mc.roundingMode().ordinal(), i.ptr);
     }
 
+    /**
+     * Compute the value of the arithmetic-geometric mean.
+     *
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @param b The second argument.
+     * @return The value of the arithmetic-geometric mean of a and b.
+     */
     public static SciFloat agm(MathContext mc, SciFloat a, SciFloat b) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         agm(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr, b.ptr);
         return result;
     }
 
+    /**
+     * Compute the sum of two SciFloat values.
+     *
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @param b The second argument.
+     * @return a + b.
+     */
     public static SciFloat add(MathContext mc, SciFloat a, SciFloat b) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.add(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr, b.ptr);
         return result;
     }
 
+    /**
+     * Compute the difference of two SciFloat values.
+     *
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @param b The second argument.
+     * @return a - b.
+     */
     public static SciFloat sub(MathContext mc, SciFloat a, SciFloat b) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.sub(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr, b.ptr);
         return result;
     }
 
+    /**
+     * Compute the product of two SciFloat values.
+     *
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @param b The second argument.
+     * @return a * b.
+     */
     public static SciFloat mul(MathContext mc, SciFloat a, SciFloat b) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.mul(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr, b.ptr);
         return result;
     }
 
+    /**
+     * Compute the quotient of two SciFloat values.
+     *
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @param b The second argument.
+     * @return a / b.
+     */
     public static SciFloat div(MathContext mc, SciFloat a, SciFloat b) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.div(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr, b.ptr);
         return result;
     }
 
+    /**
+     * Compute the modulus of two SciFloat values.
+     *
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @param b The second argument.
+     * @return a % b.
+     */
     public static SciFloat mod(MathContext mc, SciFloat a, SciFloat b) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.mod(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr, b.ptr);
         return result;
     }
 
+    /**
+     * Compute the square root of a SciFloat value.
+     *
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return sqrt(a).
+     */
     public static SciFloat sqrt(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.sqrt(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Compute the value of the trigonometric function sin(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return sin(a).
+     */
     public static SciFloat sin(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.sin(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Compute the value of the trigonometric function cos(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return cos(a).
+     */
     public static SciFloat cos(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.cos(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Compute the value of the trigonometric function tan(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return tan(a).
+     */
     public static SciFloat tan(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.tan(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Compute the value of the trigonometric function sec(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return sec(a).
+     */
     public static SciFloat sec(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.sec(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Compute the value of the trigonometric function csc(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return csc(a).
+     */
     public static SciFloat csc(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.csc(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Compute the value of the trigonometric function cot(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return cot(a).
+     */
     public static SciFloat cot(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.cot(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Compute the value of the cyclometric function arcsin(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return arcsin(a).
+     */
     public static SciFloat asin(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.asin(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Compute the value of the cyclometric function arccos(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return arccos(a).
+     */
     public static SciFloat acos(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.acos(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Compute the value of the cyclometric function arctan(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return arctan(a).
+     */
     public static SciFloat atan(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.atan(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
+
+    /**
+     * Compute the value of the cyclometric function arcsec(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return arcsec(a).
+     */
     public static SciFloat asec(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.div(mc.precision(), mc.roundingMode().ordinal(), result.ptr, ONE.ptr, a.ptr);
@@ -271,6 +492,12 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
         return result;
     }
 
+    /**
+     * Compute the value of the cyclometric function arccsc(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return arccsc(a).
+     */
     public static SciFloat acsc(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.div(mc.precision(), mc.roundingMode().ordinal(), result.ptr, ONE.ptr, a.ptr);
@@ -278,6 +505,12 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
         return result;
     }
 
+    /**
+     * Compute the value of the cyclometric function arccot(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return arccot(a).
+     */
     public static SciFloat acot(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.div(mc.precision(), mc.roundingMode().ordinal(), result.ptr, ONE.ptr, a.ptr);
@@ -285,134 +518,288 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
         return result;
     }
 
+    /**
+     * Compute the value of the hyperbolic function sinh(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return sinh(a).
+     */
     public static SciFloat sinh(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.sinh(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Compute the value of the hyperbolic function cosh(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return cosh(a).
+     */
     public static SciFloat cosh(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.cosh(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Compute the value of the hyperbolic function tanh(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return tanh(a).
+     */
     public static SciFloat tanh(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.tanh(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Compute the value of the inverse hyperbolic function asinh(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return asinh(a).
+     */
     public static SciFloat asinh(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.asinh(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Compute the value of the inverse hyperbolic function acosh(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return acosh(a).
+     */
     public static SciFloat acosh(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.acosh(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Compute the value of the inverse hyperbolic function atanh(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return atanh(a).
+     */
     public static SciFloat atanh(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.atanh(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Compute the cube root of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return The cube root of a.
+     */
     public static SciFloat cbrt(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.cbrt(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Compute the value of the digamma function of a given SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return The digamma function of a.
+     */
     public static SciFloat digamma(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.digamma(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Compute the value of the exponential integral of a given SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return The exponential integral of a.
+     */
     public static SciFloat Ei(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.Ei(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Negate a SciFloat value. Does not modify the operand.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return -a.
+     */
     public static SciFloat neg(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.neg(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Yield the absolute value of a SciFloat value. Does not modify the operand.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return abs(a).
+     */
     public static SciFloat abs(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.abs(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Return the value of the gamma function of a given SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return The gamma function of a.
+     */
     public static SciFloat gamma(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.gamma(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Return the value of the upper incomplete gamma function of a given SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return The upper incomplete gamma function of a.
+     */
     public static SciFloat igamma(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.gamma_inc(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
+    /**
+     * Compute the value of the factorial of an integer as a SciFloat value.
+     * It might be more useful to consider the {@link SciInteger} factorial method
+     * or the gamma functon from this class.
+     *
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return The factorial of a.
+     */
     public static SciFloat factorial(MathContext mc, int a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.factorial(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a);
         return result;
     }
 
+    /**
+     * Clamp a SciFloat value to a given range.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @param min The minimum value.
+     * @param max The maximum value.
+     * @return The clamped value.
+     * @throws IllegalArgumentException if min > max.
+     */
     public static SciFloat clamp(MathContext mc, SciFloat a, SciFloat min, SciFloat max) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.clamp(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr, min.ptr, max.ptr);
         return result;
     }
 
+    /**
+     * Compute the euclidean norm of two SciFloat values.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @param b The second argument.
+     * @return sqrt(a^2 + b^2).
+     */
     public static SciFloat hypot(MathContext mc, SciFloat a, SciFloat b) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.hypot(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr, b.ptr);
         return result;
     }
 
+    /**
+     * Load exponent, that is, compute the value of a * 2^exp.
+     * @param mc The math context to use for the resulting SciFlaot value.
+     * @param a The first argument.
+     * @param b The second argument.
+     * @return a * 2^exp.
+     */
     public static SciFloat ldexp(MathContext mc, int a, int b) {
         return ldexp(mc.precision(), mc.roundingMode().ordinal(), a, b);
     }
 
+    /**
+     * Check whether a SciFloat value is finite, that is, not NaN or infinity.
+     * @return
+     */
     public boolean isFinite() {
         return isFinite(ptr);
     }
 
+    /**
+     * Compare this SciFloat value to another SciFloat value.
+     * @param other The other SciFloat value.
+     * @return true when the values are equal, false otherwise.
+     */
     public boolean eq(SciFloat other) {
         return eq(ptr, other.ptr);
     }
 
+    /**
+     * Compare this SciFloat value to another SciFloat value.
+     * @param other The other SciFloat value.
+     * @return true when the values are not equal, false otherwise.
+     */
     public boolean neq(SciFloat other) {
         return neq(ptr, other.ptr);
     }
 
+    /**
+     * Compare this SciFloat value to another SciFloat value.
+     * @param other The other SciFloat value.
+     * @return true when this value is less than the other value, false otherwise.
+     */
     public boolean lt(SciFloat other) {
         return lt(ptr, other.ptr);
     }
 
+    /**
+     * Compare this SciFloat value to another SciFloat value.
+     * @param other The other SciFloat value.
+     * @return true when this value is less than or equal to the other value, false otherwise.
+     */
     public boolean lte(SciFloat other) {
         return lte(ptr, other.ptr);
     }
 
+    /**
+     * Compare this SciFloat value to another SciFloat value.
+     * @param other The other SciFloat value.
+     * @return true when this value is greater than the other value, false otherwise.
+     */
     public boolean gt(SciFloat other) {
         return gt(ptr, other.ptr);
     }
 
+    /**
+     * Compare this SciFloat value to another SciFloat value.
+     * @param other The other SciFloat value.
+     * @return true when this value is greater than or equal to the other value, false otherwise.
+     */
     public boolean gte(SciFloat other) {
         return gte(ptr, other.ptr);
     }
 
+    /**
+     * Determine the equality of this SciFloat value to another SciFloat value.
+     * The advantage of using this method over the {@link #eq(SciFloat)} method in
+     * some scenarios is that this method can detect physical equality of the
+     * underlying MPFR pointers, giving a slight performance improvement in some
+     * cases.
+     *
+     * @param other The other SciFloat value.
+     * @return true when the values are equal, false otherwise.
+     */
     @Override
     public boolean equals(Object other) {
         if (other == this) {
@@ -426,20 +813,43 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
         return false;
     }
 
+    /**
+     * Stringify this SciFloat value.
+     * @return The string representation of this SciFloat value.
+     */
     @Override
     public String toString() {
         return toString(ptr);
     }
 
+    /**
+     * Return the value of performing three-way comparison between this SciFloat value and another SciFloat value.
+     * @param o the object to be compared.
+     * @return a negative integer when this < other, zero when this = other, or a positive integer when this > other.
+     */
     @Override
     public int compareTo(SciFloat o) {
         return compare(ptr, o.ptr);
     }
 
+    /**
+     * Clone this SciFloat value.
+     * @return A deep copy of this SciFloat value.
+     */
     @Override
     protected Object clone() {
         SciFloat result = SciFloat.valueOf(getMathContext(ptr), 0);
         copy(result.ptr, ptr);
         return result;
+    }
+
+    /**
+     * Get the hash code of this SciFloat value.
+     * Relatively slow: yields the hash code of the string representation of this SciFloat value.
+     * @return The hash code of this SciFloat value.
+     */
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
     }
 }
