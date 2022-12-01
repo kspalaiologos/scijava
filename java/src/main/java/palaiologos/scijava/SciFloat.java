@@ -121,6 +121,8 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void j1(int precision, int roundingMode, long dest, long a);
     private static native void jn(int precision, int roundingMode, long dest, long a, int b);
     private static native void li2(int precision, int roundingMode, long dest, long a);
+    private static native void log10(int precision, int roundingMode, long dest, long a);
+    private static native void log2(int precision, int roundingMode, long dest, long a);
 
     // Public API
     /**
@@ -903,6 +905,30 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     public SciFloat li2(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.li2(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    /**
+     * Compute the value of the base-2 logarithm of a given SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The argument.
+     * @return log2(a)
+     */
+    public SciFloat log2(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.log2(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    /**
+     * Compute the value of the base-10 logarithm of a given SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The argument.
+     * @return log10(a)
+     */
+    public SciFloat log10(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.log10(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 }
