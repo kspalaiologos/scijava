@@ -16,6 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use std::cmp::max;
+use std::f64::consts;
 use std::hint::unreachable_unchecked;
 use std::ops::DivAssign;
 
@@ -31,11 +33,11 @@ use jni::objects::{JClass, JString, JObject, JValue, JMap};
 // This is just a pointer. We'll be returning it from our function. We
 // can't return one of the objects with lifetime information because the
 // lifetime checker won't let us.
-use jni::sys::{jstring, jlong, jint, jobject, jboolean};
+use jni::sys::{jstring, jlong, jint, jobject, jboolean, jfloat};
 use rug::rand::RandState;
 use rug::{Float, Integer};
-use rug::float::{Round, FreeCache, Constant};
-use rug::ops::NegAssign;
+use rug::float::{Round, FreeCache, Constant, Special};
+use rug::ops::{NegAssign, Pow};
 
 fn xlat_rounding(mode: jint) -> Round {
     match mode {
@@ -1307,4 +1309,203 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_log(
     dest.ln_mut();
     let lnk = k.clone().ln();
     dest.div_assign(&lnk);
+}
+
+// lambert w
+
+fn lambertw_special(prec: u32, z: Float, k: f32) -> Float {
+    if z.is_zero() {
+        if k == 0.0 {
+            return z;
+        }
+        return Float::with_val(prec, Special::NegInfinity);
+    }
+    if z.is_infinite() && k == 0.0 {
+        return z;
+    }
+    z.ln()
+}
+
+fn lambertw_approx_hybrid(prec: u32, z: Float, k: f32) -> Float {
+    if k == 0.0 {
+        if z < -4.0 && z < 4.0 && -1.0 < z && z < 2.5 {
+            // Taylor series near -1
+            if z < -0.5 {
+                return Float::with_val(prec, Special::Nan);
+            }
+            // return real type
+            let r = Float::with_val(prec, -0.367879441171442);
+            let mut z = z;
+            if z > r {
+                z = r.clone()
+            }
+            // Singularity near -1/e
+            if z < -0.2 {
+                let zmr = z - r;
+                let zmr_r = zmr.clone().sqrt();
+                return Float::with_val(prec, -1) + Float::with_val(prec, 2.33164398159712) * zmr_r - Float::with_val(prec, 1.81218788563936) * zmr;
+            }
+            // Taylor series near 0
+            if z < 0.5 {
+                return z;
+            }
+            // Simple linear approximation
+            return Float::with_val(prec, 0.2) + Float::with_val(prec, 0.3) * z;
+        }
+        
+        let l1 = z.ln();
+        let l2 = l1.clone().ln();
+        let a = l1.clone() - &l2;
+        let b = l2.clone() / &l1;
+        return a + b + l2.clone() * (l2 - 2) / (2 * l1.pow(2));
+    } else if k == -1.0 {
+        // return real type
+        let r = Float::with_val(prec, -0.367879441171442);
+        let mut z = z;
+        if r < z && z < 0.0 {
+            z = r.clone();
+        }
+        if z < 0.1 && -0.6 < z && z < -0.2 {
+            let zmr = z - r;
+            let zmr_r = zmr.clone().sqrt();
+            return Float::with_val(prec, -1) - Float::with_val(prec, 2.33164398159712) * zmr_r - Float::with_val(prec, 1.81218788563936) * zmr;
+        } else if (-0.2..0.0).contains(&z) {
+            let l1 = (-z).ln();
+            let ml1 = -l1.clone();
+            return l1 - ml1.ln();
+        } else {
+            return Float::with_val(prec, Special::Nan);
+        }
+    }
+    Float::with_val(prec, Special::Nan)
+}
+
+// return the logarithmic magnitude of a number, i.e. m such that |x| <= 2^m. m can be zero or infinity.
+fn mag(x: &Float) -> f64 {
+    if x.is_zero() {
+        return f64::NEG_INFINITY;
+    }
+    if x.is_infinite() {
+        return f64::INFINITY;
+    }
+    if x.is_sign_negative() {
+        let x = -x.clone();
+        let mut m = x.log2();
+        m.floor_mut();
+        m.to_f64()
+    } else {
+        let mut m = x.clone().log2();
+        m.floor_mut();
+        m.to_f64()
+    }
+}
+
+fn lambertw_series(prec: u32, z: Float, k: f32, tol: Float) -> (Float, bool) {
+    let magz = mag(&z);
+    if (-10.0..900.0).contains(&magz) && (-1000.0..1000.0).contains(&k) {
+        // Near the branch point at -1/e
+        if magz < 1.0 && (0.36787944117144..0.41787944117144).contains(&(z.clone() + 0.36787944117144)) {
+            if k == 0.0 || k == -1.0 {
+                let delta = Float::with_val(prec, -1).exp() + &z;
+                let cancellation = -mag(&delta);
+                let fc: Float = Float::with_val(prec, consts::E) * z + 1.0;
+                let mut p = Float::with_val(prec + cancellation as u32, 2.0) * fc.sqrt();
+                let mut u = vec![Float::with_val(prec, -1.0), Float::with_val(prec, 1.0)];
+                let mut a = vec![Float::with_val(prec, 2.0), Float::with_val(prec, -1.0)];
+                if k != 0.0 {
+                    p = -p;
+                }
+                let mut s = Float::with_val(prec + cancellation as u32 / 2, 0.0);
+                // The series converges, so we could use it directly, but unless
+                // *extremely* close, it is better to just use the first few
+                // terms to get a good approximation for the iteration
+                for l in 2..max(2, cancellation as usize) {
+                    if u.len() <= l {
+                        a.push(Float::with_val(prec, 0.0));
+                        for j in 0..l {
+                            a[l] += u[j].clone() * &u[l + 1 - j];
+                        }
+
+                        u.push(Float::with_val(prec, 0.0));
+                        u[l] = (l - 1) * (u[l - 2].clone() / 2.0 + a[l - 2].clone() / 4.0) / (l + 1) - a[l].clone() / 2.0 - u[l - 1].clone() / (l + 1);
+                    }
+                    let term = u[l].clone() * p.clone().pow(l as u32);
+                    s += &term;
+                    if mag(&term) < -tol.clone() {
+                        return (s, true);
+                    }
+                }
+                return (s, false);
+            }
+            if k == 0.0 || k == -1.0 {
+                return (lambertw_approx_hybrid(prec, z, k), false);
+            }
+        }
+        if k == 0.0 {
+            if magz < -1.0 {
+                return (z.clone() * (1.0 - z), false);
+            }
+            let L1 = z.ln();
+            let L2 = L1.clone().ln();
+            return (L1.clone() - &L2 + L2.clone() / &L1 + L2.clone() * (L2 - 2.0) / (2.0 * L1.pow(2)), false);
+        } else if k == -1.0 && (-0.36787944117144..0.0).contains(&z) {
+            let L1 = (-z).ln();
+            return (L1.clone() - (-L1).ln(), false);
+        }
+    }
+    (Float::with_val(prec, Special::Nan), false)
+}
+
+fn lambertw(env: JNIEnv, prec: u32, z: Float, k: f32) -> Option<Float> {
+    if !z.is_normal() {
+        return Some(lambertw_special(prec, z, k));
+    }
+    let wp = prec + 30;
+    let tol = wp - 5;
+    let (mut w, done) = lambertw_series(wp, z.clone(), k, Float::with_val(wp, 10.0).pow(tol).recip());
+    if !done {
+        // Use Halley iteration to solve w*exp(w) = z
+        let two = Float::with_val(wp, 2.0);
+        let mut converged = false;
+        for _ in 0..100 {
+            let ew = w.clone().exp();
+            let wew = w.clone() * &ew;
+            let wewz = wew.clone() - &z;
+            let wn = w.clone() - &wewz / (wew.clone() + &ew - (w.clone() + &two) * &wewz / (two.clone() * &w + &two));
+            if mag(&(wn.clone() - &w)) <= mag(&wn) - tol as f64 {
+                w = wn;
+                converged = true;
+                break;
+            } else {
+                w = wn;
+            }
+        }
+        if !converged {
+            // throw exception
+            let _ = env.throw(("java/lang/ArithmeticException", "Lambert W iteration failed to converge."));
+            return None;
+        }
+    }
+    Some(w)
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_lambertw(
+        env: JNIEnv, _class: JClass, prec: u32, z: jlong, k: jint) -> jobject {
+    let z = unsafe { &*(z as *const Float) };
+    let lw = lambertw(env, prec, z.clone(), k as f32);
+    let lw = match lw {
+        Some(lw) => lw,
+        None => return JObject::null().into_raw(),
+    };
+    let lw = Box::into_raw(Box::new(lw));
+    let lw = lw as jlong;
+    let class = env.new_object("palaiologos/scijava/SciFloat", "(J)V", &[JValue::Long(lw)]);
+    match class {
+        Ok(class) => class.into_raw(),
+        Err(_) => {
+            let _ = env.throw(("java/lang/ArithmeticException", "Lambert W iteration failed to converge."));
+            JObject::null().into_raw()
+        }
+    }
 }

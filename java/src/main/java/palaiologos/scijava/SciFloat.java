@@ -128,6 +128,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void log10(int precision, int roundingMode, long dest, long a);
     private static native void log2(int precision, int roundingMode, long dest, long a);
     private static native void chop(int precision, int roundingMode, long dest, long a, long eps);
+    private static native SciFloat lambertw(int precision, long x, int k);
     private static native boolean isNaN(long ptr);
     private static native boolean isInf(long ptr);
     private static native SciFloat random(int precision, int roundingMode, long randptr);
@@ -156,6 +157,17 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      * The SciFloat constant 0.5.
      */
     public static SciFloat HALF = SciFloat.valueOf(MathContext.MC24, "0.5");
+
+    /**
+     * Return the value of the Lambert W function (branch k) of x.
+     * @param mc The MathContext to use for the result.
+     * @param x The argument of the Lambert W function.
+     * @param k The branch of the Lambert W function.
+     * @return The value of the Lambert W function of x.
+     */
+    public static SciFloat lambertw(MathContext mc, SciFloat x, int k) {
+        return lambertw(mc.precision(), x.ptr, k);
+    }
 
     /**
      * Compute the logarithm in a given base of a SciFloat value.
