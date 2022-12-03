@@ -136,6 +136,9 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void sech(int precision, int roundingMode, long dest, long a);
     private static native void csch(int precision, int roundingMode, long dest, long a);
     private static native void coth(int precision, int roundingMode, long dest, long a);
+    private static native void asinh_inplace(int precision, int roundingMode, long a);
+    private static native void acosh_inplace(int precision, int roundingMode, long a);
+    private static native void atanh_inplace(int precision, int roundingMode, long a);
     private static native void chop(int precision, int roundingMode, long dest, long a, long eps);
     private static native SciFloat lambertw(int precision, long x, int k);
     private static native boolean isNaN(long ptr);
@@ -892,6 +895,42 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.atanh(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
+    }
+
+    /**
+     * Compute the value of the inverse hyperbolic function asech(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return asech(a).
+     */
+    public static SciFloat asech(MathContext mc, SciFloat a) {
+        SciFloat x = SciFloat.reciprocal(mc, a);
+        acosh_inplace(mc.precision(), mc.roundingMode().ordinal(), x.ptr);
+        return x;
+    }
+
+    /**
+     * Compute the value of the inverse hyperbolic function acsch(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return acsch(a).
+     */
+    public static SciFloat acsch(MathContext mc, SciFloat a) {
+        SciFloat x = SciFloat.reciprocal(mc, a);
+        asinh_inplace(mc.precision(), mc.roundingMode().ordinal(), x.ptr);
+        return x;
+    }
+
+    /**
+     * Compute the value of the inverse hyperbolic function acoth(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return acoth(a).
+     */
+    public static SciFloat acoth(MathContext mc, SciFloat a) {
+        SciFloat x = SciFloat.reciprocal(mc, a);
+        atanh_inplace(mc.precision(), mc.roundingMode().ordinal(), x.ptr);
+        return x;
     }
 
     /**

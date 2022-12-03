@@ -646,6 +646,45 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_atan_inplace(
     }
 }
 
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_asinh_inplace(
+        _env: JNIEnv, _class: JClass, precision: jint, _rounding_mode: jint, a: jlong) {
+    let a = a as *mut Float;
+    let a = unsafe { &mut *a };
+    if a.prec() == precision as u32 {
+        a.asinh_mut();
+    } else {
+        a.set_prec(precision as u32);
+        a.asinh_mut();
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_acosh_inplace(
+        _env: JNIEnv, _class: JClass, precision: jint, _rounding_mode: jint, a: jlong) {
+    let a = a as *mut Float;
+    let a = unsafe { &mut *a };
+    if a.prec() == precision as u32 {
+        a.acosh_mut();
+    } else {
+        a.set_prec(precision as u32);
+        a.acosh_mut();
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_atanh_inplace(
+        _env: JNIEnv, _class: JClass, precision: jint, _rounding_mode: jint, a: jlong) {
+    let a = a as *mut Float;
+    let a = unsafe { &mut *a };
+    if a.prec() == precision as u32 {
+        a.atanh_mut();
+    } else {
+        a.set_prec(precision as u32);
+        a.atanh_mut();
+    }
+}
+
 // hyperbolic functions
 
 #[no_mangle]
