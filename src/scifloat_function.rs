@@ -968,8 +968,6 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_harmonic(
 }
 
 fn bernoulli(prec: u32, n: i32) -> Float {
-    // B_n = -n * zeta(1 - n)
-    // tentatively, B_{2n}={\frac {(-1)^{n+1}2(2n)!}{(2\pi )^{2n}}}\zeta (2n)
     Float::with_val(prec, 1 - n).zeta() * -n
 }
 
