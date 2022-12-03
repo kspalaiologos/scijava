@@ -119,6 +119,8 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void ln(int precision, int roundingMode, long dest, long a);
     private static native void fract(int precision, int roundingMode, long dest, long a);
     private static native void gamma(int precision, int roundingMode, long dest, long a);
+    private static native void loggamma(int precision, int roundingMode, long dest, long a);
+    private static native void rgamma(int precision, int roundingMode, long dest, long a);
     private static native void gamma_inc(int precision, int roundingMode, long dest, long a);
     private static native void hypot(int precision, int roundingMode, long dest, long a, long b);
     private static native void j0(int precision, int roundingMode, long dest, long a);
@@ -958,6 +960,18 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     }
 
     /**
+     * Compute the value of the ln(gamma(x)) function of a given SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return The logarithm of the gamma function function of a.
+     */
+    public static SciFloat loggamma(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.loggamma(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    /**
      * Compute the value of the exponential integral of a given SciFloat value.
      * @param mc The math context to use while performing computations.
      * @param a The first argument.
@@ -1002,6 +1016,18 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     public static SciFloat gamma(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.gamma(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    /**
+     * Return the value of the inverse gamma (1 / gamma(x)) function of a given SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return The inverse gamma function of a.
+     */
+    public static SciFloat rgamma(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.rgamma(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
