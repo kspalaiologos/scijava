@@ -133,6 +133,9 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void cospi(int precision, int roundingMode, long dest, long a);
     private static native void sinc(int precision, int roundingMode, long dest, long a);
     private static native void recip(int precision, int roundingMode, long dest, long a);
+    private static native void sech(int precision, int roundingMode, long dest, long a);
+    private static native void csch(int precision, int roundingMode, long dest, long a);
+    private static native void coth(int precision, int roundingMode, long dest, long a);
     private static native void chop(int precision, int roundingMode, long dest, long a, long eps);
     private static native SciFloat lambertw(int precision, long x, int k);
     private static native boolean isNaN(long ptr);
@@ -792,6 +795,42 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     public static SciFloat sinh(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.sinh(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    /**
+     * Compute the value of the hyperbolic function sech(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return sech(a).
+     */
+    public static SciFloat sech(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.sech(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    /**
+     * Compute the value of the hyperbolic function csch(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return csch(a).
+     */
+    public static SciFloat csch(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.csch(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    /**
+     * Compute the value of the hyperbolic function coth(a) of a SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The first argument.
+     * @return coth(a).
+     */
+    public static SciFloat coth(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.coth(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
