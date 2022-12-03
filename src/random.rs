@@ -23,12 +23,12 @@ use jni::JNIEnv;
 // These objects are what you should use as arguments to your native
 // function. They carry extra lifetime information to prevent them escaping
 // this context and getting used after being GC'd.
-use jni::objects::{JClass, JString, JObject, JValue, JMap};
+use jni::objects::JClass;
 
 // This is just a pointer. We'll be returning it from our function. We
 // can't return one of the objects with lifetime information because the
 // lifetime checker won't let us.
-use jni::sys::{jstring, jlong, jint, jobject, jboolean};
+use jni::sys::{jlong, jint};
 use rug::Integer;
 use rug::rand::RandState;
 
