@@ -1711,3 +1711,46 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_loggamma(
     }
     dest.ln_gamma_mut();
 }
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_rf(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong, n: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let n = n as *mut Float;
+    let a = unsafe { &*a };
+    let n = unsafe { &*n };
+    let dest = unsafe { &mut *dest };
+    *dest = a.clone();
+    if a.prec() != precision as u32 {
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+    }
+    // gamma(a + n) / gamma(a)
+    let ga = dest.clone().gamma();
+    *dest += n;
+    dest.gamma_mut();
+    *dest /= ga;
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_ff(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong, n: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let n = n as *mut Float;
+    let a = unsafe { &*a };
+    let n = unsafe { &*n };
+    let dest = unsafe { &mut *dest };
+    *dest = a.clone();
+    if a.prec() != precision as u32 {
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+    }
+    // gamma(a + 1) / gamma(a - n + 1)
+    let mut ga = dest.clone();
+    ga += 1;
+    ga.gamma_mut();
+    *dest -= n;
+    *dest += 1;
+    dest.gamma_mut();
+    *dest /= ga;
+}

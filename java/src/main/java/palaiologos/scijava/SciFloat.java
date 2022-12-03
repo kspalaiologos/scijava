@@ -138,6 +138,8 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void sech(int precision, int roundingMode, long dest, long a);
     private static native void csch(int precision, int roundingMode, long dest, long a);
     private static native void coth(int precision, int roundingMode, long dest, long a);
+    private static native void rf(int precision, int roundingMode, long dest, long x, long n);
+    private static native void ff(int precision, int roundingMode, long dest, long x, long n);
     private static native void asinh_inplace(int precision, int roundingMode, long a);
     private static native void acosh_inplace(int precision, int roundingMode, long a);
     private static native void atanh_inplace(int precision, int roundingMode, long a);
@@ -254,6 +256,32 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     public static SciFloat cospi(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         cospi(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    /**
+     * Compute the value of the rising factorial (Pochhammer symbol) of x and n.
+     * Defined as gamma(x+n)/gamma(x).
+     * @param mc The MathContext to use for the result.
+     * @param x The argument.
+     * @return The value of the rising factorial of x and n.
+     */
+    public static SciFloat risingFactorial(MathContext mc, SciFloat x, SciFloat n) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        rf(mc.precision(), mc.roundingMode().ordinal(), result.ptr, x.ptr, n.ptr);
+        return result;
+    }
+
+    /**
+     * Compute the value of the falling factorial of x and n.
+     * Defined as gamma(x+1)/gamma(x-n+1).
+     * @param mc The MathContext to use for the result.
+     * @param x The argument.
+     * @return The value of the falling factorial of x and n.
+     */
+    public static SciFloat fallingFactorial(MathContext mc, SciFloat x, SciFloat n) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        ff(mc.precision(), mc.roundingMode().ordinal(), result.ptr, x.ptr, n.ptr);
         return result;
     }
 
