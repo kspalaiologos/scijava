@@ -151,6 +151,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native boolean isInf(long ptr);
     private static native SciFloat random(int precision, int roundingMode, long randptr);
     private static native SciFloat pi(int precision);
+    private static native SciFloat bernoulli(int precision, int n);
     private static native SciFloat glaisher(int precision);
     private static native SciFloat euler_gamma(int precision);
     private static native SciFloat degree(int precision);
@@ -202,6 +203,16 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
         SciFloat result = SciFloat.valueOf(mc, 0);
         harmonic(mc.precision(), mc.roundingMode().ordinal(), result.ptr, n.ptr);
         return result;
+    }
+
+    /**
+     * Return the n-th Bernoulli number.
+     * @param mc The MathContext to use.
+     * @param n The argument.
+     * @return The n-th Bernoulli number.
+     */
+    public static SciFloat bernoulli(MathContext mc, int n) {
+        return bernoulli(mc.precision(), n);
     }
 
     /**

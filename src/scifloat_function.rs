@@ -17,7 +17,12 @@
 */
 
 use std::cmp::max;
+use std::collections::HashMap;
 use std::f64::consts;
+use std::ptr;
+use std::sync::Mutex;
+use std::sync::atomic::{AtomicPtr, Ordering};
+use lazy_static::lazy_static;
 
 // This is the interface to the JVM that we'll call the majority of our
 // methods on.
@@ -32,7 +37,7 @@ use jni::objects::{JClass, JObject, JValue};
 // can't return one of the objects with lifetime information because the
 // lifetime checker won't let us.
 use jni::sys::{jlong, jint, jobject};
-use rug::Float;
+use rug::{Float, Integer};
 use rug::float::{Constant, Special};
 use rug::ops::Pow;
 
@@ -960,4 +965,26 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_harmonic(
     *dest += 1;
     dest.digamma_mut();
     *dest += Float::with_val(precision as u32, Constant::Euler);
+}
+
+fn bernoulli(prec: u32, n: i32) -> Float {
+    // B_n = -n * zeta(1 - n)
+    // tentatively, B_{2n}={\frac {(-1)^{n+1}2(2n)!}{(2\pi )^{2n}}}\zeta (2n)
+    Float::with_val(prec, 1 - n).zeta() * -n
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_bernoulli(
+        env: JNIEnv, _class: JClass, precision: jint, n: jint) -> jobject {
+    let n = bernoulli(precision as u32, n);
+    let ptr = Box::into_raw(Box::new(n));
+    let ptr = ptr as jlong;
+    let obj = env.new_object("palaiologos/scijava/SciFloat", "(J)V", &[ptr.into()]);
+    match obj {
+        Ok(obj) => obj.into_raw(),
+        Err(_) => {
+            let _ = env.throw(("java/lang/RuntimeException", "Failed to allocate object."));
+            JObject::null().into_raw()
+        }
+    }
 }
