@@ -1537,3 +1537,35 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_radians(
     }
     *dest *= Float::with_val(precision as u32, Constant::Pi) / 180;
 }
+
+// cospi, sinpi
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_sinpi(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.clone();
+    if a.prec() != precision as u32 {
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+    }
+    *dest *= Float::with_val(precision as u32, Constant::Pi);
+    dest.sin_mut();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_cospi(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.clone();
+    if a.prec() != precision as u32 {
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+    }
+    *dest *= Float::with_val(precision as u32, Constant::Pi);
+    dest.cos_mut();
+}

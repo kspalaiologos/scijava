@@ -129,6 +129,8 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void radians(int precision, int roundingMode, long dest, long a);
     private static native void degrees(int precision, int roundingMode, long dest, long a);
     private static native void log2(int precision, int roundingMode, long dest, long a);
+    private static native void sinpi(int precision, int roundingMode, long dest, long a);
+    private static native void cospi(int precision, int roundingMode, long dest, long a);
     private static native void chop(int precision, int roundingMode, long dest, long a, long eps);
     private static native SciFloat lambertw(int precision, long x, int k);
     private static native boolean isNaN(long ptr);
@@ -181,6 +183,30 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     public static SciFloat radians(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         radians(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    /**
+     * Compute the value of sin(pi * a)
+     * @param mc The MathContext to use for the result.
+     * @param a The argument.
+     * @return The value of sin(pi * a)
+     */
+    public static SciFloat sinpi(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        sinpi(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    /**
+     * Compute the value of cos(pi * a)
+     * @param mc The MathContext to use for the result.
+     * @param a The argument.
+     * @return The value of cos(pi * a)
+     */
+    public static SciFloat cospi(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        cospi(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
