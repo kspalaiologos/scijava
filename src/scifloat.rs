@@ -1392,7 +1392,7 @@ fn mag(x: &Float) -> f64 {
         let x = -x.clone();
         let mut m = x.log2();
         m.floor_mut();
-        m.to_f64()
+        -m.to_f64()
     } else {
         let mut m = x.clone().log2();
         m.floor_mut();
@@ -1461,7 +1461,7 @@ fn lambertw(env: JNIEnv, prec: u32, z: Float, k: f32) -> Option<Float> {
         return Some(lambertw_special(prec, z, k));
     }
     let wp = prec + 30;
-    let tol = wp - 5;
+    let tol = prec - 5;
     let (mut w, done) = lambertw_series(wp, z.clone(), k, Float::with_val(wp, 10.0).pow(tol).recip());
     if !done {
         // Use Halley iteration to solve w*exp(w) = z
