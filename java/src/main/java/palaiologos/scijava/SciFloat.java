@@ -150,6 +150,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native boolean isInf(long ptr);
     private static native SciFloat random(int precision, int roundingMode, long randptr);
     private static native SciFloat pi(int precision);
+    private static native SciFloat glaisher(int precision);
     private static native SciFloat euler_gamma(int precision);
     private static native SciFloat degree(int precision);
     private static native SciFloat e(int precision);
@@ -198,6 +199,16 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      */
     public static SciFloat sincpi(MathContext mc, SciFloat x) {
         return sinc(mc, SciFloat.mul(mc, x, SciFloat.pi(mc.precision())));
+    }
+
+    /**
+     * Return the value of the Glaisher constant with the specified precision.
+     * Loses accuracy past approximately 66500 bits of precision.
+     * @param mc The MathContext to use.
+     * @return The value of the Glaisher constant.
+     */
+    public static SciFloat glaisher(MathContext mc) {
+        return glaisher(mc.precision());
     }
 
     /**
