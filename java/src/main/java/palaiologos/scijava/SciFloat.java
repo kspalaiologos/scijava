@@ -126,6 +126,8 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void jn(int precision, int roundingMode, long dest, long a, int b);
     private static native void li2(int precision, int roundingMode, long dest, long a);
     private static native void log10(int precision, int roundingMode, long dest, long a);
+    private static native void radians(int precision, int roundingMode, long dest, long a);
+    private static native void degrees(int precision, int roundingMode, long dest, long a);
     private static native void log2(int precision, int roundingMode, long dest, long a);
     private static native void chop(int precision, int roundingMode, long dest, long a, long eps);
     private static native SciFloat lambertw(int precision, long x, int k);
@@ -157,6 +159,30 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      * The SciFloat constant 0.5.
      */
     public static SciFloat HALF = SciFloat.valueOf(MathContext.MC24, "0.5");
+
+    /**
+     * Convert a value in radians to a value in degrees.
+     * @param mc The MathContext to use for the result.
+     * @param a The value in radians.
+     * @return The value in degrees.
+     */
+    public static SciFloat degrees(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        degrees(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    /**
+     * Convert a value in degrees to a value in radians.
+     * @param mc The MathContext to use for the result.
+     * @param a The value in degrees.
+     * @return The value in radians.
+     */
+    public static SciFloat radians(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        radians(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
 
     /**
      * Return the value of the Lambert W function (branch k) of x.
