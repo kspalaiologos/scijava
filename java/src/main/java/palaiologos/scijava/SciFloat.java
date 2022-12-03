@@ -79,6 +79,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void asin(int precision, int roundingMode, long dest, long a);
     private static native void acos(int precision, int roundingMode, long dest, long a);
     private static native void atan(int precision, int roundingMode, long dest, long a);
+    private static native void beta(int precision, int roundingMode, long dest, long a, long b);
     private static native void asin_inplace(int precision, int roundingMode, long a);
     private static native void acos_inplace(int precision, int roundingMode, long a);
     private static native void atan_inplace(int precision, int roundingMode, long a);
@@ -269,6 +270,20 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     public static SciFloat risingFactorial(MathContext mc, SciFloat x, SciFloat n) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         rf(mc.precision(), mc.roundingMode().ordinal(), result.ptr, x.ptr, n.ptr);
+        return result;
+    }
+
+    /**
+     * Compute the value of the beta function of x and y.
+     * Defined as gamma(x) * gamma(y) / gamma(x+y).
+     * @param mc The MathContext to use for the result.
+     * @param x The first argument.
+     * @param y The second argument.
+     * @return The value of the beta function of x and y.
+     */
+    public static SciFloat beta(MathContext mc, SciFloat x, SciFloat y) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        beta(mc.precision(), mc.roundingMode().ordinal(), result.ptr, x.ptr, y.ptr);
         return result;
     }
 

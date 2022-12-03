@@ -1754,3 +1754,30 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_ff(
     dest.gamma_mut();
     *dest /= ga;
 }
+
+// beta(x,y) = gamma(x) * gamma(y) / gamma(x+y)
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_beta(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong, b: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let b = b as *mut Float;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    let dest = unsafe { &mut *dest };
+    let mut bp = b.clone();
+    *dest = a.clone();
+    if a.prec() != precision as u32 {
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+    }
+    if b.prec() != precision as u32 {
+        bp.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+    }
+    let mut apb = dest.clone() + &bp;
+    dest.gamma_mut();
+    bp.gamma_mut();
+    apb.gamma_mut();
+    *dest *= bp;
+    *dest /= apb;
+}
