@@ -131,6 +131,8 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void log2(int precision, int roundingMode, long dest, long a);
     private static native void sinpi(int precision, int roundingMode, long dest, long a);
     private static native void cospi(int precision, int roundingMode, long dest, long a);
+    private static native void sinc(int precision, int roundingMode, long dest, long a);
+    private static native void recip(int precision, int roundingMode, long dest, long a);
     private static native void chop(int precision, int roundingMode, long dest, long a, long eps);
     private static native SciFloat lambertw(int precision, long x, int k);
     private static native boolean isNaN(long ptr);
@@ -161,6 +163,43 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      * The SciFloat constant 0.5.
      */
     public static SciFloat HALF = SciFloat.valueOf(MathContext.MC24, "0.5");
+
+    /**
+     * Return the value of the unnormalised sinc function at x.
+     * @param mc The MathContext to use.
+     * @param x The argument.
+     * @return The value of the unnormalised sinc function at x.
+     */
+    public static SciFloat sinc(MathContext mc, SciFloat x) {
+        if(x.eq(ZERO)) {
+            return ONE;
+        }
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        sinc(mc.precision(), mc.roundingMode().ordinal(), result.ptr, x.ptr);
+        return result;
+    }
+
+    /**
+     * Return the value of the normalised sinc function at x.
+     * @param mc The MathContext to use.
+     * @param x The argument.
+     * @return The value of the normalised sinc function at x.
+     */
+    public static SciFloat sincpi(MathContext mc, SciFloat x) {
+        return sinc(mc, SciFloat.mul(mc, x, SciFloat.pi(mc.precision())));
+    }
+
+    /**
+     * Return the value of the reciprocal of x.
+     * @param mc The MathContext to use.
+     * @param x The argument.
+     * @return The value of the reciprocal of x.
+     */
+    public static SciFloat reciprocal(MathContext mc, SciFloat x) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        recip(mc.precision(), mc.roundingMode().ordinal(), result.ptr, x.ptr);
+        return result;
+    }
 
     /**
      * Convert a value in radians to a value in degrees.
