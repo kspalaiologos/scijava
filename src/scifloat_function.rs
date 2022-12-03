@@ -944,3 +944,20 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_glaisher(
         }
     }
 }
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_harmonic(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong) {
+    let dest = dest as *mut Float;
+    let a = a as *mut Float;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.clone();
+    if a.prec() != precision as u32 {
+        dest.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+    }
+    // H_n = eulergamma + digamma(n + 1)
+    *dest += 1;
+    dest.digamma_mut();
+    *dest += Float::with_val(precision as u32, Constant::Euler);
+}

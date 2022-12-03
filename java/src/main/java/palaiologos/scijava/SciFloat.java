@@ -139,6 +139,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void sech(int precision, int roundingMode, long dest, long a);
     private static native void csch(int precision, int roundingMode, long dest, long a);
     private static native void coth(int precision, int roundingMode, long dest, long a);
+    private static native void harmonic(int precision, int roundingMode, long dest, long a);
     private static native void rf(int precision, int roundingMode, long dest, long x, long n);
     private static native void ff(int precision, int roundingMode, long dest, long x, long n);
     private static native void asinh_inplace(int precision, int roundingMode, long a);
@@ -188,6 +189,18 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
         }
         SciFloat result = SciFloat.valueOf(mc, 0);
         sinc(mc.precision(), mc.roundingMode().ordinal(), result.ptr, x.ptr);
+        return result;
+    }
+
+    /**
+     * Return the n-th harmonic number. Domain extended for fractional n, defined as euler_gamma + digamma(n + 1).
+     * @param mc The MathContext to use.
+     * @param n The argument.
+     * @return The n-th harmonic number.
+     */
+    public static SciFloat harmonic(MathContext mc, SciFloat n) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        harmonic(mc.precision(), mc.roundingMode().ordinal(), result.ptr, n.ptr);
         return result;
     }
 
