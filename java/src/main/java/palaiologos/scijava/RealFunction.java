@@ -5,7 +5,7 @@ package palaiologos.scijava;
  *
  * @author Kamila Szewczyk
  */
-public interface UnivariateRealFunction {
+public interface RealFunction {
     /**
      * Compute the value of the function.
      *
