@@ -75,8 +75,8 @@ pub extern "system" fn Java_palaiologos_scijava_TanhSinhIntegrator_getNodes(
     let pi4 = Float::with_val(wp, Constant::Pi) / 4;
     let t0 = Float::with_val(wp, Float::i_exp(1, -degree));
     let mut node_id: i32 = 0;
-    let mut nodes: jarray;
-    let mut h: Float;
+    let nodes: jarray;
+    let h: Float;
     if degree == 1 {
         nodes = match env.new_object_array(2 + 20*(2_i32.pow(degree as u32)), "[palaiologos/scijava/SciFloat", JObject::null()) {
             Ok(nodes) => nodes,
@@ -113,7 +113,7 @@ pub extern "system" fn Java_palaiologos_scijava_TanhSinhIntegrator_getNodes(
     let expt0 = t0.exp();
     let mut a = Float::with_val(wp, &pi4 * &expt0);
     let mut b = Float::with_val(wp, &pi4 / &expt0);
-    let udelta = Float::with_val(wp, h.exp_ref());
+    let udelta = h.exp();
     let urdelta = Float::with_val(wp, udelta.recip_ref());
     for i in 0..(1+20*(2_i32.pow(degree as u32))) {
         let c = Float::with_val(wp, &a - &b).exp();
