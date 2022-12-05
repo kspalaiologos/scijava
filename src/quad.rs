@@ -119,9 +119,9 @@ pub extern "system" fn Java_palaiologos_scijava_TanhSinhIntegrator_getNodes(
         let c = Float::with_val(wp, &a - &b).exp();
         let d = c.clone().recip();
         let mut co = Float::with_val(wp, &c + &d);
-        let mut si = Float::with_val(wp, &c - &d);
+        let mut si = c - &d;
         co /= 2; si /= 2;
-        let x = Float::with_val(wp, &si / &co);
+        let x = si / &co;
         let w: Float = Float::with_val(wp, &a + &b) / co.pow(2);
         let diff = Float::with_val(wp, &x - 1).abs();
         if diff <= tol {
