@@ -58,7 +58,11 @@ fn wrap_nodepair(env: JNIEnv, x1: Float, x2: Float) -> Option<JObject> {
         None => return None
     };
     match env.new_object_array(2, "palaiologos/scijava/SciFloat", JObject::null()) {
-        Ok(x) => Some(unsafe { JObject::from_raw(x) }),
+        Ok(x) => {
+            env.set_object_array_element(x, 0, x1).unwrap();
+            env.set_object_array_element(x, 1, x2).unwrap();
+            Some(unsafe { JObject::from_raw(x) })
+        },
         Err(_) => {
             let _ = env.throw(("java/lang/OutOfMemoryError", "Could not allocate memory for nodes"));
             None
