@@ -123,6 +123,7 @@ pub extern "system" fn Java_palaiologos_scijava_TanhSinhIntegrator_getNodes(
         co /= 2; si /= 2;
         let x = si / &co;
         let w: Float = Float::with_val(wp, &a + &b) / co.pow(2);
+        // x generally converges to 1, check how close we are
         let diff = Float::with_val(wp, &x - 1).abs();
         if diff <= tol {
             break;
