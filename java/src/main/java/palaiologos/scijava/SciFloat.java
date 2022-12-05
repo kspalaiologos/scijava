@@ -47,18 +47,29 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
         }
     }
 
+    static class CleanerRunnable implements Runnable {
+        private final long pointer;
+
+        CleanerRunnable(long pointer) {
+            this.pointer = pointer;
+        }
+
+        @Override
+        public void run() {
+            synchronized (CleanerRunnable.class) {
+                drop_caches();
+            }
+            SciFloat.free(pointer);
+        }
+    }
+
     final long ptr;
 
     private final Cleaner.Cleanable cleanable;
 
     private SciFloat(long ptr) {
         this.ptr = ptr;
-        cleanable = CleanerSingleton.CLEANER.register(this, () -> {
-            synchronized (SciFloat.class) {
-                drop_caches();
-            }
-            SciFloat.free(ptr);
-        });
+        cleanable = CleanerSingleton.CLEANER.register(this, new CleanerRunnable(ptr));
     }
 
     private static native void free(long ptr);
