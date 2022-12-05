@@ -110,10 +110,10 @@ pub extern "system" fn Java_palaiologos_scijava_TanhSinhIntegrator_getNodes(
         };
         h = Float::with_val(wp, 2 * &t0);
     };
-    let expt0 = Float::with_val(wp, t0.exp10_ref());
+    let expt0 = t0.exp();
     let mut a = Float::with_val(wp, &pi4 * &expt0);
     let mut b = Float::with_val(wp, &pi4 / &expt0);
-    let udelta = Float::with_val(wp, h.exp10_ref());
+    let udelta = Float::with_val(wp, h.exp_ref());
     let urdelta = Float::with_val(wp, udelta.recip_ref());
     for i in 0..(1+20*(2_i32.pow(degree as u32))) {
         let c = Float::with_val(wp, &a - &b).exp();
@@ -122,14 +122,28 @@ pub extern "system" fn Java_palaiologos_scijava_TanhSinhIntegrator_getNodes(
         let mut si = Float::with_val(wp, &c - &d);
         co /= 2; si /= 2;
         let x = Float::with_val(wp, &si / &co);
-        let w = Float::with_val(wp, &a + &b) / co.pow(2);
+        let w: Float = Float::with_val(wp, &a + &b) / co.pow(2);
         let diff = Float::with_val(wp, &x - 1).abs();
         if diff <= tol {
             break;
         }
         a *= &udelta;
         b *= &urdelta;
-        let pair = wrap_nodepair(env, x, w);
+        let pair = wrap_nodepair(env, x.clone(), w.clone());
+        match pair {
+            Some(pair) => {
+                match env.set_object_array_element(nodes, node_id, pair) {
+                    Ok(_) => (),
+                    Err(_) => {
+                        let _ = env.throw(("java/lang/OutOfMemoryError", "Could not allocate memory for nodes"));
+                        return JObject::null().into_raw();
+                    }
+                }
+                node_id += 1;
+            },
+            None => return JObject::null().into_raw()
+        }
+        let pair = wrap_nodepair(env, -x, w);
         match pair {
             Some(pair) => {
                 match env.set_object_array_element(nodes, node_id, pair) {
