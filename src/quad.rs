@@ -197,8 +197,8 @@ pub extern "system" fn Java_palaiologos_scijava_TanhSinhIntegrator_transformNode
             let node = env.get_object_array_element(nodes, i).unwrap();
             let x1 = float_from_obj(env, env.get_object_array_element(*node, 0).unwrap());
             let x2 = float_from_obj(env, env.get_object_array_element(*node, 1).unwrap());
-            let x1 = c.clone() * x1.clone() + d.clone();
-            let x2 = c.clone() * x2.clone();
+            let x1 = c.clone() * x1 + &d;
+            let x2 = c.clone() * x2;
             let node = wrap_nodepair(env, x1, x2);
             let node = match node {
                 Some(node) => node,

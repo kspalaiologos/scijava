@@ -180,6 +180,16 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     public static SciFloat ONE = SciFloat.valueOf(MathContext.MC24, 1);
 
     /**
+     * The SciFloat constant 2.
+     */
+    public static SciFloat TWO = SciFloat.valueOf(MathContext.MC24, 2);
+
+    /**
+     * The SciFloat constant -1.
+     */
+    public static SciFloat MINUS_ONE = SciFloat.valueOf(MathContext.MC24, -1);
+
+    /**
      * The SciFloat constant 0.
      */
     public static SciFloat ZERO = SciFloat.valueOf(MathContext.MC24, 0);
