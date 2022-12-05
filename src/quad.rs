@@ -112,7 +112,7 @@ pub extern "system" fn Java_palaiologos_scijava_TanhSinhIntegrator_getNodes(
     };
     let expt0 = t0.exp();
     let mut a = Float::with_val(wp, &pi4 * &expt0);
-    let mut b = Float::with_val(wp, &pi4 / &expt0);
+    let mut b = pi4 / &expt0;
     let udelta = h.exp();
     let urdelta = Float::with_val(wp, udelta.recip_ref());
     for i in 0..(1+20*(2_i32.pow(degree as u32))) {
