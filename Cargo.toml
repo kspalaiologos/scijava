@@ -16,7 +16,6 @@ debug = false
 [dependencies]
 rug = "1.18.0"
 jni = "0.20.0"
-lazy_static = "1.4.0"
 
 [patch.crates-io]
 gmp-mpfr-sys = { path = "gmp-mpfr-sys/" }

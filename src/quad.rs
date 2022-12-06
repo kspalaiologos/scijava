@@ -28,10 +28,10 @@ use jni::objects::{JClass, JObject, JList};
 // This is just a pointer. We'll be returning it from our function. We
 // can't return one of the objects with lifetime information because the
 // lifetime checker won't let us.
-use jni::sys::{jlong, jint, jarray, jobject};
+use jni::sys::{jlong, jint};
 use rug::float::Constant;
 use rug::ops::{Pow, NegAssign};
-use rug::{Integer, Float};
+use rug::Float;
 
 fn wrap_float(env: JNIEnv, n: Float) -> Option<JObject> {
     let ptr = Box::into_raw(Box::new(n));
@@ -93,6 +93,10 @@ pub extern "system" fn Java_palaiologos_scijava_integrator_RealIntegrator_transf
     if a == &-1 && b == &1 {
         return;
     }
+    let mut a = a.clone();
+    a.set_prec(precision as u32);
+    let mut b = b.clone();
+    b.set_prec(precision as u32);
     if a.is_infinite() || b.is_infinite() {
         if (a.is_infinite() && a.is_sign_negative()) && (b.is_infinite() && b.is_sign_positive()) {
             for i in 0..nodes.size().unwrap() {
@@ -139,8 +143,8 @@ pub extern "system" fn Java_palaiologos_scijava_integrator_RealIntegrator_transf
         }
     } else {
         // Linear change of variables.
-        let c: Float = (b.clone() - a) / 2;
-        let d: Float = (b.clone() + a) / 2;
+        let c: Float = (b.clone() - &a) / 2;
+        let d: Float = (b.clone() + &a) / 2;
         for i in 0..nodes.size().unwrap() {
             let node = nodes.get(i).unwrap().unwrap();
             let x1 = unsafe { mut_float_from_obj(env, env.get_object_array_element(*node, 0).unwrap()) };

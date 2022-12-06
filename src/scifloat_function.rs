@@ -17,12 +17,7 @@
 */
 
 use std::cmp::max;
-use std::collections::HashMap;
 use std::f64::consts;
-use std::ptr;
-use std::sync::Mutex;
-use std::sync::atomic::{AtomicPtr, Ordering};
-use lazy_static::lazy_static;
 
 // This is the interface to the JVM that we'll call the majority of our
 // methods on.
@@ -37,7 +32,7 @@ use jni::objects::{JClass, JObject, JValue};
 // can't return one of the objects with lifetime information because the
 // lifetime checker won't let us.
 use jni::sys::{jlong, jint, jobject};
-use rug::{Float, Integer};
+use rug::Float;
 use rug::float::{Constant, Special};
 use rug::ops::Pow;
 
