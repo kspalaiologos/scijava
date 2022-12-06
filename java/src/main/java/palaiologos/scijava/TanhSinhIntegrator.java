@@ -4,13 +4,14 @@ import palaiologos.scijava.util.ConcurrentLRUCache;
 import palaiologos.scijava.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public final class TanhSinhIntegrator {
     private static final int LRU_SIZE = 256;
 
-    private int guessDegree(MathContext mc) {
+    private static int guessDegree(MathContext mc) {
         return 6 + Math.max(0, (int) Math.ceil(Math.log(mc.precision() / 30.0) / Math.log(2)));
     }
 
@@ -104,6 +105,16 @@ public final class TanhSinhIntegrator {
             S = SciFloat.add(mc, S, SciFloat.mul(mc, w, f.value(mc, x)));
         }
         return SciFloat.mul(mc, S, h);
+    }
+
+    public static Pair<SciFloat, SciFloat> quad(MathContext mc, RealFunction f, SciFloat[] points) {
+        return quad(mc, f, points, guessDegree(mc));
+    }
+
+    public static Pair<SciFloat, SciFloat> quad(MathContext mc, RealFunction f, SciFloat[] points, int max_degree) {
+        SciFloat epsilon = SciFloat.ldexp(mc, 1, 1-mc.precision());
+        MathContext nmc = new MathContext(mc.precision() + 20, mc.roundingMode());
+        return summation(nmc, f, Arrays.asList(points), epsilon, max_degree);
     }
 
     static class IntegratorProperties {
