@@ -81,21 +81,13 @@ public class TestSciFloat {
 
     @Test
     public void testQuadrature() {
-        Pair<SciFloat, SciFloat> result = RealTanhSinhIntegrator.quad(mc1, new RealFunction() {
-            @Override
-            public SciFloat value(MathContext mc, SciFloat x) {
-                return SciFloat.exp(mc, SciFloat.neg(mc, SciFloat.mul(mc, x, x)));
-            }
-        }, new SciFloat[] { SciFloat.MINUS_ONE, SciFloat.ONE });
+        Pair<SciFloat, SciFloat> result;
+
+        result = RealTanhSinhIntegrator.quad(mc1, (mc, x) -> SciFloat.exp(mc, SciFloat.neg(mc, SciFloat.mul(mc, x, x))), new SciFloat[] { SciFloat.MINUS_ONE, SciFloat.ONE });
 
         Assertions.assertEquals(result.left, SciFloat.valueOf(mc1, "1.4936482656248540507989348722634"));
 
-        result = RealTanhSinhIntegrator.quad(mc1, new RealFunction() {
-            @Override
-            public SciFloat value(MathContext mc, SciFloat x) {
-                return SciFloat.exp(mc, SciFloat.neg(mc, SciFloat.mul(mc, x, x)));
-            }
-        }, new SciFloat[] { SciFloat.NINF, SciFloat.INF });
+        result = RealTanhSinhIntegrator.quad(mc1, (mc, x) -> SciFloat.exp(mc, SciFloat.neg(mc, SciFloat.mul(mc, x, x))), new SciFloat[] { SciFloat.NINF, SciFloat.INF });
 
         Assertions.assertEquals(SciFloat.mul(mc1, result.left, result.left), SciFloat.pi(mc1));
     }
