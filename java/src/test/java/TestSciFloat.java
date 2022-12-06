@@ -79,15 +79,15 @@ public class TestSciFloat {
         Assertions.assertEquals(SciFloat.bernoulli(mc10, 22), SciFloat.valueOf(mc10, "6192.12318840579710144927536231884057971014492753623188405797101449275362318840579710144927536231884057971014492753623188405797101449275362318840579710144927536231884057971014492753623188405797101449275362318840579710144927536231884057971014492753623188405797101449275362318840579710144927536231884057956"));
     }
 
-    // @Test
+    @Test
     public void testQuadrature() {
         Pair<SciFloat, SciFloat> result = TanhSinhIntegrator.quad(mc1, new RealFunction() {
             @Override
             public SciFloat value(MathContext mc, SciFloat x) {
-                return SciFloat.exp(mc, SciFloat.mul(mc, x, x));
+                return SciFloat.exp(mc, SciFloat.neg(mc, SciFloat.mul(mc, x, x)));
             }
-        }, new SciFloat[] { SciFloat.NINF, SciFloat.INF });
+        }, new SciFloat[] { SciFloat.MINUS_ONE, SciFloat.ONE });
 
-        System.out.println(result.left);
+        Assertions.assertEquals(result.left, SciFloat.valueOf(mc1, "1.4936482656248540507989348722634"));
     }
 }

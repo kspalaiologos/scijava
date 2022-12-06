@@ -244,9 +244,7 @@ pub extern "system" fn Java_palaiologos_scijava_TanhSinhIntegrator_getNodes(
     let mut b = pi4 / &expt0;
     let udelta = h.exp();
     let urdelta = Float::with_val(wp, udelta.recip_ref());
-    println!("OK!");
-    for i in 0..(1+20*(2_i32.pow(degree as u32))) {
-        println!("{i}");
+    for _ in 0..(1+20*(2_i32.pow(degree as u32))) {
         let c = Float::with_val(wp, &a - &b).exp();
         let d = c.clone().recip();
         let mut co = Float::with_val(wp, &c + &d);

@@ -49,7 +49,7 @@ public final class TanhSinhIntegrator {
         return SciFloat.pow(mc, SciFloat.TEN, SciFloat.floor(mc, D4));
     }
 
-    private static Pair<SciFloat, SciFloat> summation(MathContext mc, RealFunction f, List<SciFloat> points, SciFloat epsilon, int maxDegree) {
+    private static Pair<SciFloat, SciFloat> summation(MathContext mc, RealFunction f, List<SciFloat> points, SciFloat epsilon, int maxDegree, MathContext oldMc) {
         SciFloat I, totalError;
         I = totalError = SciFloat.ZERO;
         if(points.size() % 2 != 0) {
@@ -72,7 +72,7 @@ public final class TanhSinhIntegrator {
             }
             List<SciFloat> results = new ArrayList<>();
             SciFloat error = SciFloat.ZERO;
-            IntegratorProperties props = new IntegratorProperties(mc.precision(), maxDegree, a, b);
+            IntegratorProperties props = new IntegratorProperties(mc.precision(), 1, a, b);
             for (int degree = 1; degree <= maxDegree; degree++) {
                 SciFloat[][] nodes = getNodes(mc, props);
                 SciFloat result = sumNext(f, nodes, degree, mc, results);
@@ -85,14 +85,14 @@ public final class TanhSinhIntegrator {
                 }
                 props.degree++;
             }
-            I = SciFloat.add(mc, I, results.get(results.size() - 1));
+            I = SciFloat.add(oldMc, I, results.get(results.size() - 1));
             totalError = SciFloat.add(mc, totalError, error);
         }
         return new Pair<>(I, totalError);
     }
 
     private static SciFloat sumNext(RealFunction f, SciFloat[][] nodes, int degree, MathContext mc, List<SciFloat> previous) {
-        SciFloat h = SciFloat.ldexp(mc, 2, -degree);
+        SciFloat h = SciFloat.ldexp(mc, 1, -degree);
         SciFloat S;
         if(!previous.isEmpty()) {
             S = SciFloat.div(mc, previous.get(previous.size() - 1), SciFloat.mul(mc, h, SciFloat.TWO));
@@ -115,7 +115,7 @@ public final class TanhSinhIntegrator {
     public static Pair<SciFloat, SciFloat> quad(MathContext mc, RealFunction f, SciFloat[] points, int max_degree) {
         SciFloat epsilon = SciFloat.ldexp(mc, 1, 1-mc.precision());
         MathContext nmc = new MathContext(mc.precision() + 20, mc.roundingMode());
-        return summation(nmc, f, Arrays.asList(points), epsilon, max_degree);
+        return summation(nmc, f, Arrays.asList(points), epsilon, max_degree, mc);
     }
 
     static class IntegratorProperties {
