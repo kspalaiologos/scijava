@@ -95,8 +95,8 @@ public class TestSciFloat {
             public SciFloat value(MathContext mc, SciFloat x) {
                 return SciFloat.exp(mc, SciFloat.neg(mc, SciFloat.mul(mc, x, x)));
             }
-        }, new SciFloat[] { SciFloat.ZERO, SciFloat.TWO });
+        }, new SciFloat[] { SciFloat.NINF, SciFloat.INF });
 
-        Assertions.assertEquals(SciFloat.mul(mc1, result.left, result.left), SciFloat.valueOf(mc1, "3.1415926552494475930404145500404"));
+        Assertions.assertEquals(SciFloat.mul(mc1, result.left, result.left), SciFloat.pi(mc1));
     }
 }
