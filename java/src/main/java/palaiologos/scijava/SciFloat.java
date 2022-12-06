@@ -123,6 +123,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native SciFloat ldexp(int precision, int roundingMode, int x, int exp);
     private static native boolean isFinite(long ptr);
     private static native void ceil(int precision, int roundingMode, long dest, long a);
+    private static native void pow(int precision, int roundingMode, long dest, long a, long b);
     private static native void floor(int precision, int roundingMode, long dest, long a);
     private static native void erf(int precision, int roundingMode, long dest, long a);
     private static native void exp(int precision, int roundingMode, long dest, long a);
@@ -178,6 +179,10 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      * The SciFloat constant 1.
      */
     public static SciFloat ONE = SciFloat.valueOf(MathContext.MC24, 1);
+    /**
+     * The SciFloat constant 10.
+     */
+    public static SciFloat TEN = SciFloat.valueOf(MathContext.MC24, 10);
 
     /**
      * The SciFloat constant 2.
@@ -281,6 +286,19 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     }
 
     /**
+     * Raise a value to the given power.
+     * @param mc The MathContext to use for the result.
+     * @param x The value to raise.
+     * @param y The power to raise to.
+     * @return The value of x raised to the power of y.
+     */
+    public static SciFloat pow(MathContext mc, SciFloat x, SciFloat y) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        pow(mc.precision(), mc.roundingMode().ordinal(), result.ptr, x.ptr, y.ptr);
+        return result;
+    }
+
+    /**
      * Convert a value in degrees to a value in radians.
      * @param mc The MathContext to use for the result.
      * @param a The value in degrees.
@@ -327,6 +345,26 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
         SciFloat result = SciFloat.valueOf(mc, 0);
         rf(mc.precision(), mc.roundingMode().ordinal(), result.ptr, x.ptr, n.ptr);
         return result;
+    }
+
+    /**
+     * Return the minimum (the smaller) of the two arguments.
+     * @param a The first argument.
+     * @param b The second argument.
+     * @return The minimum of the two arguments.
+     */
+    public static SciFloat min(SciFloat a, SciFloat b) {
+        return a.lt(b) ? a : b;
+    }
+
+    /**
+     * Return the maximum (the larger) of the two arguments.
+     * @param a The first argument.
+     * @param b The second argument.
+     * @return The maximum of the two arguments.
+     */
+    public static SciFloat max(SciFloat a, SciFloat b) {
+        return a.gt(b) ? a : b;
     }
 
     /**
@@ -1327,7 +1365,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      * @param a The argument.
      * @return bessel_j0(a).
      */
-    public SciFloat j0(MathContext mc, SciFloat a) {
+    public static SciFloat j0(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.j0(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
@@ -1339,7 +1377,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      * @param a The argument.
      * @return bessel_j1(a).
      */
-    public SciFloat j1(MathContext mc, SciFloat a) {
+    public static SciFloat j1(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.j1(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
@@ -1352,7 +1390,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      * @param n The order.
      * @return bessel_jn(a).
      */
-    public SciFloat jn(MathContext mc, int n, SciFloat a) {
+    public static SciFloat jn(MathContext mc, int n, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.jn(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr, n);
         return result;
@@ -1364,7 +1402,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      * @param a The argument.
      * @return Li2(a)
      */
-    public SciFloat li2(MathContext mc, SciFloat a) {
+    public static SciFloat li2(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.li2(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
@@ -1376,7 +1414,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      * @param a The argument.
      * @return log2(a)
      */
-    public SciFloat log2(MathContext mc, SciFloat a) {
+    public static SciFloat log2(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.log2(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
@@ -1388,7 +1426,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      * @param a The argument.
      * @return log10(a)
      */
-    public SciFloat log10(MathContext mc, SciFloat a) {
+    public static SciFloat log10(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.log10(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;

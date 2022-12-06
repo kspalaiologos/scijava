@@ -31,6 +31,20 @@ public final class TanhSinhIntegrator {
         nodeCache = new ConcurrentLRUCache<>(LRU_SIZE);
     }
 
+    private static SciFloat estimateError(MathContext mc, SciFloat epsilon, List<SciFloat> results) {
+        if (results.size() == 2) {
+            return SciFloat.abs(mc, SciFloat.sub(mc, results.get(0), results.get(1)));
+        }
+        if(results.get(results.size() - 1).equals(results.get(results.size() - 2)) && results.get(results.size() - 1).equals(results.get(results.size() - 3))) {
+            return SciFloat.ZERO;
+        }
+        SciFloat D1 = SciFloat.log10(mc, SciFloat.abs(mc, SciFloat.sub(mc, results.get(results.size() - 1), results.get(results.size() - 2))));
+        SciFloat D2 = SciFloat.log10(mc, SciFloat.abs(mc, SciFloat.sub(mc, results.get(results.size() - 1), results.get(results.size() - 3))));
+        SciFloat D3 = SciFloat.valueOf(mc, -mc.precision());
+        SciFloat D4 = SciFloat.min(mc, SciFloat.ZERO, SciFloat.max(mc, SciFloat.div(mc, SciFloat.mul(mc, D1, D1), D2), SciFloat.mul(mc, SciFloat.TWO, D1), D3));
+        return SciFloat.pow(mc, SciFloat.TEN, SciFloat.floor(mc, D4));
+    }
+
     private static SciFloat sumNext(RealFunction f, SciFloat[][] nodes, int degree, MathContext mc, List<SciFloat> previous) {
         SciFloat h = SciFloat.ldexp(mc, 2, -degree);
         SciFloat S;
@@ -42,7 +56,7 @@ public final class TanhSinhIntegrator {
         for(int i = 0; i < nodes.length; i++) {
             SciFloat x = nodes[i][0];
             SciFloat w = nodes[i][1];
-            // XXX: slow like fuck
+            // XXX: slow as fuck
             S = SciFloat.add(mc, S, SciFloat.mul(mc, w, f.value(mc, x)));
         }
         return SciFloat.mul(mc, S, h);
