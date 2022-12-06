@@ -12,7 +12,7 @@ import static palaiologos.scijava.NativeLibrary.resourceName;
  *
  * @author Kamila Szewczyk
  */
-public class Random {
+public final class Random {
     static {
         try {
             load(resourceName());

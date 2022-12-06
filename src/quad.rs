@@ -82,136 +82,77 @@ unsafe fn mut_float_from_obj<'a>(env: JNIEnv, obj: JObject<'a>) -> &'a mut Float
 }
 
 #[no_mangle]
-pub extern "system" fn Java_palaiologos_scijava_TanhSinhIntegrator_transformNodes(
-            env: JNIEnv, _class: JClass, precision: jint, nodes: jarray, a: JObject, b: JObject) -> jarray {
+pub extern "system" fn Java_palaiologos_scijava_integrator_RealIntegrator_transformNodes(
+            env: JNIEnv, _class: JClass, precision: jint, nodes: JObject, a: JObject, b: JObject) {
+    let nodes = JList::from_env(&env, nodes).unwrap();
     let orig_a = a;
     let orig_b = b;
     let a = float_from_obj(env, a);
     let b = float_from_obj(env, b);
     let half: Float = Float::with_val(precision as u32, 1) / 2;
     if a == &-1 && b == &1 {
-        return nodes;
+        return;
     }
     if a.is_infinite() || b.is_infinite() {
         if (a.is_infinite() && a.is_sign_negative()) && (b.is_infinite() && b.is_sign_positive()) {
-            let new_nodes = match env.new_object_array(env.get_array_length(nodes).unwrap(), "[Lpalaiologos/scijava/SciFloat;", JObject::null()) {
-                Ok(nodes) => nodes,
-                Err(_) => {
-                    let _ = env.throw(("java/lang/OutOfMemoryError", "Could not allocate memory for nodes"));
-                    return JObject::null().into_raw();
-                }
-            };
-            for i in 0..env.get_array_length(nodes).unwrap() {
-                let node = env.get_object_array_element(nodes, i).unwrap();
-                let x = float_from_obj(env, env.get_object_array_element(*node, 0).unwrap());
-                let w = float_from_obj(env, env.get_object_array_element(*node, 1).unwrap());
+            for i in 0..nodes.size().unwrap() {
+                let node = nodes.get(i).unwrap().unwrap();
+                let x = unsafe { mut_float_from_obj(env, env.get_object_array_element(*node, 0).unwrap()) };
+                let w = unsafe { mut_float_from_obj(env, env.get_object_array_element(*node, 1).unwrap()) };
 
                 let x2 = x.clone().square();
                 let px1: Float = -x2 + 1;
                 let spx1 = px1.clone().recip_sqrt();
-                let x = x.clone() * &spx1;
-                let w = w * (spx1 / px1);
-
-                let node = wrap_nodepair(env, x, w);
-                let node = match node {
-                    Some(node) => node,
-                    None => return JObject::null().into_raw()
-                };
-                env.set_object_array_element(new_nodes, i, node).unwrap();
+                *x *= &spx1;
+                *w *= spx1 / px1;
             }
-            nodes
         } else if a.is_infinite() && a.is_sign_negative() {
-            let new_nodes = match env.new_object_array(env.get_array_length(nodes).unwrap(), "[Lpalaiologos/scijava/SciFloat;", JObject::null()) {
-                Ok(nodes) => nodes,
-                Err(_) => {
-                    let _ = env.throw(("java/lang/OutOfMemoryError", "Could not allocate memory for nodes"));
-                    return JObject::null().into_raw();
-                }
-            };
-            for i in 0..env.get_array_length(nodes).unwrap() {
-                let node = env.get_object_array_element(nodes, i).unwrap();
-                let x = float_from_obj(env, env.get_object_array_element(*node, 0).unwrap());
-                let w = float_from_obj(env, env.get_object_array_element(*node, 1).unwrap());
+            for i in 0..nodes.size().unwrap() {
+                let node = nodes.get(i).unwrap().unwrap();
+                let x = unsafe { mut_float_from_obj(env, env.get_object_array_element(*node, 0).unwrap()) };
+                let w = unsafe { mut_float_from_obj(env, env.get_object_array_element(*node, 1).unwrap()) };
 
                 let u: Float = 2 / (x.clone() + 1);
-                let x = b.clone() - &u + 1;
-                let w = w.clone() * &half * u.square();
-
-                let node = wrap_nodepair(env, x, w);
-                let node = match node {
-                    Some(node) => node,
-                    None => return JObject::null().into_raw()
-                };
-                env.set_object_array_element(new_nodes, i, node).unwrap();
+                *x = b.clone() - &u + 1;
+                *w *= u.square() * &half;
             }
-            nodes
         } else if b.is_infinite() && b.is_sign_positive() {
-            let new_nodes = match env.new_object_array(env.get_array_length(nodes).unwrap(), "[Lpalaiologos/scijava/SciFloat;", JObject::null()) {
-                Ok(nodes) => nodes,
-                Err(_) => {
-                    let _ = env.throw(("java/lang/OutOfMemoryError", "Could not allocate memory for nodes"));
-                    return JObject::null().into_raw();
-                }
-            };
-            for i in 0..env.get_array_length(nodes).unwrap() {
-                let node = env.get_object_array_element(nodes, i).unwrap();
-                let x = float_from_obj(env, env.get_object_array_element(*node, 0).unwrap());
-                let w = float_from_obj(env, env.get_object_array_element(*node, 1).unwrap());
+            for i in 0..nodes.size().unwrap() {
+                let node = nodes.get(i).unwrap().unwrap();
+                let x = unsafe { mut_float_from_obj(env, env.get_object_array_element(*node, 0).unwrap()) };
+                let w = unsafe { mut_float_from_obj(env, env.get_object_array_element(*node, 1).unwrap()) };
 
                 let u: Float = 2 / (x.clone() + 1);
-                let x = a.clone() + &u - 1;
-                let w = w.clone() * &half * u.square();
-
-                let node = wrap_nodepair(env, x, w);
-                let node = match node {
-                    Some(node) => node,
-                    None => return JObject::null().into_raw()
-                };
-                env.set_object_array_element(new_nodes, i, node).unwrap();
+                *x = a.clone() + &u - 1;
+                *w *= u.square() * &half;
             }
-            nodes
         } else if (a.is_infinite() && a.is_sign_positive()) && (b.is_infinite() && b.is_sign_negative()) {
-            let new_nodes = Java_palaiologos_scijava_TanhSinhIntegrator_transformNodes(env, _class, precision, nodes, orig_b, orig_a);
-            for i in 0..env.get_array_length(nodes).unwrap() {
-                let node = env.get_object_array_element(nodes, i).unwrap();
+            Java_palaiologos_scijava_integrator_RealIntegrator_transformNodes(env, _class, precision, *nodes, orig_b, orig_a);
+            for i in 0..nodes.size().unwrap() {
+                let node = nodes.get(i).unwrap().unwrap();
                 let w = unsafe { mut_float_from_obj(env, env.get_object_array_element(*node, 1).unwrap()) };
                 w.neg_assign();
             }
-            new_nodes
         } else {
             let _ = env.throw(("java/lang/IllegalArgumentException", "Invalid interval"));
-            JObject::null().into_raw()
+            return;
         }
     } else {
         // Linear change of variables.
         let c: Float = (b.clone() - a) / 2;
         let d: Float = (b.clone() + a) / 2;
-        let new_nodes = match env.new_object_array(env.get_array_length(nodes).unwrap(), "[Lpalaiologos/scijava/SciFloat;", JObject::null()) {
-            Ok(nodes) => nodes,
-            Err(_) => {
-                let _ = env.throw(("java/lang/OutOfMemoryError", "Could not allocate memory for nodes"));
-                return JObject::null().into_raw();
-            }
-        };
-        for i in 0..env.get_array_length(nodes).unwrap() {
-            let node = env.get_object_array_element(nodes, i).unwrap();
-            let x1 = float_from_obj(env, env.get_object_array_element(*node, 0).unwrap());
-            let x2 = float_from_obj(env, env.get_object_array_element(*node, 1).unwrap());
-            let x1 = c.clone() * x1 + &d;
-            let x2 = c.clone() * x2;
-            let node = wrap_nodepair(env, x1, x2);
-            let node = match node {
-                Some(node) => node,
-                None => return JObject::null().into_raw()
-            };
-            env.set_object_array_element(new_nodes, i, node).unwrap();
+        for i in 0..nodes.size().unwrap() {
+            let node = nodes.get(i).unwrap().unwrap();
+            let x1 = unsafe { mut_float_from_obj(env, env.get_object_array_element(*node, 0).unwrap()) };
+            let x2 = unsafe { mut_float_from_obj(env, env.get_object_array_element(*node, 1).unwrap()) };
+            *x1 *= &c; *x1 += &d;
+            *x2 *= &c;
         }
-        nodes
     }
 }
 
 #[no_mangle]
-pub extern "system" fn Java_palaiologos_scijava_TanhSinhIntegrator_getNodes(
+pub extern "system" fn Java_palaiologos_scijava_integrator_RealTanhSinhIntegrator_getNodes(
             env: JNIEnv, _class: JClass, nodes: JObject, precision: jint, degree: jint) {
     let nodes = JList::from_env(&env, nodes).unwrap();
     let wp = precision as u32 + 30;

@@ -1,52 +1,48 @@
-package palaiologos.scijava;
+package palaiologos.scijava.integrator;
 
+import palaiologos.scijava.MathContext;
+import palaiologos.scijava.SciFloat;
 import palaiologos.scijava.util.ConcurrentLRUCache;
 import palaiologos.scijava.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
-public final class TanhSinhIntegrator {
+public final class RealTanhSinhIntegrator {
     private static final int LRU_SIZE = 256;
 
-    private static int guessDegree(MathContext mc) {
-        return 6 + Math.max(0, (int) Math.ceil(Math.log(mc.precision() / 30.0) / Math.log(2)));
-    }
-
-    private static native SciFloat[][] transformNodes(int precision, SciFloat[][] orig, SciFloat a, SciFloat b);
     private static native void getNodes(List<SciFloat[]> dest, int precision, int degree);
 
-    private static ConcurrentLRUCache<IntegratorProperties, SciFloat[][]> nodeCache = new ConcurrentLRUCache<>(LRU_SIZE);
+    private static ConcurrentLRUCache<IntegratorProperties, List<SciFloat[]>> nodeCache = new ConcurrentLRUCache<>(LRU_SIZE);
 
-    private static SciFloat[][] getNodes(MathContext mc, IntegratorProperties properties) {
-        SciFloat[][] nodes = nodeCache.get(properties);
+    private static List<SciFloat[]> getNodes(MathContext mc, IntegratorProperties properties) {
+        List<SciFloat[]> nodes = nodeCache.get(properties);
         if (nodes == null) {
-            List<SciFloat[]> nodesList = new ArrayList<>();
-            getNodes(nodesList, mc.precision() + 20, properties.degree);
-            nodes = transformNodes(mc.precision() + 20, nodesList.toArray(new SciFloat[][] { }), properties.a, properties.b);
-            nodeCache.put(properties, nodes);
+            // try to find nodes from -1 to 1 instead?
+            IntegratorProperties newProperties = new IntegratorProperties(properties.precision, properties.degree, SciFloat.MINUS_ONE, SciFloat.ONE);
+            List<SciFloat[]> unscaledNodes = nodeCache.get(newProperties);
+            List<SciFloat[]> nodesList;
+            if (unscaledNodes == null) {
+                // Nope :(
+                nodesList = new ArrayList<>();
+                getNodes(nodesList, mc.precision() + 20, properties.degree);
+            } else {
+                // Found!
+                nodesList = new ArrayList<>(unscaledNodes.size());
+                // Deep clone
+                for (SciFloat[] node : unscaledNodes)
+                    nodesList.add(new SciFloat[] { node[0], node[1] });
+            }
+            RealIntegrator.transformNodes(mc.precision() + 20, nodesList, properties.a, properties.b);
+            nodeCache.put(properties, nodesList);
+            return nodesList;
         }
         return nodes;
     }
 
     public static void dropCaches() {
         nodeCache = new ConcurrentLRUCache<>(LRU_SIZE);
-    }
-
-    private static SciFloat estimateError(MathContext mc, SciFloat epsilon, List<SciFloat> results) {
-        if (results.size() == 2) {
-            return SciFloat.abs(mc, SciFloat.sub(mc, results.get(0), results.get(1)));
-        }
-        if(results.get(results.size() - 1).equals(results.get(results.size() - 2)) && results.get(results.size() - 1).equals(results.get(results.size() - 3))) {
-            return SciFloat.ZERO;
-        }
-        SciFloat D1 = SciFloat.log10(mc, SciFloat.abs(mc, SciFloat.sub(mc, results.get(results.size() - 1), results.get(results.size() - 2))));
-        SciFloat D2 = SciFloat.log10(mc, SciFloat.abs(mc, SciFloat.sub(mc, results.get(results.size() - 1), results.get(results.size() - 3))));
-        SciFloat D3 = SciFloat.valueOf(mc, -mc.precision());
-        SciFloat D4 = SciFloat.min(SciFloat.ZERO, SciFloat.max(SciFloat.max(SciFloat.div(mc, SciFloat.mul(mc, D1, D1), D2), SciFloat.mul(mc, SciFloat.TWO, D1)), D3));
-        return SciFloat.pow(mc, SciFloat.TEN, SciFloat.floor(mc, D4));
     }
 
     private static Pair<SciFloat, SciFloat> summation(MathContext mc, RealFunction f, List<SciFloat> points, SciFloat epsilon, int maxDegree, MathContext oldMc) {
@@ -74,11 +70,11 @@ public final class TanhSinhIntegrator {
             SciFloat error = SciFloat.ZERO;
             IntegratorProperties props = new IntegratorProperties(mc.precision(), 1, a, b);
             for (int degree = 1; degree <= maxDegree; degree++) {
-                SciFloat[][] nodes = getNodes(mc, props);
+                List<SciFloat[]> nodes = getNodes(mc, props);
                 SciFloat result = sumNext(f, nodes, degree, mc, results);
                 results.add(result);
                 if(degree > 1) {
-                    error = estimateError(mc, epsilon, results);
+                    error = RealIntegrator.estimateError(mc, epsilon, results);
                     if(error.lt(epsilon)) {
                         break;
                     }
@@ -91,7 +87,7 @@ public final class TanhSinhIntegrator {
         return new Pair<>(I, totalError);
     }
 
-    private static SciFloat sumNext(RealFunction f, SciFloat[][] nodes, int degree, MathContext mc, List<SciFloat> previous) {
+    private static SciFloat sumNext(RealFunction f, List<SciFloat[]> nodes, int degree, MathContext mc, List<SciFloat> previous) {
         SciFloat h = SciFloat.ldexp(mc, 1, -degree);
         SciFloat S;
         if(!previous.isEmpty()) {
@@ -99,9 +95,9 @@ public final class TanhSinhIntegrator {
         } else {
             S = SciFloat.ZERO;
         }
-        for(int i = 0; i < nodes.length; i++) {
-            SciFloat x = nodes[i][0];
-            SciFloat w = nodes[i][1];
+        for(int i = 0; i < nodes.size(); i++) {
+            SciFloat x = nodes.get(i)[0];
+            SciFloat w = nodes.get(i)[1];
             // XXX: slow as fuck
             S = SciFloat.add(mc, S, SciFloat.mul(mc, w, f.value(mc, x)));
         }
@@ -109,42 +105,12 @@ public final class TanhSinhIntegrator {
     }
 
     public static Pair<SciFloat, SciFloat> quad(MathContext mc, RealFunction f, SciFloat[] points) {
-        return quad(mc, f, points, guessDegree(mc));
+        return quad(mc, f, points, RealIntegrator.guessDegree(mc));
     }
 
     public static Pair<SciFloat, SciFloat> quad(MathContext mc, RealFunction f, SciFloat[] points, int max_degree) {
         SciFloat epsilon = SciFloat.ldexp(mc, 1, 1-mc.precision());
         MathContext nmc = new MathContext(mc.precision() + 20, mc.roundingMode());
         return summation(nmc, f, Arrays.asList(points), epsilon, max_degree, mc);
-    }
-
-    static class IntegratorProperties {
-        int precision;
-        int degree;
-        SciFloat a;
-        SciFloat b;
-
-        public IntegratorProperties(int precision, int degree, SciFloat a, SciFloat b) {
-            this.precision = precision;
-            this.degree = degree;
-            this.a = a;
-            this.b = b;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            IntegratorProperties that = (IntegratorProperties) o;
-            return precision == that.precision &&
-                    degree == that.degree &&
-                    a.equals(that.a) &&
-                    b.equals(that.b);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(precision, degree, a.hashCode(), b.hashCode());
-        }
     }
 }

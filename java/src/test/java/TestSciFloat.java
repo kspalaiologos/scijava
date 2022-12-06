@@ -18,10 +18,10 @@
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import palaiologos.scijava.RealFunction;
+import palaiologos.scijava.integrator.RealFunction;
 import palaiologos.scijava.SciFloat;
 import palaiologos.scijava.MathContext;
-import palaiologos.scijava.TanhSinhIntegrator;
+import palaiologos.scijava.integrator.RealTanhSinhIntegrator;
 import palaiologos.scijava.util.Pair;
 
 public class TestSciFloat {
@@ -81,7 +81,7 @@ public class TestSciFloat {
 
     @Test
     public void testQuadrature() {
-        Pair<SciFloat, SciFloat> result = TanhSinhIntegrator.quad(mc1, new RealFunction() {
+        Pair<SciFloat, SciFloat> result = RealTanhSinhIntegrator.quad(mc1, new RealFunction() {
             @Override
             public SciFloat value(MathContext mc, SciFloat x) {
                 return SciFloat.exp(mc, SciFloat.neg(mc, SciFloat.mul(mc, x, x)));
@@ -89,5 +89,14 @@ public class TestSciFloat {
         }, new SciFloat[] { SciFloat.MINUS_ONE, SciFloat.ONE });
 
         Assertions.assertEquals(result.left, SciFloat.valueOf(mc1, "1.4936482656248540507989348722634"));
+
+        result = RealTanhSinhIntegrator.quad(mc1, new RealFunction() {
+            @Override
+            public SciFloat value(MathContext mc, SciFloat x) {
+                return SciFloat.exp(mc, SciFloat.neg(mc, SciFloat.mul(mc, x, x)));
+            }
+        }, new SciFloat[] { SciFloat.NINF, SciFloat.INF });
+
+        Assertions.assertEquals(SciFloat.mul(mc1, result.left, result.left), SciFloat.valueOf(mc1, "3.1415926552494475930404145500404"));
     }
 }

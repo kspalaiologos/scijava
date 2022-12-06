@@ -1,4 +1,7 @@
-package palaiologos.scijava;
+package palaiologos.scijava.integrator;
+
+import palaiologos.scijava.MathContext;
+import palaiologos.scijava.SciFloat;
 
 /**
  * An univariate real function interface.
