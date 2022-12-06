@@ -16,15 +16,16 @@ public final class TanhSinhIntegrator {
     }
 
     private static native SciFloat[][] transformNodes(int precision, SciFloat[][] orig, SciFloat a, SciFloat b);
-    private static native SciFloat[][] getNodes(int precision, int degree);
+    private static native void getNodes(List<SciFloat[]> dest, int precision, int degree);
 
     private static ConcurrentLRUCache<IntegratorProperties, SciFloat[][]> nodeCache = new ConcurrentLRUCache<>(LRU_SIZE);
 
     private static SciFloat[][] getNodes(MathContext mc, IntegratorProperties properties) {
         SciFloat[][] nodes = nodeCache.get(properties);
         if (nodes == null) {
-            nodes = getNodes(mc.precision() + 20, properties.degree);
-            nodes = transformNodes(mc.precision() + 20, nodes, properties.a, properties.b);
+            List<SciFloat[]> nodesList = new ArrayList<>();
+            getNodes(nodesList, mc.precision() + 20, properties.degree);
+            nodes = transformNodes(mc.precision() + 20, nodesList.toArray(new SciFloat[][] { }), properties.a, properties.b);
             nodeCache.put(properties, nodes);
         }
         return nodes;
@@ -71,7 +72,7 @@ public final class TanhSinhIntegrator {
             }
             List<SciFloat> results = new ArrayList<>();
             SciFloat error = SciFloat.ZERO;
-            IntegratorProperties props = new IntegratorProperties(mc.precision(), 1, a, b);
+            IntegratorProperties props = new IntegratorProperties(mc.precision(), maxDegree, a, b);
             for (int degree = 1; degree <= maxDegree; degree++) {
                 SciFloat[][] nodes = getNodes(mc, props);
                 SciFloat result = sumNext(f, nodes, degree, mc, results);
