@@ -94,7 +94,7 @@ pub extern "system" fn Java_palaiologos_scijava_TanhSinhIntegrator_transformNode
     }
     if a.is_infinite() || b.is_infinite() {
         if (a.is_infinite() && a.is_sign_negative()) && (b.is_infinite() && b.is_sign_positive()) {
-            let new_nodes = match env.new_object_array(env.get_array_length(nodes).unwrap(), "[palaiologos/scijava/SciFloat", JObject::null()) {
+            let new_nodes = match env.new_object_array(env.get_array_length(nodes).unwrap(), "[Lpalaiologos/scijava/SciFloat", JObject::null()) {
                 Ok(nodes) => nodes,
                 Err(_) => {
                     let _ = env.throw(("java/lang/OutOfMemoryError", "Could not allocate memory for nodes"));
@@ -121,7 +121,7 @@ pub extern "system" fn Java_palaiologos_scijava_TanhSinhIntegrator_transformNode
             }
             nodes
         } else if a.is_infinite() && a.is_sign_negative() {
-            let new_nodes = match env.new_object_array(env.get_array_length(nodes).unwrap(), "[palaiologos/scijava/SciFloat", JObject::null()) {
+            let new_nodes = match env.new_object_array(env.get_array_length(nodes).unwrap(), "[Lpalaiologos/scijava/SciFloat", JObject::null()) {
                 Ok(nodes) => nodes,
                 Err(_) => {
                     let _ = env.throw(("java/lang/OutOfMemoryError", "Could not allocate memory for nodes"));
@@ -146,7 +146,7 @@ pub extern "system" fn Java_palaiologos_scijava_TanhSinhIntegrator_transformNode
             }
             nodes
         } else if b.is_infinite() && b.is_sign_positive() {
-            let new_nodes = match env.new_object_array(env.get_array_length(nodes).unwrap(), "[palaiologos/scijava/SciFloat", JObject::null()) {
+            let new_nodes = match env.new_object_array(env.get_array_length(nodes).unwrap(), "[Lpalaiologos/scijava/SciFloat", JObject::null()) {
                 Ok(nodes) => nodes,
                 Err(_) => {
                     let _ = env.throw(("java/lang/OutOfMemoryError", "Could not allocate memory for nodes"));
@@ -186,7 +186,7 @@ pub extern "system" fn Java_palaiologos_scijava_TanhSinhIntegrator_transformNode
         // Linear change of variables.
         let c: Float = (b.clone() - a) / 2;
         let d: Float = (b.clone() + a) / 2;
-        let new_nodes = match env.new_object_array(env.get_array_length(nodes).unwrap(), "[palaiologos/scijava/SciFloat", JObject::null()) {
+        let new_nodes = match env.new_object_array(env.get_array_length(nodes).unwrap(), "[Lpalaiologos/scijava/SciFloat", JObject::null()) {
             Ok(nodes) => nodes,
             Err(_) => {
                 let _ = env.throw(("java/lang/OutOfMemoryError", "Could not allocate memory for nodes"));
@@ -221,7 +221,7 @@ pub extern "system" fn Java_palaiologos_scijava_TanhSinhIntegrator_getNodes(
     let nodes: jarray;
     let h: Float;
     if degree == 1 {
-        nodes = match env.new_object_array(2 + 20*(2_i32.pow(degree as u32)), "[palaiologos/scijava/SciFloat", JObject::null()) {
+        nodes = match env.new_object_array(2 + 20*(2_i32.pow(degree as u32)), "[Lpalaiologos/scijava/SciFloat", JObject::null()) {
             Ok(nodes) => nodes,
             Err(_) => {
                 let _ = env.throw(("java/lang/OutOfMemoryError", "Could not allocate memory for nodes"));
@@ -244,7 +244,7 @@ pub extern "system" fn Java_palaiologos_scijava_TanhSinhIntegrator_getNodes(
             None => return JObject::null().into_raw()
         }
     } else {
-        nodes = match env.new_object_array(1 + 20*(2_i32.pow(degree as u32)), "[palaiologos/scijava/SciFloat", JObject::null()) {
+        nodes = match env.new_object_array(1 + 20*(2_i32.pow(degree as u32)), "[Lpalaiologos/scijava/SciFloat", JObject::null()) {
             Ok(nodes) => nodes,
             Err(_) => {
                 let _ = env.throw(("java/lang/OutOfMemoryError", "Could not allocate memory for nodes"));

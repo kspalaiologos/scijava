@@ -205,6 +205,16 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     public static SciFloat HALF = SciFloat.valueOf(MathContext.MC24, "0.5");
 
     /**
+     * The SciFloat constant representing infinity.
+     */
+    public static SciFloat INF = SciFloat.valueOf(MathContext.MC24, "inf");
+
+    /**
+     * The SciFloat constant representing negative infinity.
+     */
+    public static SciFloat NINF = SciFloat.valueOf(MathContext.MC24, "-inf");
+
+    /**
      * Return the value of the unnormalised sinc function at x.
      * @param mc The MathContext to use.
      * @param x The argument.
