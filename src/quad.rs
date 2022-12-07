@@ -28,7 +28,7 @@ use jni::objects::{JClass, JObject, JList};
 // This is just a pointer. We'll be returning it from our function. We
 // can't return one of the objects with lifetime information because the
 // lifetime checker won't let us.
-use jni::sys::{jlong, jint};
+use jni::sys::{jlong, jint, jobject};
 use rug::float::Constant;
 use rug::ops::{Pow, NegAssign};
 use rug::Float;
@@ -151,6 +151,55 @@ pub extern "system" fn Java_palaiologos_scijava_integrator_RealIntegrator_transf
             let x2 = unsafe { mut_float_from_obj(env, env.get_object_array_element(*node, 1).unwrap()) };
             *x1 *= &c; *x1 += &d;
             *x2 *= &c;
+        }
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_integrator_RealIntegrator_estimateError(
+            env: JNIEnv, _class: JClass, precision: jint, epsilon: JObject, nodes: JObject) -> jobject {
+    let epsilon = float_from_obj(env, epsilon);
+    let nodes = JList::from_env(&env, nodes).unwrap();
+    let sz = nodes.size().unwrap();
+    if sz == 1 {
+        let res = epsilon.clone();
+        return match wrap_float(env, res) {
+            Some(res) => res.into_raw(),
+            None => {
+                JObject::null().into_raw()
+            }
+        }
+    }
+    let a = float_from_obj(env, nodes.get(sz - 1).unwrap().unwrap());
+    let b = float_from_obj(env, nodes.get(sz - 2).unwrap().unwrap());
+    if sz == 2 {
+        let res = (b.clone() - a).abs();
+        return match wrap_float(env, res) {
+            Some(res) => res.into_raw(),
+            None => {
+                JObject::null().into_raw()
+            }
+        }
+    };
+    let c = float_from_obj(env, nodes.get(sz - 3).unwrap().unwrap());
+    if a == c && a == b {
+        let zero = Float::with_val(precision as u32, 0);
+        return match wrap_float(env, zero) {
+            Some(res) => res.into_raw(),
+            None => {
+                JObject::null().into_raw()
+            }
+        }
+    }
+    let D1 = (a.clone() - b).abs().log10();
+    let D2 = (a.clone() - c).abs().log10();
+    let D3 = Float::with_val(precision as u32, -precision);
+    let D4 = Float::min(Float::max(Float::max(D1.clone().square() / &D2, &(D1 * 2)), &D3), &Float::with_val(precision as u32, 0));
+    let error = Float::with_val(precision as u32, 10).pow(D4.floor());
+    match wrap_float(env, error) {
+        Some(res) => res.into_raw(),
+        None => {
+            JObject::null().into_raw()
         }
     }
 }

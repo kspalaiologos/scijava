@@ -74,7 +74,7 @@ public final class RealTanhSinhIntegrator {
                 SciFloat result = sumNext(f, nodes, degree, mc, results);
                 results.add(result);
                 if(degree > 1) {
-                    error = RealIntegrator.estimateError(mc, epsilon, results);
+                    error = RealIntegrator.estimateError(mc.precision(), epsilon, results);
                     if(error.lt(epsilon)) {
                         break;
                     }
