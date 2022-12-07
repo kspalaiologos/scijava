@@ -16,6 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use std::f64::consts::PI;
+
 // This is the interface to the JVM that we'll call the majority of our
 // methods on.
 use jni::JNIEnv;
@@ -279,9 +281,113 @@ pub extern "system" fn Java_palaiologos_scijava_integrator_RealTanhSinhIntegrato
                     }
                 }
             },
+            None => { return; }
+        }
+    }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_integrator_RealGaussLegendreIntegrator_getNodes(
+            env: JNIEnv, _class: JClass, nodes: JObject, mut precision: jint, degree: jint) {
+    let nodes = JList::from_env(&env, nodes).unwrap();
+    let epsilon = Float::with_val(precision as u32, Float::i_exp(1, -precision-8));
+    precision += precision / 2;
+    if degree == 1 {
+        let mut x: Float = Float::with_val(precision as u32, 3) / 5;
+        x.sqrt_mut();
+        let w: Float = Float::with_val(precision as u32, 5) / 9;
+        let pair = wrap_nodepair(env, -(x.clone()), w.clone());
+        match pair {
+            Some(pair) => {
+                match nodes.add(pair) {
+                    Ok(_) => (),
+                    Err(_) => {
+                        let _ = env.throw(("java/lang/OutOfMemoryError", "Could not allocate memory for nodes"));
+                        return;
+                    }
+                }
+            },
+            None => { return; }
+        }
+        let pair = wrap_nodepair(env, Float::with_val(precision as u32, 0), Float::with_val(precision as u32, 8) / 9);
+        match pair {
+            Some(pair) => {
+                match nodes.add(pair) {
+                    Ok(_) => (),
+                    Err(_) => {
+                        let _ = env.throw(("java/lang/OutOfMemoryError", "Could not allocate memory for nodes"));
+                        return;
+                    }
+                }
+            },
+            None => { return; }
+        }
+        let pair = wrap_nodepair(env, x, w);
+        match pair {
+            Some(pair) => {
+                match nodes.add(pair) {
+                    Ok(_) => (),
+                    Err(_) => {
+                        let _ = env.throw(("java/lang/OutOfMemoryError", "Could not allocate memory for nodes"));
+                        return;
+                    }
+                }
+            },
+            None => { return; }
+        }
+    }
+
+    let n = 3 * 2.pow((degree - 1) as u32);
+    let upto = (n / 2) + 1;
+    for j in 1..upto {
+        // Roughly compute the starting value for Newton-Raphson iterations.
+        // The precision being sligtly off as a result of us using f64 doesn't matter much.
+        let mut r = Float::with_val(precision as u32, (PI*((j as f64)-0.25)/((n as f64)+0.5)).cos());
+        let mut t4: Float;
+        'inner: loop {
+            let mut t1 = Float::with_val(precision as u32, 1);
+            let mut t2 = Float::with_val(precision as u32, 0);
+            for j1 in 1..(n+1) {
+                let newt1: Float = (r.clone() * (2 * j1 - 1) * &t1 - Float::with_val(precision as u32, j1-1) * &t2) / j1;
+                t2 = t1; t1 = newt1;
+            }
+            t4 = Float::with_val(precision as u32, n) * (t1.clone() * &r - &t2) / (r.clone().pow(2) - 1);
+            let a: Float = t1 / &t4;
+            r -= &a;
+            if a.abs() <= epsilon {
+                break 'inner;
+            }
+        }
+        let x = r.clone();
+        // w = 2/((1-r**2)*t4**2)
+        let w: Float = Float::with_val(precision as u32, 2) / ((1 - r.pow(2)) * t4.pow(2));
+        let pair = wrap_nodepair(env, x.clone(), w.clone());
+        match pair {
+            Some(pair) => {
+                match nodes.add(pair) {
+                    Ok(_) => (),
+                    Err(_) => {
+                        let _ = env.throw(("java/lang/OutOfMemoryError", "Could not allocate memory for nodes"));
+                        return;
+                    }
+                }
+            },
             None => {
                 return;
             }
+        }
+        let pair = wrap_nodepair(env, -x, w);
+        match pair {
+            Some(pair) => {
+                match nodes.add(pair) {
+                    Ok(_) => (),
+                    Err(_) => {
+                        let _ = env.throw(("java/lang/OutOfMemoryError", "Could not allocate memory for nodes"));
+                        return;
+                    }
+                }
+            },
+            None => { return; }
         }
     }
 }
