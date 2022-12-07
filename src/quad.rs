@@ -353,7 +353,7 @@ pub extern "system" fn Java_palaiologos_scijava_integrator_RealGaussLegendreInte
                 let newt1: Float = (r.clone() * (2 * j1 - 1) * &t1 - Float::with_val(precision as u32, j1-1) * &t2) / j1;
                 t2 = t1; t1 = newt1;
             }
-            t4 = Float::with_val(precision as u32, n) * (t1.clone() * &r - &t2) / (r.clone().pow(2) - 1);
+            t4 = Float::with_val(precision as u32, n) * (r.clone() * &t1 - &t2) / (r.clone().square() - 1);
             let a: Float = t1 / &t4;
             r -= &a;
             if a.abs() <= epsilon {

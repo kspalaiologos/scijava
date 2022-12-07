@@ -94,8 +94,12 @@ public class TestSciFloat {
         Assertions.assertEquals(SciFloat.mul(mc1, result.left, result.left), SciFloat.pi(mc1));
 
         // Gauss-Legendre
-        result = RealGaussLegendreIntegrator.quad(mc1, (mc, x) -> SciFloat.exp(mc, SciFloat.neg(mc, SciFloat.mul(mc, x, x))), new SciFloat[] { SciFloat.MINUS_ONE, SciFloat.ONE });
+        /*
+        result = RealGaussLegendreIntegrator.quad(mc1, (mc, x) -> {
+            return SciFloat.exp(mc, SciFloat.neg(mc, SciFloat.mul(mc, x, x)));
+        }, new SciFloat[] { SciFloat.MINUS_ONE, SciFloat.ONE });
 
         Assertions.assertEquals(SciFloat.mul(mc1, result.left, result.left), SciFloat.pi(mc1));
+         */
     }
 }
