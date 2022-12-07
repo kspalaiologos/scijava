@@ -193,11 +193,11 @@ pub extern "system" fn Java_palaiologos_scijava_integrator_RealIntegrator_estima
             }
         }
     }
-    let D1 = (a.clone() - b).abs().log10();
-    let D2 = (a.clone() - c).abs().log10();
-    let D3 = Float::with_val(precision as u32, -precision);
-    let D4 = Float::min(Float::max(Float::max(D1.clone().square() / &D2, &(D1 * 2)), &D3), &Float::with_val(precision as u32, 0));
-    let error = Float::with_val(precision as u32, 10).pow(D4.floor());
+    let d1 = (a.clone() - b).abs().log10();
+    let d2 = (a.clone() - c).abs().log10();
+    let d3 = Float::with_val(precision as u32, -precision);
+    let d4 = Float::min(Float::max(Float::max(d1.clone().square() / &d2, &(d1 * 2)), &d3), &Float::with_val(precision as u32, 0));
+    let error = Float::with_val(precision as u32, 10).pow(d4.floor());
     match wrap_float(env, error) {
         Some(res) => res.into_raw(),
         None => {
@@ -359,7 +359,6 @@ pub extern "system" fn Java_palaiologos_scijava_integrator_RealGaussLegendreInte
             }
         }
         let x = r.clone();
-        // w = 2/((1-r**2)*t4**2)
         let w: Float = Float::with_val(precision as u32, 2) / ((1 - r.pow(2)) * t4.pow(2));
         let pair = wrap_nodepair(env, x.clone(), w.clone());
         match pair {

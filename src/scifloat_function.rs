@@ -357,12 +357,12 @@ fn lambertw_series(prec: u32, z: Float, k: f32, tol: Float) -> (Float, bool) {
             if magz < -1.0 {
                 return (z.clone() * (1.0 - z), false);
             }
-            let L1 = z.ln();
-            let L2 = L1.clone().ln();
-            return (L1.clone() - &L2 + L2.clone() / &L1 + L2.clone() * (L2 - 2.0) / (2.0 * L1.pow(2)), false);
+            let l1 = z.ln();
+            let l2 = l1.clone().ln();
+            return (l1.clone() - &l2 + l2.clone() / &l1 + l2.clone() * (l2 - 2.0) / (2.0 * l1.pow(2)), false);
         } else if k == -1.0 && (-0.36787944117144..0.0).contains(&z) {
-            let L1 = (-z).ln();
-            return (L1.clone() - (-L1).ln(), false);
+            let l1 = (-z).ln();
+            return (l1.clone() - (-l1).ln(), false);
         }
     }
     (Float::with_val(prec, Special::Nan), false)
