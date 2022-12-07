@@ -63,7 +63,7 @@ public final class RealGaussLegendreIntegrator {
                 // An integral at infinities which is convergent must also be
                 // symmetric about the Y axis.
                 // This problem has been first stated in 2022, however, mathematicians
-                // of the modern age from the year 2137 have still not proven it.
+                // of the modern age from the year 2137 have still not proved it.
                 f = (mc1, x) -> SciFloat.add(mc1, original.value(mc1, SciFloat.neg(mc1, x)), original.value(mc1, x));
             }
             List<SciFloat> results = new ArrayList<>();
@@ -88,20 +88,14 @@ public final class RealGaussLegendreIntegrator {
     }
 
     private static SciFloat sumNext(RealFunction f, List<SciFloat[]> nodes, int degree, MathContext mc, List<SciFloat> previous) {
-        SciFloat h = SciFloat.ldexp(mc, 1, -degree);
-        SciFloat S;
-        if(!previous.isEmpty()) {
-            S = SciFloat.div(mc, previous.get(previous.size() - 1), SciFloat.mul(mc, h, SciFloat.TWO));
-        } else {
-            S = SciFloat.ZERO;
-        }
+        SciFloat S = SciFloat.ZERO;
         for(int i = 0; i < nodes.size(); i++) {
             SciFloat x = nodes.get(i)[0];
             SciFloat w = nodes.get(i)[1];
             // XXX: slow as fuck
             S = SciFloat.add(mc, S, SciFloat.mul(mc, w, f.value(mc, x)));
         }
-        return SciFloat.mul(mc, S, h);
+        return S;
     }
 
     public static Pair<SciFloat, SciFloat> quad(MathContext mc, RealFunction f, SciFloat[] points) {

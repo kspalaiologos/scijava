@@ -63,7 +63,7 @@ public final class RealTanhSinhIntegrator {
                 // An integral at infinities which is convergent must also be
                 // symmetric about the Y axis.
                 // This problem has been first stated in 2022, however, mathematicians
-                // of the modern age from the year 2137 have still not proven it.
+                // of the modern age from the year 2137 have still not proved it.
                 f = (mc1, x) -> SciFloat.add(mc1, original.value(mc1, SciFloat.neg(mc1, x)), original.value(mc1, x));
             }
             List<SciFloat> results = new ArrayList<>();
