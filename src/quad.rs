@@ -288,15 +288,14 @@ pub extern "system" fn Java_palaiologos_scijava_integrator_RealTanhSinhIntegrato
 
 #[no_mangle]
 pub extern "system" fn Java_palaiologos_scijava_integrator_RealGaussLegendreIntegrator_getNodes(
-            env: JNIEnv, _class: JClass, nodes: JObject, mut precision: jint, degree: jint) {
+            env: JNIEnv, _class: JClass, nodes: JObject, precision: jint, degree: jint) {
     let nodes = JList::from_env(&env, nodes).unwrap();
     let epsilon = Float::with_val(precision as u32, Float::i_exp(1, -precision-8));
-    precision += precision / 2;
+    let precision = precision + precision / 2;
     if degree == 1 {
-        let mut x: Float = Float::with_val(precision as u32, 3) / 5;
-        x.sqrt_mut();
-        let w: Float = Float::with_val(precision as u32, 5) / 9;
-        let pair = wrap_nodepair(env, -(x.clone()), w.clone());
+        let x = (Float::with_val(precision as u32, 3) / 5_i32).sqrt();
+        let w: Float = Float::with_val(precision as u32, 5) / 9_i32;
+        let pair = wrap_nodepair(env, x.clone(), w.clone());
         match pair {
             Some(pair) => {
                 match nodes.add(pair) {
@@ -309,7 +308,7 @@ pub extern "system" fn Java_palaiologos_scijava_integrator_RealGaussLegendreInte
             },
             None => { return; }
         }
-        let pair = wrap_nodepair(env, Float::with_val(precision as u32, 0), Float::with_val(precision as u32, 8) / 9);
+        let pair = wrap_nodepair(env, -x, w);
         match pair {
             Some(pair) => {
                 match nodes.add(pair) {
@@ -322,6 +321,8 @@ pub extern "system" fn Java_palaiologos_scijava_integrator_RealGaussLegendreInte
             },
             None => { return; }
         }
+        let x = Float::with_val(precision as u32, 0);
+        let w = Float::with_val(precision as u32, 8) / 9_i32;
         let pair = wrap_nodepair(env, x, w);
         match pair {
             Some(pair) => {
@@ -335,6 +336,7 @@ pub extern "system" fn Java_palaiologos_scijava_integrator_RealGaussLegendreInte
             },
             None => { return; }
         }
+        return;
     }
 
     let n = 3 * 2.pow((degree - 1) as u32);

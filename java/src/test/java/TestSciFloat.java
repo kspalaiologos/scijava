@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import palaiologos.scijava.integrator.RealFunction;
 import palaiologos.scijava.SciFloat;
 import palaiologos.scijava.MathContext;
+import palaiologos.scijava.integrator.RealGaussLegendreIntegrator;
 import palaiologos.scijava.integrator.RealTanhSinhIntegrator;
 import palaiologos.scijava.util.Pair;
 
@@ -83,11 +84,17 @@ public class TestSciFloat {
     public void testQuadrature() {
         Pair<SciFloat, SciFloat> result;
 
+        // TanhSinh
         result = RealTanhSinhIntegrator.quad(mc1, (mc, x) -> SciFloat.exp(mc, SciFloat.neg(mc, SciFloat.mul(mc, x, x))), new SciFloat[] { SciFloat.MINUS_ONE, SciFloat.ONE });
 
         Assertions.assertEquals(result.left, SciFloat.valueOf(mc1, "1.4936482656248540507989348722634"));
 
         result = RealTanhSinhIntegrator.quad(mc1, (mc, x) -> SciFloat.exp(mc, SciFloat.neg(mc, SciFloat.mul(mc, x, x))), new SciFloat[] { SciFloat.NINF, SciFloat.INF });
+
+        Assertions.assertEquals(SciFloat.mul(mc1, result.left, result.left), SciFloat.pi(mc1));
+
+        // Gauss-Legendre
+        result = RealGaussLegendreIntegrator.quad(mc1, (mc, x) -> SciFloat.exp(mc, SciFloat.neg(mc, SciFloat.mul(mc, x, x))), new SciFloat[] { SciFloat.MINUS_ONE, SciFloat.ONE });
 
         Assertions.assertEquals(SciFloat.mul(mc1, result.left, result.left), SciFloat.pi(mc1));
     }
