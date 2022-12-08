@@ -18,6 +18,8 @@
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import palaiologos.scijava.differentiation.DerivativeDirection;
+import palaiologos.scijava.differentiation.RealDifferentiation;
 import palaiologos.scijava.integrator.RealFunction;
 import palaiologos.scijava.SciFloat;
 import palaiologos.scijava.MathContext;
@@ -107,5 +109,14 @@ public class TestSciFloat {
         SciFloat b = SciFloat.valueOf(mc1, "1");
         SciFloat c = SciFloat.valueOf(mc1, "2");
         Assertions.assertEquals(SciFloat.lerchPhi(mc1, a, b, c), SciFloat.valueOf(mc1, "0.5"));
+    }
+
+    @Test
+    public void testDifferentiation() {
+        SciFloat result = RealDifferentiation.differentiate(
+                mc1, (mc, x) ->
+                        SciFloat.add(mc1, SciFloat.mul(mc1, x, x), x),
+                SciFloat.ONE, 1, DerivativeDirection.CENTRAL, 0, false, false);
+        Assertions.assertEquals(result, SciFloat.valueOf(mc1, "3"));
     }
 }
