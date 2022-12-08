@@ -117,6 +117,6 @@ public class TestSciFloat {
                 mc1, (mc, x) ->
                         SciFloat.add(mc1, SciFloat.mul(mc1, x, x), x),
                 SciFloat.ONE, 1, DerivativeDirection.CENTRAL, 0, false, false);
-        Assertions.assertEquals(result, SciFloat.valueOf(mc1, "3"));
+        Assertions.assertEquals(result, SciFloat.valueOf(mc1, "2"));
     }
 }

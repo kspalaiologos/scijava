@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 
 public class RealDifferentiation {
     public static SciFloat differentiate(MathContext mc, RealFunction f, SciFloat x, int n, DerivativeDirection dir, int additionalPrecision, boolean relativePrecision, boolean singular) {
-        // TODO: Implement .scale() and .unscale() for SciFloat (divide/multiply by integer).
         if (n == 0 && !singular)
             return f.value(mc, x);
         int workprec = (mc.precision() + 2 * additionalPrecision) * (n + 1);
@@ -37,7 +36,7 @@ public class RealDifferentiation {
             MathContext finalMc = mc;
             SciFloat finalX = x;
             SciFloat finalH = h;
-            vals = steps.mapToObj(k -> f.value(finalMc, SciFloat.add(finalMc, finalX, SciFloat.mul(finalMc, finalH, SciFloat.valueOf(finalMc, k)))));
+            vals = steps.mapToObj(k -> f.value(finalMc, SciFloat.add(finalMc, finalX, SciFloat.scale(finalMc, finalH, k))));
         }
         // N-th forward difference operator.
         SciFloat d = SciFloat.ZERO;
@@ -46,8 +45,8 @@ public class RealDifferentiation {
         for (Iterator<SciFloat> it = vals.iterator(); it.hasNext(); k++) {
             SciFloat kV = it.next();
             d = SciFloat.add(mc, d, SciFloat.mul(mc, kV, b));
-            b = SciFloat.floor(mc, SciFloat.div(mc, SciFloat.mul(mc, b, SciFloat.valueOf(mc, k - n)), SciFloat.valueOf(mc, k + 1)));
+            b = SciFloat.floor(mc, SciFloat.unscale(mc, SciFloat.scale(mc, b, k - n), k + 1));
         }
-        return SciFloat.div(mc, d, SciFloat.pow(mc, SciFloat.valueOf(mc, n), norm));
+        return SciFloat.div(mc, d, SciFloat.pow(mc, norm, SciFloat.valueOf(mc, n)));
     }
 }

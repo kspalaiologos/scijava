@@ -80,7 +80,7 @@ fn float_from_obj<'a>(env: JNIEnv, obj: JObject<'a>) -> &'a Float {
 // evil shit
 unsafe fn mut_float_from_obj<'a>(env: JNIEnv, obj: JObject<'a>) -> &'a mut Float {
     let ptr = env.get_field(obj, "ptr", "J").unwrap().j().unwrap();
-    unsafe { &mut *(ptr as *mut Float) }
+    &mut *(ptr as *mut Float)
 }
 
 #[no_mangle]
@@ -141,7 +141,6 @@ pub extern "system" fn Java_palaiologos_scijava_integrator_RealIntegrator_transf
             }
         } else {
             let _ = env.throw(("java/lang/IllegalArgumentException", "Invalid interval"));
-            return;
         }
     } else {
         // Linear change of variables.

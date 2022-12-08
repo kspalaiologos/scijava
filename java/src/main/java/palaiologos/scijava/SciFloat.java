@@ -152,6 +152,8 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void sinpi(int precision, int roundingMode, long dest, long a);
     private static native void cospi(int precision, int roundingMode, long dest, long a);
     private static native void sinc(int precision, int roundingMode, long dest, long a);
+    private static native void scale(int precision, int roundingMode, long dest, long a, int b);
+    private static native void unscale(int precision, int roundingMode, long dest, long a, int b);
     private static native void recip(int precision, int roundingMode, long dest, long a);
     private static native void sech(int precision, int roundingMode, long dest, long a);
     private static native void csch(int precision, int roundingMode, long dest, long a);
@@ -219,10 +221,24 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      */
     public static SciFloat NINF = SciFloat.valueOf(MathContext.MC24, "-inf");
 
+    /**
+     * Return the value of this SciFloat value as an integer.
+     * @param mc the MathContext to use
+     * @return the integer value of this SciFloat
+     */
     public int intValue(MathContext mc) {
         return intValue(mc.precision(), mc.roundingMode().ordinal(), ptr);
     }
 
+    /**
+     * Compute the value of the Lerch transcendent phi(x, s, a).
+     * Generalisation of the Riemann and Hurwitz zeta functions.
+     * @param mc The math context to use.
+     * @param z The value of z.
+     * @param s The value of s.
+     * @param a The value of a.
+     * @return The value of phi(x, s, a).
+     */
     public static SciFloat lerchPhi(MathContext mc, SciFloat z, SciFloat s, SciFloat a) {
         if(z.eq(ZERO)) {
             return SciFloat.pow(mc, a, SciFloat.neg(mc, s));
@@ -245,6 +261,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
             }
             return SciFloat.add(mc, SciFloat.mul(mc, zpow, lerchPhi(mc, z, s, SciFloat.add(mc, a, SciFloat.valueOf(mc, m)))), v);
         }
+        // gamma(1-s, 0)
         SciFloat g = SciFloat.ln(mc, z);
         SciFloat v = SciFloat.add(mc,
                 SciFloat.div(mc, ONE, SciFloat.mul(mc, TWO, SciFloat.pow(mc, a, s))),
@@ -260,6 +277,32 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
                         SciFloat.sub(mc1, SciFloat.exp(mc1, SciFloat.mul(mc1, r, t)), ONE))),
                 new SciFloat[] { ZERO, INF });
         return SciFloat.add(mc, v, SciFloat.mul(mc, TWO, I.left));
+    }
+
+    /**
+     * Scale a SciFloat value, that is, multiply it times a machine integral value.
+     * @param mc The math context to use.
+     * @param a The SciFloat value to scale.
+     * @param scale The scale factor.
+     * @return The scaled value.
+     */
+    public static SciFloat scale(MathContext mc, SciFloat a, int scale) {
+        SciFloat dest = SciFloat.valueOf(mc, 0);
+        scale(mc.precision(), mc.roundingMode().ordinal(), dest.ptr, a.ptr, scale);
+        return dest;
+    }
+
+    /**
+     * Unscale a SciFloat value, that is, divide it by a machine integral value.
+     * @param mc The math context to use.
+     * @param a The SciFloat value to unscale.
+     * @param scale The scale factor.
+     * @return The unscaled value.
+     */
+    public static SciFloat unscale(MathContext mc, SciFloat a, int scale) {
+        SciFloat dest = SciFloat.valueOf(mc, 0);
+        unscale(mc.precision(), mc.roundingMode().ordinal(), dest.ptr, a.ptr, scale);
+        return dest;
     }
     
     /**
