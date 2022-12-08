@@ -148,6 +148,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void radians(int precision, int roundingMode, long dest, long a);
     private static native void degrees(int precision, int roundingMode, long dest, long a);
     private static native void log2(int precision, int roundingMode, long dest, long a);
+    private static native void zeta(int precision, int roundingMode, long dest, long a);
     private static native void sinpi(int precision, int roundingMode, long dest, long a);
     private static native void cospi(int precision, int roundingMode, long dest, long a);
     private static native void sinc(int precision, int roundingMode, long dest, long a);
@@ -229,7 +230,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
         if(z.eq(ONE)) {
             // Hurwitz/Riemann zeta.
             if(a.eq(ONE)) {
-                throw new IllegalArgumentException("Riemann Zeta: NYI");
+                return SciFloat.zeta(mc, s);
             } else {
                 throw new IllegalArgumentException("Hurwitz Zeta: NYI");
             }
@@ -1465,6 +1466,18 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     public static SciFloat log2(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.log2(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        return result;
+    }
+
+    /**
+     * Compute the value of the Riemann Zeta of a given SciFloat value.
+     * @param mc The math context to use while performing computations.
+     * @param a The argument.
+     * @return zeta(a)
+     */
+    public static SciFloat zeta(MathContext mc, SciFloat a) {
+        SciFloat result = SciFloat.valueOf(mc, 0);
+        SciFloat.zeta(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
         return result;
     }
 
