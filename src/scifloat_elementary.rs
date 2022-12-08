@@ -897,3 +897,13 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_pow(
     }
     dest.pow_assign(b);
 }
+
+// intValue
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_intValue(
+        _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, a: jlong) -> jint {
+    let a = unsafe { &*(a as *const Float) };
+    let mut a = a.clone();
+    a.set_prec_round(precision as u32, xlat_rounding(rounding_mode));
+    a.to_i32_saturating().unwrap_or(0) as jint
+}

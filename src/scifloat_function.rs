@@ -508,7 +508,7 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_gamma(
 }
 
 #[no_mangle]
-pub extern "system" fn Java_palaiologos_scijava_SciFloat_gamma_inc(
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_gammainc(
         _env: JNIEnv, _class: JClass, precision: jint, rounding_mode: jint, dest: jlong, a: jlong, x: jlong) {
     let dest = dest as *mut Float;
     let a = a as *mut Float;
@@ -782,7 +782,7 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_asin(
 }
 
 #[no_mangle]
-pub extern "system" fn Java_palaiologos_scijava_SciFloat_asin_inplace(
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_asinInplace(
         _env: JNIEnv, _class: JClass, precision: jint, _rounding_mode: jint, a: jlong) {
     let a = a as *mut Float;
     let a = unsafe { &mut *a };
@@ -812,7 +812,7 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_acos(
 }
 
 #[no_mangle]
-pub extern "system" fn Java_palaiologos_scijava_SciFloat_acos_inplace(
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_acosInplace(
         _env: JNIEnv, _class: JClass, precision: jint, _rounding_mode: jint, a: jlong) {
     let a = a as *mut Float;
     let a = unsafe { &mut *a };
@@ -842,7 +842,7 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_atan(
 }
 
 #[no_mangle]
-pub extern "system" fn Java_palaiologos_scijava_SciFloat_atan_inplace(
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_atanInplace(
         _env: JNIEnv, _class: JClass, precision: jint, _rounding_mode: jint, a: jlong) {
     let a = a as *mut Float;
     let a = unsafe { &mut *a };
@@ -855,7 +855,7 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_atan_inplace(
 }
 
 #[no_mangle]
-pub extern "system" fn Java_palaiologos_scijava_SciFloat_asinh_inplace(
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_asinhInplace(
         _env: JNIEnv, _class: JClass, precision: jint, _rounding_mode: jint, a: jlong) {
     let a = a as *mut Float;
     let a = unsafe { &mut *a };
@@ -868,7 +868,7 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_asinh_inplace(
 }
 
 #[no_mangle]
-pub extern "system" fn Java_palaiologos_scijava_SciFloat_acosh_inplace(
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_acoshInplace(
         _env: JNIEnv, _class: JClass, precision: jint, _rounding_mode: jint, a: jlong) {
     let a = a as *mut Float;
     let a = unsafe { &mut *a };
@@ -881,7 +881,7 @@ pub extern "system" fn Java_palaiologos_scijava_SciFloat_acosh_inplace(
 }
 
 #[no_mangle]
-pub extern "system" fn Java_palaiologos_scijava_SciFloat_atanh_inplace(
+pub extern "system" fn Java_palaiologos_scijava_SciFloat_atanhInplace(
         _env: JNIEnv, _class: JClass, precision: jint, _rounding_mode: jint, a: jlong) {
     let a = a as *mut Float;
     let a = unsafe { &mut *a };

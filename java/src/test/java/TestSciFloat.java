@@ -100,4 +100,12 @@ public class TestSciFloat {
 
         Assertions.assertEquals(SciFloat.mul(mc1, result.left, result.left), SciFloat.pi(mc1));
     }
+
+    @Test
+    public void testLerchPhi() {
+        SciFloat a = SciFloat.valueOf(mc1, "0");
+        SciFloat b = SciFloat.valueOf(mc1, "1");
+        SciFloat c = SciFloat.valueOf(mc1, "2");
+        Assertions.assertEquals(SciFloat.lerchPhi(mc1, a, b, c), SciFloat.valueOf(mc1, "0.5"));
+    }
 }

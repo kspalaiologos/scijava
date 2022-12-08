@@ -18,6 +18,10 @@
 
 package palaiologos.scijava;
 
+import palaiologos.scijava.integrator.RealFunction;
+import palaiologos.scijava.integrator.RealGaussLegendreIntegrator;
+import palaiologos.scijava.util.Pair;
+
 import java.io.IOException;
 import java.lang.ref.Cleaner;
 
@@ -91,9 +95,9 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void acos(int precision, int roundingMode, long dest, long a);
     private static native void atan(int precision, int roundingMode, long dest, long a);
     private static native void beta(int precision, int roundingMode, long dest, long a, long b);
-    private static native void asin_inplace(int precision, int roundingMode, long a);
-    private static native void acos_inplace(int precision, int roundingMode, long a);
-    private static native void atan_inplace(int precision, int roundingMode, long a);
+    private static native void asinInplace(int precision, int roundingMode, long a);
+    private static native void acosInplace(int precision, int roundingMode, long a);
+    private static native void atanInplace(int precision, int roundingMode, long a);
     private static native void sinh(int precision, int roundingMode, long dest, long a);
     private static native void cosh(int precision, int roundingMode, long dest, long a);
     private static native void tanh(int precision, int roundingMode, long dest, long a);
@@ -134,7 +138,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void gamma(int precision, int roundingMode, long dest, long a);
     private static native void loggamma(int precision, int roundingMode, long dest, long a);
     private static native void rgamma(int precision, int roundingMode, long dest, long a);
-    private static native void gamma_inc(int precision, int roundingMode, long dest, long a);
+    private static native void gammainc(int precision, int roundingMode, long dest, long a, long x);
     private static native void hypot(int precision, int roundingMode, long dest, long a, long b);
     private static native void j0(int precision, int roundingMode, long dest, long a);
     private static native void j1(int precision, int roundingMode, long dest, long a);
@@ -154,9 +158,9 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native void harmonic(int precision, int roundingMode, long dest, long a);
     private static native void rf(int precision, int roundingMode, long dest, long x, long n);
     private static native void ff(int precision, int roundingMode, long dest, long x, long n);
-    private static native void asinh_inplace(int precision, int roundingMode, long a);
-    private static native void acosh_inplace(int precision, int roundingMode, long a);
-    private static native void atanh_inplace(int precision, int roundingMode, long a);
+    private static native void asinhInplace(int precision, int roundingMode, long a);
+    private static native void acoshInplace(int precision, int roundingMode, long a);
+    private static native void atanhInplace(int precision, int roundingMode, long a);
     private static native void chop(int precision, int roundingMode, long dest, long a, long eps);
     private static native SciFloat lambertw(int precision, long x, int k);
     private static native boolean isNaN(long ptr);
@@ -164,9 +168,9 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native SciFloat random(int precision, int roundingMode, long randptr);
     private static native SciFloat pi(int precision);
     private static native SciFloat bernoulli(int precision, int n);
-    private static native SciFloat glaisher(int precision);
     private static native SciFloat euler_gamma(int precision);
     private static native SciFloat degree(int precision);
+    private static native int intValue(int precision, int roundingMode, long a);
     private static native SciFloat e(int precision);
     private static native SciFloat phi(int precision);
     private static native SciFloat catalan(int precision);
@@ -214,6 +218,49 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      */
     public static SciFloat NINF = SciFloat.valueOf(MathContext.MC24, "-inf");
 
+    public int intValue(MathContext mc) {
+        return intValue(mc.precision(), mc.roundingMode().ordinal(), ptr);
+    }
+
+    public static SciFloat lerchPhi(MathContext mc, SciFloat z, SciFloat s, SciFloat a) {
+        if(z.eq(ZERO)) {
+            return SciFloat.pow(mc, a, SciFloat.neg(mc, s));
+        }
+        if(z.eq(ONE)) {
+            // Hurwitz/Riemann zeta.
+            if(a.eq(ONE)) {
+                throw new IllegalArgumentException("Riemann Zeta: NYI");
+            } else {
+                throw new IllegalArgumentException("Hurwitz Zeta: NYI");
+            }
+        }
+        if(a.lt(ONE)) {
+            int m = SciFloat.ceil(mc, SciFloat.sub(mc, ONE, a)).intValue(mc);
+            SciFloat v = ZERO;
+            SciFloat zpow = ONE;
+            for(int n = 0; n < m; n++) {
+                v = SciFloat.add(mc, v, SciFloat.div(mc, zpow, SciFloat.pow(mc, SciFloat.add(mc, a, SciFloat.valueOf(mc, n)), s)));
+                zpow = SciFloat.mul(mc, zpow, z);
+            }
+            return SciFloat.add(mc, SciFloat.mul(mc, zpow, lerchPhi(mc, z, s, SciFloat.add(mc, a, SciFloat.valueOf(mc, m)))), v);
+        }
+        SciFloat g = SciFloat.ln(mc, z);
+        SciFloat v = SciFloat.add(mc,
+                SciFloat.div(mc, ONE, SciFloat.mul(mc, TWO, SciFloat.pow(mc, a, s))),
+                SciFloat.mul(mc,
+                        SciFloat.igamma(mc, SciFloat.sub(mc, ONE, s), SciFloat.neg(mc, SciFloat.mul(mc, a, g))),
+                        SciFloat.div(mc, SciFloat.pow(mc, SciFloat.neg(mc, g), SciFloat.sub(mc, s, ONE)), SciFloat.pow(mc, z, a))));
+        SciFloat h = SciFloat.div(mc, s, TWO);
+        SciFloat r = SciFloat.mul(mc, TWO, SciFloat.pi(mc));
+        Pair<SciFloat, SciFloat> I = RealGaussLegendreIntegrator.quad(mc, (mc1, t) -> SciFloat.div(mc1,
+                SciFloat.sin(mc1, SciFloat.sub(mc1, SciFloat.mul(mc1, s, SciFloat.atan(mc1, SciFloat.div(mc1, t, a))), SciFloat.mul(mc1, t, g))),
+                SciFloat.mul(mc1,
+                        SciFloat.pow(mc1, SciFloat.add(mc1, SciFloat.pow(mc1, a, TWO), SciFloat.pow(mc1, t, TWO)), h),
+                        SciFloat.sub(mc1, SciFloat.exp(mc1, SciFloat.mul(mc1, r, t)), ONE))),
+                new SciFloat[] { ZERO, INF });
+        return SciFloat.add(mc, v, SciFloat.mul(mc, TWO, I.left));
+    }
+    
     /**
      * Return the value of the unnormalised sinc function at x.
      * @param mc The MathContext to use.
@@ -259,16 +306,6 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      */
     public static SciFloat sincpi(MathContext mc, SciFloat x) {
         return sinc(mc, SciFloat.mul(mc, x, SciFloat.pi(mc.precision())));
-    }
-
-    /**
-     * Return the value of the Glaisher constant with the specified precision.
-     * Loses accuracy past approximately 66500 bits of precision.
-     * @param mc The MathContext to use.
-     * @return The value of the Glaisher constant.
-     */
-    public static SciFloat glaisher(MathContext mc) {
-        return glaisher(mc.precision());
     }
 
     /**
@@ -908,7 +945,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     public static SciFloat asec(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.div(mc.precision(), mc.roundingMode().ordinal(), result.ptr, ONE.ptr, a.ptr);
-        SciFloat.acos_inplace(mc.precision(), mc.roundingMode().ordinal(), result.ptr);
+        SciFloat.acosInplace(mc.precision(), mc.roundingMode().ordinal(), result.ptr);
         return result;
     }
 
@@ -921,7 +958,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     public static SciFloat acsc(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.div(mc.precision(), mc.roundingMode().ordinal(), result.ptr, ONE.ptr, a.ptr);
-        SciFloat.asin_inplace(mc.precision(), mc.roundingMode().ordinal(), result.ptr);
+        SciFloat.asinInplace(mc.precision(), mc.roundingMode().ordinal(), result.ptr);
         return result;
     }
 
@@ -934,7 +971,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     public static SciFloat acot(MathContext mc, SciFloat a) {
         SciFloat result = SciFloat.valueOf(mc, 0);
         SciFloat.div(mc.precision(), mc.roundingMode().ordinal(), result.ptr, ONE.ptr, a.ptr);
-        SciFloat.atan_inplace(mc.precision(), mc.roundingMode().ordinal(), result.ptr);
+        SciFloat.atanInplace(mc.precision(), mc.roundingMode().ordinal(), result.ptr);
         return result;
     }
 
@@ -1054,7 +1091,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      */
     public static SciFloat asech(MathContext mc, SciFloat a) {
         SciFloat x = SciFloat.reciprocal(mc, a);
-        acosh_inplace(mc.precision(), mc.roundingMode().ordinal(), x.ptr);
+        acoshInplace(mc.precision(), mc.roundingMode().ordinal(), x.ptr);
         return x;
     }
 
@@ -1066,7 +1103,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      */
     public static SciFloat acsch(MathContext mc, SciFloat a) {
         SciFloat x = SciFloat.reciprocal(mc, a);
-        asinh_inplace(mc.precision(), mc.roundingMode().ordinal(), x.ptr);
+        asinhInplace(mc.precision(), mc.roundingMode().ordinal(), x.ptr);
         return x;
     }
 
@@ -1078,7 +1115,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      */
     public static SciFloat acoth(MathContext mc, SciFloat a) {
         SciFloat x = SciFloat.reciprocal(mc, a);
-        atanh_inplace(mc.precision(), mc.roundingMode().ordinal(), x.ptr);
+        atanhInplace(mc.precision(), mc.roundingMode().ordinal(), x.ptr);
         return x;
     }
 
@@ -1182,11 +1219,12 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      * Return the value of the upper incomplete gamma function of a given SciFloat value.
      * @param mc The math context to use while performing computations.
      * @param a The first argument.
-     * @return The upper incomplete gamma function of a.
+     * @param x The second argument.
+     * @return The upper incomplete gamma function of a and x.
      */
-    public static SciFloat igamma(MathContext mc, SciFloat a) {
+    public static SciFloat igamma(MathContext mc, SciFloat a, SciFloat x) {
         SciFloat result = SciFloat.valueOf(mc, 0);
-        SciFloat.gamma_inc(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr);
+        SciFloat.gammainc(mc.precision(), mc.roundingMode().ordinal(), result.ptr, a.ptr, x.ptr);
         return result;
     }
 
