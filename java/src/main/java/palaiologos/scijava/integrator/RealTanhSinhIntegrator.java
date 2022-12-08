@@ -9,6 +9,30 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * An implementation of the Tanh-Sinh quadrature algorithm.
+ * <p> For a precise MathContext, computing the nodes and weights for the integration
+ *     can be rather expensive (less so for the Tanh-Sinh quadrature though).
+ *     To make repeated integrations fast, nodes are automatically cached.
+ *     To free the integration nodes, use the {@link #dropCaches()} method.
+ *     The cache size is limited to 256 entries and governed using the Least-Recently-Used policy.
+ *
+ * <p> The Tanh-Sinh quadrature tends to handle endpoint singularities very well and
+ *     the nodes are cheaper to compute on the first run compared to the Gauss-Legendre quadrature.
+ *
+ * <p> While the Tanh-Sinh algorithm handles endpoint singularities well, it is not
+ *     as good at handling interior singularities. If such occur, make sure to split the
+ *     integration interval accordingly to leave out the point of singularity.
+ *     The Tanh-Sinh algorithm sometimes can't cope with certain endpoint singularities
+ *     (e.g. the sharp one for the square root at x=0) and will return a slightly inaccurate
+ *     result. In this case, try to increase the precision temporarily.
+ *
+ * <p> If the desired function is smooth (infinitely differentiable), but has many sharp peaks,
+ *     the precision might hinder. In these cases, consider either splitting the interval into
+ *     smaller parts or increasing the degree of the quadrature.
+ *
+ * @author Kamila Szewczyk
+ */
 public final class RealTanhSinhIntegrator {
     private static final int LRU_SIZE = 256;
 
@@ -41,6 +65,9 @@ public final class RealTanhSinhIntegrator {
         return nodes;
     }
 
+    /**
+     * Free the node caches held by the Tanh-Sinh integrator.
+     */
     public static void dropCaches() {
         nodeCache = new ConcurrentLRUCache<>(LRU_SIZE);
     }
@@ -104,10 +131,27 @@ public final class RealTanhSinhIntegrator {
         return SciFloat.mul(mc, S, h);
     }
 
+    /**
+     * Compute the integral of the given function using the Tanh-Sinh quadrature.
+     * @param mc The math context to use for the computation.
+     * @param f The function to integrate.
+     * @param points The endpoints to integrate at.
+     * @return A pair of the approximate integral value and the error estimate.
+     * @see #quad(MathContext, RealFunction, SciFloat[], int)
+     */
     public static Pair<SciFloat, SciFloat> quad(MathContext mc, RealFunction f, SciFloat[] points) {
         return quad(mc, f, points, RealIntegrator.guessDegree(mc));
     }
 
+    /**
+     * Compute the integral of the given function using the Tanh-Sinh quadrature with a specified quadrature degree.
+     * @param mc The math context to use for the computation.
+     * @param f The function to integrate.
+     * @param points The endpoints to integrate at.
+     * @param max_degree The maximum degree of the quadrature.
+     * @return A pair of the approximate integral value and the error estimate.
+     * @see #quad(MathContext, RealFunction, SciFloat[])
+     */
     public static Pair<SciFloat, SciFloat> quad(MathContext mc, RealFunction f, SciFloat[] points, int max_degree) {
         SciFloat epsilon = SciFloat.ldexp(mc, 1, 1-mc.precision());
         MathContext nmc = new MathContext(mc.precision() + 20, mc.roundingMode());
