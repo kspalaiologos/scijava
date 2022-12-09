@@ -26,7 +26,7 @@ public class RealDifferentiation {
 
     /**
      * Differentiate a function at the specified point.
-     * Assumes that there is no singularity at thespecified point.
+     * Assumes that there is no singularity at the specified point.
      * Additionally, assumes that the derivative exists and returns the central derivative.
      * The precision is slightly increased for the computations and not relative to the
      * magnitude of the argument.

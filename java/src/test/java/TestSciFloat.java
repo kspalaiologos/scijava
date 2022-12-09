@@ -25,6 +25,7 @@ import palaiologos.scijava.SciFloat;
 import palaiologos.scijava.MathContext;
 import palaiologos.scijava.integrator.RealGaussLegendreIntegrator;
 import palaiologos.scijava.integrator.RealTanhSinhIntegrator;
+import palaiologos.scijava.sum.EulerMaclaurinSum;
 import palaiologos.scijava.util.Pair;
 
 public class TestSciFloat {
@@ -101,6 +102,13 @@ public class TestSciFloat {
         }, new SciFloat[] { SciFloat.NINF, SciFloat.INF });
 
         Assertions.assertEquals(SciFloat.mul(mc1, result.left, result.left), SciFloat.pi(mc1));
+
+        // Integrate gamma(x)/x^x from 1 to infinity.
+        result = RealTanhSinhIntegrator.quad(mc1, (mc, x) -> {
+            return SciFloat.div(mc, SciFloat.gamma(mc, x), SciFloat.pow(mc, x, x));
+        }, new SciFloat[] { SciFloat.ONE, SciFloat.INF });
+
+        Assertions.assertEquals(result.left, SciFloat.valueOf(mc1, "0.73657685272323505319808654132535"));
     }
 
     @Test
@@ -118,5 +126,12 @@ public class TestSciFloat {
                         SciFloat.add(mc1, SciFloat.mul(mc1, x, x), x),
                 SciFloat.ONE, 1, DerivativeDirection.CENTRAL, 0, false, false);
         Assertions.assertEquals(result, SciFloat.valueOf(mc1, "2"));
+    }
+
+    @Test
+    public void testEulerMaclaurin() {
+        // sum of gamma(x)/x^x from 1 to infinity.
+        Pair<SciFloat, SciFloat> s = EulerMaclaurinSum.sum(mc1, (mc, x) -> SciFloat.div(mc, SciFloat.gamma(mc, x), SciFloat.pow(mc, x, x)), SciFloat.ONE, SciFloat.INF, null, null, null);
+        Assertions.assertEquals(s.left, SciFloat.valueOf(mc1, "1.3563736992032889678785295836750701"));
     }
 }

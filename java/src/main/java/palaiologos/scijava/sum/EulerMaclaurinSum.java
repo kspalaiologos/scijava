@@ -4,11 +4,11 @@ import palaiologos.scijava.MathContext;
 import palaiologos.scijava.SciFloat;
 import palaiologos.scijava.differentiation.RealDifferentiation;
 import palaiologos.scijava.integrator.RealFunction;
+import palaiologos.scijava.integrator.RealGaussLegendreIntegrator;
 import palaiologos.scijava.integrator.RealTanhSinhIntegrator;
 import palaiologos.scijava.util.Pair;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -19,7 +19,7 @@ public class EulerMaclaurinSum {
         SciFloat err = SciFloat.ZERO;
         SciFloat prev = SciFloat.ZERO;
         SciFloat s = SciFloat.ZERO;
-        SciFloat eps = SciFloat.ldexp(mc, 1, -mc.precision() - 8);
+        SciFloat eps = SciFloat.ldexp(mc, 1, -mc.precision() - 4);
         Stream<SciFloat> ad, bd;
 
         if(a.isInf() && a.lt(SciFloat.ZERO)) {
@@ -33,7 +33,7 @@ public class EulerMaclaurinSum {
             }
         }));
 
-        if(b.isInf() && b.lt(SciFloat.ZERO)) {
+        if(b.isInf() && b.gt(SciFloat.ZERO)) {
             bd = Stream.generate(() -> SciFloat.ZERO);
         } else bd = Objects.requireNonNullElseGet(bDiffs, () -> Stream.generate(new Supplier<>() {
             private int d = 0;
@@ -76,7 +76,7 @@ public class EulerMaclaurinSum {
         }
 
         if(integral == null) {
-            Pair<SciFloat, SciFloat> I = RealTanhSinhIntegrator.quad(wmc, f, new SciFloat[]{a, b});
+            Pair<SciFloat, SciFloat> I = RealGaussLegendreIntegrator.quad(wmc, f, new SciFloat[]{a, b});
             s = SciFloat.add(wmc, s, I.left);
             err = SciFloat.add(wmc, err, I.right);
         } else {
@@ -84,6 +84,6 @@ public class EulerMaclaurinSum {
             err = SciFloat.add(wmc, err, integral.right);
         }
 
-        return new Pair<>(s, err);
+        return new Pair<>(SciFloat.add(mc, s, SciFloat.ZERO), SciFloat.add(mc, err, SciFloat.ZERO));
     }
 }
