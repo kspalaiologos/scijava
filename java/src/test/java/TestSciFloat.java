@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import palaiologos.scijava.differentiation.DerivativeDirection;
 import palaiologos.scijava.differentiation.RealDifferentiation;
+import palaiologos.scijava.integrator.Integrator;
 import palaiologos.scijava.integrator.RealFunction;
 import palaiologos.scijava.SciFloat;
 import palaiologos.scijava.MathContext;
@@ -104,7 +105,7 @@ public class TestSciFloat {
         Assertions.assertEquals(SciFloat.mul(mc1, result.left, result.left), SciFloat.pi(mc1));
 
         // Integrate gamma(x)/x^x from 1 to infinity.
-        result = RealTanhSinhIntegrator.quad(mc1, (mc, x) -> {
+        result = RealGaussLegendreIntegrator.quad(mc1, (mc, x) -> {
             return SciFloat.div(mc, SciFloat.gamma(mc, x), SciFloat.pow(mc, x, x));
         }, new SciFloat[] { SciFloat.ONE, SciFloat.INF });
 
@@ -131,7 +132,13 @@ public class TestSciFloat {
     @Test
     public void testEulerMaclaurin() {
         // sum of gamma(x)/x^x from 1 to infinity.
-        Pair<SciFloat, SciFloat> s = EulerMaclaurinSum.sum(mc1, (mc, x) -> SciFloat.div(mc, SciFloat.gamma(mc, x), SciFloat.pow(mc, x, x)), SciFloat.ONE, SciFloat.INF, null, null, null);
+        Pair<SciFloat, SciFloat> s = EulerMaclaurinSum.sum(mc1, (mc, x) -> SciFloat.div(mc, SciFloat.gamma(mc, x), SciFloat.pow(mc, x, x)), SciFloat.ONE, SciFloat.INF, null, null, null, Integrator.GAUSS_LEGENDRE);
         Assertions.assertEquals(s.left, SciFloat.valueOf(mc1, "1.3563736992032889678785295836750701"));
+    }
+
+    @Test
+    public void testHurwitz() {
+        SciFloat h = SciFloat.hurwitzZeta(mc1, SciFloat.valueOf(mc1, "1.5"), SciFloat.valueOf(mc1, "2.5"));
+        Assertions.assertEquals(h, SciFloat.valueOf(mc1, "1.4037839632432208564079768276140"));
     }
 }

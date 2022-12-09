@@ -3,6 +3,7 @@ package palaiologos.scijava.sum;
 import palaiologos.scijava.MathContext;
 import palaiologos.scijava.SciFloat;
 import palaiologos.scijava.differentiation.RealDifferentiation;
+import palaiologos.scijava.integrator.Integrator;
 import palaiologos.scijava.integrator.RealFunction;
 import palaiologos.scijava.integrator.RealGaussLegendreIntegrator;
 import palaiologos.scijava.integrator.RealTanhSinhIntegrator;
@@ -14,7 +15,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class EulerMaclaurinSum {
-    public static Pair<SciFloat, SciFloat> sum(MathContext mc, RealFunction f, SciFloat a, SciFloat b, Stream<SciFloat> aDiffs, Stream<SciFloat> bDiffs, Pair<SciFloat, SciFloat> integral) {
+    public static Pair<SciFloat, SciFloat> sum(MathContext mc, RealFunction f, SciFloat a, SciFloat b, Stream<SciFloat> aDiffs, Stream<SciFloat> bDiffs, Pair<SciFloat, SciFloat> integral, Integrator integrator) {
         final int M = 10000;
         SciFloat err = SciFloat.ZERO;
         SciFloat prev = SciFloat.ZERO;
@@ -76,7 +77,7 @@ public class EulerMaclaurinSum {
         }
 
         if(integral == null) {
-            Pair<SciFloat, SciFloat> I = RealGaussLegendreIntegrator.quad(wmc, f, new SciFloat[]{a, b});
+            Pair<SciFloat, SciFloat> I = integrator == Integrator.TANH_SINH ? RealTanhSinhIntegrator.quad(wmc, f, new SciFloat[]{a, b}) : RealGaussLegendreIntegrator.quad(wmc, f, new SciFloat[]{a, b});
             s = SciFloat.add(wmc, s, I.left);
             err = SciFloat.add(wmc, err, I.right);
         } else {

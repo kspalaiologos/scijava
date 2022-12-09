@@ -18,12 +18,16 @@
 
 package palaiologos.scijava;
 
+import palaiologos.scijava.integrator.Integrator;
 import palaiologos.scijava.integrator.RealFunction;
 import palaiologos.scijava.integrator.RealGaussLegendreIntegrator;
+import palaiologos.scijava.sum.EulerMaclaurinSum;
 import palaiologos.scijava.util.Pair;
 
 import java.io.IOException;
 import java.lang.ref.Cleaner;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static palaiologos.scijava.NativeLibrary.load;
 import static palaiologos.scijava.NativeLibrary.resourceName;
@@ -277,6 +281,36 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
                         SciFloat.sub(mc1, SciFloat.exp(mc1, SciFloat.mul(mc1, r, t)), ONE))),
                 new SciFloat[] { ZERO, INF });
         return SciFloat.add(mc, v, SciFloat.mul(mc, TWO, I.left));
+    }
+
+    /**
+     * Compute the value of the Hurwitz zeta at two given points.
+     * The main implementation challenge in this case is given by the fact that the Euler-MacLaurin formula has to
+     * be implemented in a way that we don't automatically differentiate numerically the Zeta function, because the
+     * evaluation of it is particularly computationally expensive at high precisions.
+     * Because of this, we supply a pre-computed symbolic version of Hurwitz zeta that is evaluated by the
+     * Euler-MacLaurin summator.
+     *
+     * @param mc The math context to use.
+     * @param s The value of s.
+     * @param a The value of a.
+     * @return The value of hurwitzZeta(x, s, a).
+     */
+    public static SciFloat hurwitzZeta(MathContext mc, SciFloat s, SciFloat a) {
+        // hurwitz(a,s) = sum from n=1 to infinity of 1/(n+a)^s
+        // d/dn 1/(n+a)^s = -s*(a+n)^(-s-1)
+        // check if we have to reflect:
+        if(s.lt(ZERO)) {
+            throw new RuntimeException("Reflection formula for Hurwitz zeta not implemented.");
+        }
+
+        SciFloat ns = SciFloat.neg(mc, s);
+        return EulerMaclaurinSum.sum(mc, new RealFunction() {
+            @Override
+            public SciFloat value(MathContext mc, SciFloat x) {
+                return SciFloat.reciprocal(mc, SciFloat.pow(mc, SciFloat.add(mc, x, a), s));
+            }
+        }, ZERO, INF, null, null, null, Integrator.TANH_SINH).left;
     }
 
     /**
