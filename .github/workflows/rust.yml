@@ -168,9 +168,9 @@ jobs:
         cargo install cross --git https://github.com/cross-rs/cross
     - name: Build
       run: |
-        cross build --release --features unwind-stubs
+        cross build --target x86_64-unknown-freebsd --release --features unwind-stubs
         find target
-        cp target/release/libscijava.so freebsd-amd64-scijava.so
+        cp target/x86_64-unknown-freebsd/release/libscijava.so freebsd-amd64-scijava.so
     - name: Upload Artifact
       uses: actions/upload-artifact@v3.1.1
       with:
