@@ -140,7 +140,7 @@ jobs:
         name: linux-riscv64-scijava.so
         path: linux-riscv64-scijava.so
   build-x86_64-darwin:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v3
     - name: Install Rust & GCC
