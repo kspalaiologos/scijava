@@ -1,10 +1,26 @@
+/*
+    scijava
+    Copyright (C) 2022 Kamila Szewczyk
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import palaiologos.scijava.SciInteger;
 
-import java.util.HashMap;
-
-public class TestArithmetic {
+public class TestSciInteger {
     @Test
     public void testAdd() {
         Assertions.assertTrue(SciInteger.add(SciInteger.TEN, SciInteger.FIVE).eq(SciInteger.valueOf(15)));
@@ -219,5 +235,42 @@ public class TestArithmetic {
         Assertions.assertEquals(SciInteger.fibonacci(10), SciInteger.valueOf(55));
         // try something big: 100
         Assertions.assertEquals(SciInteger.fibonacci(100), SciInteger.valueOf("354224848179261915075"));
+    }
+
+    @Test
+    public void testPrimes() {
+        // try a negative number
+        Assertions.assertFalse(SciInteger.isPrime(SciInteger.valueOf(-1), 25));
+        // try zero
+        Assertions.assertFalse(SciInteger.isPrime(SciInteger.ZERO, 25));
+        // try one
+        Assertions.assertFalse(SciInteger.isPrime(SciInteger.ONE, 25));
+        // try 7
+        Assertions.assertTrue(SciInteger.isPrime(SciInteger.valueOf(7), 25));
+        // try some big composite number
+        Assertions.assertFalse(SciInteger.isPrime(SciInteger.valueOf("12345678901234567890123456789012345678901234567890123456789012345678901234567890"), 25));
+        // try some big prime number
+        Assertions.assertTrue(SciInteger.isPrime(SciInteger.valueOf("975319753197531975319"), 25));
+        // try negative certainty
+        Assertions.assertThrows(ArithmeticException.class, () -> SciInteger.isPrime(SciInteger.valueOf(7), -1));
+
+        // try nextPrime
+        Assertions.assertEquals(SciInteger.valueOf(7), SciInteger.nextPrime(SciInteger.valueOf(5)));
+        Assertions.assertEquals(SciInteger.valueOf(11), SciInteger.nextPrime(SciInteger.valueOf(7)));
+        // try some big number
+        Assertions.assertTrue(SciInteger.isPrime(SciInteger.nextPrime(SciInteger.valueOf("975319753197531975319")), 50));
+    }
+
+    @Test
+    public void testClamp() {
+        // try a positive number
+        Assertions.assertTrue(SciInteger.clamp(SciInteger.TEN, SciInteger.valueOf(5), SciInteger.valueOf(20)).eq(SciInteger.TEN));
+        Assertions.assertThrows(ArithmeticException.class, () -> SciInteger.clamp(SciInteger.TEN, SciInteger.valueOf(20), SciInteger.valueOf(5)));
+        // try a negative number
+        Assertions.assertTrue(SciInteger.clamp(SciInteger.valueOf(-10), SciInteger.valueOf(-20), SciInteger.valueOf(-5)).eq(SciInteger.valueOf(-10)));
+        Assertions.assertThrows(ArithmeticException.class, () -> SciInteger.clamp(SciInteger.valueOf(-10), SciInteger.valueOf(-5), SciInteger.valueOf(-20)));
+        // try zero
+        Assertions.assertTrue(SciInteger.clamp(SciInteger.ZERO, SciInteger.valueOf(-20), SciInteger.valueOf(20)).eq(SciInteger.ZERO));
+        Assertions.assertThrows(ArithmeticException.class, () -> SciInteger.clamp(SciInteger.ZERO, SciInteger.valueOf(20), SciInteger.valueOf(-20)));
     }
 }

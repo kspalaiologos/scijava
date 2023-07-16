@@ -58,7 +58,12 @@ class NativeLibrary {
     private NativeLibrary() {
     }
 
+    private static boolean loaded = false;
+
     static void load(String path) throws IOException {
+        if(loaded)
+            return;
+
         String[] parts = path.split("/");
         String filename = (parts.length > 1) ? parts[parts.length - 1] : null;
 
@@ -84,6 +89,8 @@ class NativeLibrary {
         } finally {
             temp.deleteOnExit();
         }
+
+        loaded = true;
     }
 
     private static File createTempDirectory() throws IOException {

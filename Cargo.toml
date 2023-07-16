@@ -14,7 +14,7 @@ overflow-checks = false
 debug = false
 
 [dependencies]
-rug = "1.18.0"
+rug = "=1.18.0"
 jni = "0.20.0"
 
 [patch.crates-io]

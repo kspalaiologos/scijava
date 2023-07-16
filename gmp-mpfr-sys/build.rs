@@ -67,6 +67,7 @@ struct Environment {
     version_prefix: String,
     version_patch: Option<u64>,
     use_system_libs: bool,
+    no_asm: bool,
     workaround_47048: Workaround47048,
 }
 
@@ -111,6 +112,7 @@ fn main() {
     if raw_target.contains("windows-gnu") {
         raw_target = raw_target.replace("windows-gnu", "windows");
     }
+    let no_asm = raw_target.contains("darwin");
     let force_cross = there_is_env("CARGO_FEATURE_FORCE_CROSS");
     if !force_cross && !compilation_target_allowed(&host, &raw_target) {
         panic!(
@@ -183,6 +185,7 @@ fn main() {
         version_prefix,
         version_patch,
         use_system_libs,
+        no_asm,
         workaround_47048: Workaround47048::No,
     };
     env.check_feature(
@@ -671,6 +674,10 @@ fn build_gmp(env: &Environment, lib: &Path, header: &Path) {
     println!("$ cd {:?}", build_dir);
     let mut conf = String::from("../gmp-src/configure --disable-shared --with-pic");
     let mut enable_fat = true;
+    if env.no_asm {
+        conf.push_str(" --disable-assembly");
+        enable_fat = false;
+    }
     if let Some(cross_target) = env.cross_target.as_ref() {
         conf.push_str(" --host ");
         conf.push_str(cross_target);
