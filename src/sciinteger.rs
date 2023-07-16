@@ -17,6 +17,8 @@
 */
 
 use std::collections::HashMap;
+use std::collections::hash_map::DefaultHasher;
+use std::hash::{Hash, Hasher};
 use std::ops::{BitAnd, BitOr, BitXor, Not, Shl, Shr};
 
 // This is the interface to the JVM that we'll call the majority of our
@@ -193,6 +195,15 @@ pub extern "system" fn Java_palaiologos_scijava_SciInteger_toStringRadix(env: JN
             JObject::null().into_raw()
         }
     }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciInteger_hash(env: JNIEnv, _class: JClass, ptr: jlong) -> jlong {
+    let ptr = ptr as *mut Integer;
+    let n = unsafe { &*ptr };
+    let mut hasher = DefaultHasher::new();
+    n.hash(&mut hasher);
+    hasher.finish() as jlong
 }
 
 #[no_mangle]

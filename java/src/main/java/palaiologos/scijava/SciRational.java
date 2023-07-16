@@ -67,11 +67,40 @@ public final class SciRational implements Comparable<SciRational>, Cloneable {
     
     private static native String toString(long i);
     private static native String toStringRadix(long i, int radix);
-
     private static native SciRational fromInteger(int i);
-
+    private static native SciRational fromSciFloat(long f);
+    private static native SciRational fromSciInteger(long f);
+    private static native SciInteger num(long a);
+    private static native SciInteger den(long a);
+    private static native long hash(long a);
+    private static native SciRational fromString(String s);
+    private static native SciRational fromStringRadix(String s, int radix);
+    private static native boolean lt(long a, long b);
+    private static native boolean lte(long a, long b);
+    private static native boolean gt(long a, long b);
+    private static native boolean gte(long a, long b);
+    private static native boolean eq(long a, long b);
+    private static native boolean neq(long a, long b);
+    private static native void copy(long dest, long src);
+    private static native int compare(long a, long b);
     private static native void add(long dest, long a, long b);
     private static native void sub(long dest, long a, long b);
+
+    public static SciRational valueOf(SciInteger i) {
+        return fromSciInteger(i.ptr);
+    }
+
+    public static SciRational valueOf(SciFloat i) {
+        return fromSciFloat(i.ptr);
+    }
+
+    public static SciRational valueOf(String s) {
+        return fromString(s);
+    }
+
+    public static SciRational valueOf(String s, int radix) {
+        return fromStringRadix(s, radix);
+    }
 
     /**
      * Return a new SciInteger with the value of the specified integer.
@@ -80,6 +109,76 @@ public final class SciRational implements Comparable<SciRational>, Cloneable {
      */
     public static SciRational valueOf(int i) {
         return fromInteger(i);
+    }
+
+    public SciInteger numerator() {
+        return num(ptr);
+    }
+
+    public SciInteger denominator() {
+        return den(ptr);
+    }
+
+    /**
+     * Compare this SciRational with another SciRational to determine their relative order.
+     * @param b the other SciRational
+     * @return true if this SciRational is less than b, false otherwise
+     */
+    public boolean lt(SciRational b) {
+        return lt(ptr, b.ptr);
+    }
+
+    /**
+     * Compare this SciRational with another SciRational to determine their relative order.
+     * @param b the other SciRational
+     * @return true if this SciRational is less than or equal to b, false otherwise
+     */
+    public boolean lte(SciRational b) {
+        return lte(ptr, b.ptr);
+    }
+
+    /**
+     * Compare this SciRational with another SciRational to determine their relative order.
+     * @param b the other SciRational
+     * @return true if this SciRational is greater than b, false otherwise
+     */
+    public boolean gt(SciRational b) {
+        return gt(ptr, b.ptr);
+    }
+
+    /**
+     * Compare this SciRational with another SciRational to determine their relative order.
+     * @param b the other SciInteger
+     * @return true if this SciInteger is greater than or equal to b, false otherwise
+     */
+    public boolean gte(SciRational b) {
+        return gte(ptr, b.ptr);
+    }
+
+    /**
+     * Compare this SciRational with another SciRational to determine their relative order.
+     * Notice that this method always involves the underlying equality checks. When dealing
+     * with objects of unknown origin, consider using the {@link #equals(Object)} method first
+     * to avoid unnecessary equality checks in case the objects are physically equal or the
+     * types differ.
+     * @param b the other SciInteger
+     * @return true if this SciInteger is equal to b, false otherwise
+     */
+    public boolean eq(SciRational b) {
+        return eq(ptr, b.ptr);
+    }
+
+    /**
+     * Compare this SciRational with another SciRational to determine their relative order.
+     * Notice that this method always involves the underlying equality checks. When dealing
+     * with objects of unknown origin, consider using the {@link #equals(Object)} method first
+     * to avoid unnecessary equality checks in case the objects are physically equal or the
+     * types differ.
+     * @param b the other SciRational
+     * @return true if this SciRational is not equal to b, false otherwise
+     */
+    public boolean neq(SciRational b) {
+        return neq(ptr, b.ptr);
     }
 
     /**
@@ -109,13 +208,39 @@ public final class SciRational implements Comparable<SciRational>, Cloneable {
     }
 
     @Override
+    public SciRational clone() {
+        SciRational result = SciRational.fromInteger(0);
+        copy(result.ptr, ptr);
+        return result;
+    }
+
+    @Override
     public int hashCode() {
-        throw new UnsupportedOperationException();
+        return (int) hash(ptr);
     }
 
     @Override
     public int compareTo(SciRational o) {
-        throw new UnsupportedOperationException();
+        return compare(ptr, o.ptr);
+    }
+
+    /**
+     * Turn a SciRational into a string. The string is formatted in base 10.
+     * @return the value of the SciRational as a string
+     */
+    @Override
+    public String toString() {
+        return toString(ptr);
+    }
+
+    /**
+     * Turn a SciRational into a string. The string is formatted in the given base.
+     * @param radix the base to format the string in
+     * @return the value of the SciRational as a string
+     * @throws IllegalArgumentException if radix is not between 2 and 36
+     */
+    public String toString(int radix) {
+        return toStringRadix(ptr, radix);
     }
 
     /**
@@ -139,6 +264,6 @@ public final class SciRational implements Comparable<SciRational>, Cloneable {
         if (this.ptr == other.ptr) {
             return true;
         }
-        return this.eq(other);
+        return eq(this.ptr, other.ptr);
     }
 }

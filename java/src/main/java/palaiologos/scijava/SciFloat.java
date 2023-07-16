@@ -121,6 +121,7 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
     private static native SciFloat fromString(int precision, int roundingMode, String s);
     private static native SciFloat fromInteger(int precision, int roundingMode, int n);
     private static native SciFloat fromSciInteger(int precision, int roundingMode, long n);
+    private static native SciFloat fromSciRational(int precision, int roundingMode, long n);
     private static native SciFloat ldexp(int precision, int roundingMode, int x, int exp);
     private static native boolean isFinite(long ptr);
     private static native void ceil(int precision, int roundingMode, long dest, long a);
@@ -725,6 +726,17 @@ public final class SciFloat implements Comparable<SciFloat>, Cloneable {
      */
     public static SciFloat valueOf(MathContext mc, SciInteger i) {
         return fromSciInteger(mc.precision(), mc.roundingMode().ordinal(), i.ptr);
+    }
+
+    /**
+     * Convert a SciInteger value to a SciFloat.
+     *
+     * @param mc The math context to use for the resulting SciFloat.
+     * @param i The SciInteger value to convert.
+     * @return The SciFloat representation of i.
+     */
+    public static SciFloat valueOf(MathContext mc, SciRational i) {
+        return fromSciRational(mc.precision(), mc.roundingMode().ordinal(), i.ptr);
     }
 
     /**

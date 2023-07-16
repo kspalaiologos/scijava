@@ -118,6 +118,7 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
     private static native int jacobi(long a, long b);
     private static native int legendre(long a, long b);
     private static native SciInteger fromInteger(int i);
+    private static native long hash(long a);
     private static native SciInteger fromSciFloat(long i);
     private static native SciInteger fromString(String s);
     private static native SciInteger fromStringRadix(String s, int radix);
@@ -822,7 +823,7 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(bitCount(this));
+        return (int) hash(ptr);
     }
 
     /**
