@@ -1,0 +1,30 @@
+[package]
+name = "flint-sys"
+version = "0.7.3"
+links = "flint"
+authors = ["Alex Ozdemir <aozdemir@hmc.edu>"]
+edition = "2018"
+description = "Bindings to the FLINT C library"
+homepage = "https://github.com/alex-ozdemir/flint-rs/tree/master/flint-sys"
+repository = "https://github.com/alex-ozdemir/flint-rs"
+documentation = "https://docs.rs/flint-sys"
+license = "MIT OR Apache-2.0"
+keywords = ["polynomials", "number-theory", "math"]
+categories = ["cryptography", "algorithms", "external-ffi-bindings"]
+readme = "README.md"
+
+[dependencies]
+libc = "0.2"
+gmp-mpfr-sys = "1.4"
+
+[dev-dependencies]
+quickcheck = "0.9"
+quickcheck_macros = "0.9"
+
+[features]
+default = ["disable-make-check"]
+disable-make-check = []
+
+[target.'cfg(target_os = "windows")'.build-dependencies.winapi]
+version = "0.3"
+features = ["combaseapi", "knownfolders", "shlobj", "winbase", "winerror"]

@@ -21,6 +21,9 @@ jni = "0.20.0"
 [patch.crates-io]
 gmp-mpfr-sys = { path = "gmp-mpfr-sys/" }
 
+[patch.crates-io]
+flint-sys = { path = "flint-sys/" }
+
 [dependencies.gmp-mpfr-sys]
 version = "1.4.11"
 features = ["mpfr", "mpc", "force-cross"]
