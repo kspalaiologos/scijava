@@ -34,7 +34,8 @@ use jni::objects::{JClass, JString, JObject, JValue, JMap};
 // lifetime checker won't let us.
 use jni::sys::{jstring, jlong, jint, jobject, jboolean};
 
-use rug::{Rational, Float, Integer};
+use rug::ops::Pow;
+use rug::{Rational, Float, Integer, Assign};
 
 #[no_mangle]
 pub extern "system" fn Java_palaiologos_scijava_SciRational_free(_env: JNIEnv, _class: JClass, ptr: jlong) {
@@ -331,5 +332,180 @@ pub extern "system" fn Java_palaiologos_scijava_SciRational_copy(_env: JNIEnv, _
     let a = unsafe { &*a };
     let dest = unsafe { &mut *dest };
     *dest = a.clone();
+}
+
+// --
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciRational_recip(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong) {
+    let dest = dest as *mut Rational;
+    let a = a as *mut Rational;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.recip_ref().into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciRational_ceil(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong) {
+    let dest = dest as *mut Rational;
+    let a = a as *mut Rational;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.ceil_ref().into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciRational_floor(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong) {
+    let dest = dest as *mut Rational;
+    let a = a as *mut Rational;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.floor_ref().into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciRational_fract_ceil(_env: JNIEnv, _class: JClass, dest: jlong, dest2: jlong, a: jlong) {
+    let dest = dest as *mut Rational;
+    let dest2 = dest2 as *mut Integer;
+    let a = a as *mut Rational;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    let dest2 = unsafe { &mut *dest2 };
+    (dest, dest2).assign(a.fract_ceil_ref());
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciRational_fract_floor(_env: JNIEnv, _class: JClass, dest: jlong, dest2: jlong, a: jlong) {
+    let dest = dest as *mut Rational;
+    let dest2 = dest2 as *mut Integer;
+    let a = a as *mut Rational;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    let dest2 = unsafe { &mut *dest2 };
+    (dest, dest2).assign(a.fract_floor_ref());
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciRational_fract_round(_env: JNIEnv, _class: JClass, dest: jlong, dest2: jlong, a: jlong) {
+    let dest = dest as *mut Rational;
+    let dest2 = dest2 as *mut Integer;
+    let a = a as *mut Rational;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    let dest2 = unsafe { &mut *dest2 };
+    (dest, dest2).assign(a.fract_round_ref());
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciRational_fract_trunc(_env: JNIEnv, _class: JClass, dest: jlong, dest2: jlong, a: jlong) {
+    let dest = dest as *mut Rational;
+    let dest2 = dest2 as *mut Integer;
+    let a = a as *mut Rational;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    let dest2 = unsafe { &mut *dest2 };
+    (dest, dest2).assign(a.fract_trunc_ref());
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciRational_rem_ceil(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong) {
+    let dest = dest as *mut Rational;
+    let a = a as *mut Rational;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.rem_ceil_ref().into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciRational_rem_floor(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong) {
+    let dest = dest as *mut Rational;
+    let a = a as *mut Rational;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.rem_floor_ref().into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciRational_rem_round(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong) {
+    let dest = dest as *mut Rational;
+    let a = a as *mut Rational;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.rem_round_ref().into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciRational_rem_trunc(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong) {
+    let dest = dest as *mut Rational;
+    let a = a as *mut Rational;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.rem_trunc_ref().into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciRational_round(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong) {
+    let dest = dest as *mut Rational;
+    let a = a as *mut Rational;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.round_ref().into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciRational_signum(_env: JNIEnv, _class: JClass, a: jlong) -> jlong {
+    let a = a as *mut Rational;
+    let a = unsafe { &*a };
+    let a: Integer = a.signum_ref().into();
+    a.to_i64().unwrap()
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciRational_square(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong) {
+    let dest = dest as *mut Rational;
+    let a = a as *mut Rational;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.square_ref().into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciRational_mul(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong, b: jlong) {
+    let dest = dest as *mut Rational;
+    let a = a as *mut Rational;
+    let b = b as *mut Rational;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    let dest = unsafe { &mut *dest };
+    *dest = (a * b).into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciRational_div(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong, b: jlong) {
+    let dest = dest as *mut Rational;
+    let a = a as *mut Rational;
+    let b = b as *mut Rational;
+    let a = unsafe { &*a };
+    let b = unsafe { &*b };
+    let dest = unsafe { &mut *dest };
+    *dest = (a / b).into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciRational_neg(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong) {
+    let dest = dest as *mut Rational;
+    let a = a as *mut Rational;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = (-a).into();
+}
+
+#[no_mangle]
+pub extern "system" fn Java_palaiologos_scijava_SciRational_pow(_env: JNIEnv, _class: JClass, dest: jlong, a: jlong, exp: jint) {
+    let dest = dest as *mut Rational;
+    let a = a as *mut Rational;
+    let a = unsafe { &*a };
+    let dest = unsafe { &mut *dest };
+    *dest = a.pow(exp).into();
 }
 
