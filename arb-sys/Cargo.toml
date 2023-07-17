@@ -1,0 +1,26 @@
+[package]
+name = "arb-sys"
+version = "0.3.6"
+authors = ["William Youmans <wyoumans@usf.edu>"]
+edition = "2018"
+description = "Bindings to the Arb library"
+homepage = "https://github.com/wjyoumans/arb-sys"
+repository = "https://github.com/wjyoumans/arb-sys"
+license = "MIT OR Apache-2.0" 
+keywords = ["flint", "real", "complex", "number-theory", "math"]
+categories = ["algorithms", "external-ffi-bindings", "mathematics"]
+readme = "README.md"
+
+[dependencies]
+libc = "0.2"
+derivative = "2.0"
+gmp-mpfr-sys = "1.4"
+flint-sys = { path = "../flint-sys", version = "0.7.3" }
+
+[features]
+default = ["disable-make-check"]
+disable-make-check = []
+
+[target.'cfg(target_os = "windows")'.build-dependencies.winapi]
+version = "0.3"
+features = ["combaseapi", "knownfolders", "shlobj", "winbase", "winerror"]

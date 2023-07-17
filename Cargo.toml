@@ -14,6 +14,7 @@ overflow-checks = false
 debug = false
 
 [dependencies]
+arb-sys = "=0.3.6"
 flint-sys = "=0.7.3"
 rug = "=1.18.0"
 jni = "0.20.0"
@@ -21,6 +22,7 @@ jni = "0.20.0"
 [patch.crates-io]
 gmp-mpfr-sys = { path = "gmp-mpfr-sys/" }
 flint-sys = { path = "flint-sys/" }
+arb-sys = { path = "arb-sys/" }
 
 [dependencies.gmp-mpfr-sys]
 version = "1.4.11"
