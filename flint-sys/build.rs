@@ -290,7 +290,7 @@ fn build(env: &Environment) {
     ));
 
     if let Some(cross_target) = env.cross_target.as_ref() {
-        conf.push_str(" --host ");
+        conf.push_str(" --build=");
         conf.push_str(cross_target);
     }
 
