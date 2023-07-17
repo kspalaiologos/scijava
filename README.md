@@ -8,7 +8,3 @@ If the GCC crosscompiler for the architecture you run is available in Ubuntu/Deb
 - I use musl.
 
 My condolences.
-
-- Will you support MacOS and FreeBSD?
-
-PRs for the Actions artifact builder welcome.
