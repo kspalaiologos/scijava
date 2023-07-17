@@ -139,9 +139,12 @@ fn main() {
         dir
     });
 
-    let raw_target = cargo_env("TARGET")
+    let mut raw_target = cargo_env("TARGET")
         .into_string()
         .expect("env var TARGET having sensible characters");
+    let host = cargo_env("HOST")
+        .into_string()
+        .expect("env var HOST having sensible characters");
 
     if raw_target.contains("riscv64gc") {
         raw_target = raw_target.replace("riscv64gc", "riscv64");
@@ -280,7 +283,7 @@ fn should_save_cache(env: &Environment) -> bool {
 
 fn build(env: &Environment) {
     println!("$ cd {:?}", &env.build_dir);
-    let conf = String::from(format!(
+    let mut conf = String::from(format!(
         "./configure --disable-shared --with-gmp={} --with-mpfr={}",
         env.gmp_mpfr_dir.display(),
         env.gmp_mpfr_dir.display(),
@@ -289,10 +292,6 @@ fn build(env: &Environment) {
     if let Some(cross_target) = env.cross_target.as_ref() {
         conf.push_str(" --host ");
         conf.push_str(cross_target);
-        if cross_target.contains("windows") {
-            conf.push_str(" --disable-assembly");
-            enable_fat = false;
-        }
     }
 
     configure(&env.build_dir, &OsString::from(conf));
