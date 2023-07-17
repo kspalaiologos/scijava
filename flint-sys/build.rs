@@ -284,7 +284,7 @@ fn should_save_cache(env: &Environment) -> bool {
 fn build(env: &Environment) {
     println!("$ cd {:?}", &env.build_dir);
     let mut conf = String::from(format!(
-        "./configure --disable-shared --with-gmp={} --with-mpfr={}",
+        "./configure --disable-pthread --disable-shared --with-gmp={} --with-mpfr={}",
         env.gmp_mpfr_dir.display(),
         env.gmp_mpfr_dir.display(),
     ));

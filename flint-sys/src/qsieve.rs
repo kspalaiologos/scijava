@@ -7,7 +7,7 @@ use crate::deps::*;
 use crate::flint::*;
 use crate::fmpz::{fmpz, fmpz_t};
 use crate::fmpz_factor::fmpz_factor_struct;
-use libc::{c_char, c_int, c_uchar, c_void, pthread_mutex_t, FILE};
+use libc::{c_char, c_int, c_uchar, c_void, FILE};
 
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -70,7 +70,6 @@ pub type qs_poly_t = [qs_poly_s; 1usize];
 #[derive(Copy, Clone)]
 pub struct qs_s {
     pub index_j: mp_limb_signed_t,
-    pub mutex: pthread_mutex_t,
     pub handles: *mut thread_pool_handle,
     pub num_handles: mp_limb_signed_t,
     pub n: fmpz_t,
