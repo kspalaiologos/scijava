@@ -117,7 +117,7 @@ public final class SciInteger implements Comparable<SciInteger>, Cloneable {
     private static native void square(long dest, long a);
     private static native int jacobi(long a, long b);
     private static native int legendre(long a, long b);
-    private static native SciInteger fromInteger(int i);
+    static native SciInteger fromInteger(int i);
     private static native long hash(long a);
     private static native SciInteger fromSciFloat(long i);
     private static native SciInteger fromString(String s);

@@ -453,11 +453,11 @@ pub extern "system" fn Java_palaiologos_scijava_SciRational_round(_env: JNIEnv, 
 }
 
 #[no_mangle]
-pub extern "system" fn Java_palaiologos_scijava_SciRational_signum(_env: JNIEnv, _class: JClass, a: jlong) -> jlong {
+pub extern "system" fn Java_palaiologos_scijava_SciRational_signum(_env: JNIEnv, _class: JClass, a: jlong) -> jint {
     let a = a as *mut Rational;
     let a = unsafe { &*a };
     let a: Integer = a.signum_ref().into();
-    a.to_i64().unwrap()
+    a.to_i64().unwrap() as jint
 }
 
 #[no_mangle]
